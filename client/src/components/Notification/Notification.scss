@@ -1,0 +1,73 @@
+@use "../../sass/index.scss" as *;
+
+.notification {
+    &__tooltip {
+      h2 {
+        padding: 1rem;
+      }
+      
+    }
+
+
+    &__item {
+      position: relative;
+      @include flex(center, center);
+      padding: 1rem;
+      margin:1rem 0;
+      border-radius: 1rem;
+      cursor: pointer;
+      &:hover {
+        background-color: rgba(44, 46, 62, 0.05);
+        .notification__item__setting {
+          opacity: 1;  
+        }
+      }
+      &__avatar {
+        position: relative;
+        & > img {
+          position: absolute;
+          right: -10%;
+          bottom: -10%;
+          width: 45%!important;
+          height: 45%!important;
+        }
+      }
+      &__desc {
+        margin: 0 1rem;
+        span {
+          font-weight: bold;
+          font-size: 1rem;
+        }
+      }
+      &__setting {
+        width: 3rem;
+        height: 3rem;
+        opacity: 0;
+        &:hover {
+          background-color: rgb(222, 222, 222);
+          border-radius: 50%;
+          svg {
+              color: #555555;
+          }
+      }
+      }
+
+      &__dot {
+        position: absolute;
+        display: none;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 0;
+        width: 1.2rem;
+        height: 1.2rem;
+        background-color: red;
+        border-radius: 50%;
+        &.active {
+          display: block;
+        }
+      }
+    }
+  }
+
+
+  

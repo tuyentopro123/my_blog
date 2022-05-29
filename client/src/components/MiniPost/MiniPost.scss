@@ -1,0 +1,53 @@
+@use '../../sass/index.scss' as *;
+
+.miniPost {
+    cursor: pointer;
+    &:hover {
+        h2 {
+            color: $main-color;
+        }
+    }
+    &__container {
+        @include flex(flex-start,center);
+    }
+    
+    &__img {
+        width:10rem;
+        height:10rem;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        margin-right: 1rem;
+        flex: 1 1;
+        border-radius: 1.5rem;
+    }
+
+    &__desc {
+        flex: 2 1;
+        height:100%;
+        margin-top: 1rem;
+        h2 {
+            min-height:4rem;
+            line-height: 1.5;
+            cursor: pointer;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+    }
+
+    &__inter {
+        @include flex(center,space-between);
+        margin-top: 2rem;
+        &__icon {
+            @include flex(center,center);
+            
+            span {
+                font-size: 1.5rem;
+                margin-left: 1rem;
+                color: $user-none;
+            }
+        }
+    }
+}

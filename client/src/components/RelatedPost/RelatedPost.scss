@@ -1,0 +1,61 @@
+@use '../../sass/index.scss' as *;
+
+.related {
+    margin: 3rem 0;
+    cursor: pointer;
+    &__container {
+        @include flex(flex-start,flex-start);
+    }   
+    
+    &__thumbnail {
+        width:40rem;
+        height:20rem;
+        margin-right: 2rem;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        flex: 2 1;
+        border-radius:1.5rem;
+    }
+
+    &__content {
+        flex: 3 1;
+        @include flex(flex-start, space-between);
+        flex-direction: column;
+        height: 20rem;
+        &__header {
+            h1 {
+                cursor: pointer;
+                line-height: 1.5;
+                min-height: 1rem;
+                margin: 0;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+            }
+        }
+
+        &__category {
+            @include flex(center,flex-start);
+            flex-wrap: wrap;
+            &__item {
+                margin-right: 1rem;
+                padding:1rem 2rem;
+                span {
+                    font-size: 1.2rem!important;
+                }
+            }
+        }
+
+        &__author {
+            font-size: 1.6rem;
+            span {
+                font-weight: bold;
+                margin: 0 .5rem;
+            }
+        }
+
+    }
+
+}

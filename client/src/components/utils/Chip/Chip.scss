@@ -1,0 +1,36 @@
+@use '../../../sass/index.scss' as *;
+
+.category {
+    position: relative;
+    padding:1rem 2rem;
+    border: 1px solid $main-color;
+    border-radius: 2rem;
+    z-index:100;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    cursor: pointer;
+    &:hover {
+        background-color: $main-color;
+        span {
+            color: #fff;
+        }
+    }
+    span {
+        user-select: none;
+        letter-spacing: 2px;
+        font-size: 1.8rem;
+        z-index: 1;
+        color: $main-color;
+    }
+
+    &__overlay {
+        background-color:rgba(35,35,35,.65);
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
+}

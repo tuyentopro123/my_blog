@@ -1,0 +1,33 @@
+@use '../../sass/index.scss' as *;
+
+.blog {
+    position: relative;
+    top: 8rem;
+    display: flex;
+    min-height:100vh;
+    &__container {
+        margin: 3rem;
+        width: 100%;
+    }
+
+    &__title {
+        width: 100%;
+        padding:4rem 2rem;
+        background: rgba(243, 248, 251, 0.6);
+        border-radius: 1rem;
+        span {
+            font-size: 4rem;
+            font-weight: bold;
+            text-transform:capitalize;
+            color: #041B3A;
+        }
+    }
+
+    &__content__list {
+        span {
+            font-size: 3rem;
+            text-align: center;
+            width: 100%;
+        }
+    }
+}

@@ -1,0 +1,57 @@
+@use '../../sass/index.scss' as *;
+
+.item {
+    position: relative;
+    border-radius:2rem;
+    border: 2px solid #ccc;
+    &__container {
+        max-height:32vh;
+        @include flex(center,space-around);
+    }
+
+    &__avatar {
+        flex: 1;
+        & > * {
+            margin: 2rem;
+        }
+        &__img {
+            @include flex(center,center);
+            img {
+                outline: 5px solid $third-color;
+                width:120px;
+                height:120px;
+                object-fit: cover;
+                border-radius:50%;
+            }
+        }
+    }
+
+    &__desc {
+        flex: 2;
+        margin-right: 2rem;
+        overflow: hidden;
+        align-self: flex-start;
+        & > * {
+            margin: 2rem 0;
+        }
+
+
+        &__intro {
+            & > * {
+                margin: 2rem 0;
+            }
+            h2 {
+                font-size: 2.5rem;
+            }
+            h4 {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: $main-color;
+                span {
+                    color: $para-color;
+                }
+            }
+        }
+
+    }
+}

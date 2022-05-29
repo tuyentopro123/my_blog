@@ -1,0 +1,15 @@
+
+.pagination {
+    padding: 3rem;
+    margin-top: 2rem;
+    ul {
+        justify-content: center;
+        li {
+            margin:0 .5rem;
+            a {
+                padding: 2rem;
+                font-size: 1.5rem;
+            }
+        }
+    }
+}

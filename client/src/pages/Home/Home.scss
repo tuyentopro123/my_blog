@@ -1,0 +1,11 @@
+@use '../../sass/index.scss' as *;
+
+.home {
+    position: relative;
+    top: 8rem;
+    display: flex;
+    min-height:400vh;
+    @include mobile {
+        display:inherit;
+    }
+}

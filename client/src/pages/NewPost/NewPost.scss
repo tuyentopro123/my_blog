@@ -1,0 +1,90 @@
+@use '../../sass/index.scss' as *;
+
+.new {
+    position: relative;
+    top: 8rem;
+    display: flex;
+    min-height:100vh;
+    &__container {
+        margin-left: 3rem;
+        width: 100%;
+    }
+
+    &__body {
+        @include flex(flex-start,space-around);
+        margin:2rem 0;
+        & > * {
+            margin: 0 1rem;
+        }
+        &__thumbnail {
+            h2 {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+            }
+            img {
+                max-height: 20rem;
+                margin: 1rem 0 2rem 0;
+                padding:1rem;
+                outline: 2px #ccc solid;
+                border-radius: 1rem;
+            }
+        }
+
+        &__blog {
+            & > * {
+                margin-bottom: 1.5rem;
+            }
+            &__title {
+                margin-top: 5rem;
+                input {
+                    width: 100%;
+                    padding:1.5rem 2rem;
+                    font-size: 2.5rem;
+                    border: 2px #e5e7eb solid;
+                }
+            }
+    
+            &__category {
+                &__input {
+                    min-height: 4rem;
+                    margin-top: 1.5rem;
+                    border: 2px #e5e7eb solid;
+                }
+
+                &__select {
+                    &.program {
+                        #program {
+                            display: inline-block;
+                        }
+                    }
+
+                    &.life {
+                        #life {
+                            display: inline-block;
+                        }
+                    }
+                }
+            }
+    
+            &__content {
+                margin-bottom: 3rem;
+                .content-area {
+                    // width: 80%;
+                    max-width: 50vw;
+                    min-width: 50vw;
+                    .ql-editor {
+                        // overflow: hidden;
+                        // overflow-y: clip;
+                        max-height: 50vh;
+                        min-height: 50vh;
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+#program,#life {
+    display: none;
+}

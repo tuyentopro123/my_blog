@@ -1,0 +1,143 @@
+@use './variables.scss' as *;
+@use './mixin.scss' as *;
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    transition: 
+        color .1s linear, 
+        transform .1s linear, 
+        opacity .1s linear,
+        visibility .1s linear
+    ;
+}
+
+html {
+    box-sizing: border-box;
+    overflow-x: hidden;
+    font-size: 62.5%;
+    line-height: 1;
+    scroll-behavior: smooth;
+    color: $txt-color;
+    font-weight: 500;
+    user-select: unset;
+
+    @include tablet {
+        font-size: 55%;
+    }
+
+    @include mobile {
+        font-size: 50%;
+    }
+}
+
+body {
+    width: 100%;
+    // overflow-x: hidden;
+    // overflow-y: clip;
+    font-family: 'Nunito', sans-serif;
+}
+
+.bg-img {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.overlay {
+    display: none;
+}
+
+.overlay::before {
+    position: absolute;
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+img {
+    max-width: 100%;
+}
+
+input {
+    outline: 0;
+    border: 0;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+}
+
+ul {
+    list-style: none;
+}
+
+h1, h2, h3, h4, h5 {
+    line-height: 1.2;
+}
+
+h1, h2, h3, h4, h5 , span,p {
+    color:$txt-color;
+}
+
+button {
+    border:none;
+    padding: 1rem;
+    cursor: pointer;
+    border-radius:2rem;
+    background-color: $main-color;
+    color:#fff;
+    text-transform: uppercase;
+    &:hover {
+        opacity: 0.6;
+    }
+    &.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+
+//css grid
+
+$numbers: 1, 2, 3, 4, 5, 6, 7, 8, 9;
+.grid {
+    display: grid;
+    width: 100%;
+    height: 100%;
+} 
+
+@each $size in $numbers {
+    .col-#{$size} {
+        grid-template-columns: repeat($size, 1fr);
+    }
+    .col-sm-#{$size} {
+        @include mobile() {
+            grid-template-columns: repeat($size, 1fr);
+        }
+    }
+}
+
+@each $size in $numbers {
+    @include tablet() {
+        .col-md-#{$size} {
+            grid-template-columns: repeat($size, 1fr);
+        }
+    }
+}
+
+@each $size in $numbers {
+    @include mobile() {
+        .col-sm-#{$size} {
+            grid-template-columns: repeat($size, 1fr);
+        }
+    }
+}

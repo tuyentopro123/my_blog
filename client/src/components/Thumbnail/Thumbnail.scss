@@ -1,0 +1,142 @@
+@use '../../sass/index.scss' as *;
+
+.thumbnail {   
+    position: relative;
+    max-width: 70rem; 
+    margin-bottom: 2rem;
+    &__container {
+        @include flex(center,space-around);
+        flex-direction: column;
+        &.information {
+            flex-direction: row;
+        }
+    }
+
+    
+
+    &__img {
+        width: 100%;
+        // transform: scale(1.5);
+        // width: 30rem;
+        height: 25rem;
+        border-radius:1rem;
+        outline: 1px #000 solid;
+        margin:.8rem 0;
+        overflow: hidden;
+        cursor: pointer;
+        &:hover {
+            .thumbnail__img__container {
+                transform: scale(1.2);
+            }
+            .thumbnail__img__overlay {
+                opacity: 1  ;
+            }
+        }
+        &__container {
+            width: 100%;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.25s ease-in-out;
+        }
+        &__overlay {
+            background-color: rgba(37, 37, 37, 0.5);
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+        }
+        @include mobile {
+            height:25rem;
+        }
+        @include tablet {
+            height:25rem;
+        }
+    }
+
+    &__desc {
+        // max-width: 37rem;
+        // min-width: 30rem;
+        width: 100%;
+        & > * {
+            margin:1rem 0;
+        }
+        h2 {
+            cursor: pointer;
+            line-height: 1.8;
+            min-height: 5rem;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+    }
+
+    &__inter {
+        @include flex(center,space-between);
+        margin-top: 1rem;
+        &__infor {
+            @include flex(center,flex-start);
+            cursor: pointer;
+            & > * {
+                margin:0 .2rem;
+            }
+            img {
+                width: 3.5rem;
+                height: 3.5rem;
+                border-radius: 50%;
+                object-fit: cover;
+                cursor: pointer;
+            }
+            span {
+                font-size: 1.4rem;
+                font-weight: bold;
+            }
+        }
+
+        &__time {
+            span {
+                font-size: 1.4rem;
+            }
+        }
+    }
+
+    &__fields {
+        position: absolute;
+        top: 1.5rem;
+        left: -.6rem;
+        padding:1rem 2rem;
+        border-radius: .5rem;
+        border-bottom-left-radius: 0;
+        &.life {
+            background-color: $life-color;
+            &::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -.6rem;
+                border-top: .6rem solid $life-color;
+                border-left: .6rem solid transparent;
+                filter: brightness(60%);
+            }
+        }
+        &.program {
+            background-color: $program-color;
+            &::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -.6rem;
+                border-top: .6rem solid $program-color;
+                border-left: .6rem solid transparent;
+                filter: brightness(60%);
+            }
+        }
+        span {
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            color: #fff;
+            text-transform: capitalize;
+        }
+    }
+}
