@@ -65,9 +65,7 @@ const Comment = ({ comment, socket, id }) => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.login?.currentUser);
   const reply = useSelector((state) => state.comment.commentpost.replyComment);
-  console.log(reply);
 
-  let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
   const [newComment, setNewComment] = useState({
     user_name: currentUser.username,
     user_img: currentUser.image,
@@ -94,8 +92,6 @@ const Comment = ({ comment, socket, id }) => {
       .classList.remove("active");
     await createComment(
       newComment,
-      axiosJWT,
-      currentUser?.accessToken,
       dispatch
     );
     if (currentUser._id !== e.target.name) {
@@ -110,7 +106,7 @@ const Comment = ({ comment, socket, id }) => {
         seen: false,
       });
     }
-    getReplyComment(axiosJWT, comment._id, currentUser.accessToken, dispatch);
+    getReplyComment(comment._id, dispatch);
   };
 
   // cancel comment
@@ -145,9 +141,7 @@ const Comment = ({ comment, socket, id }) => {
     };
     await interComment(
       newInter,
-      axiosJWT,
       e.target.id,
-      currentUser?.accessToken,
       dispatch
     );
     if (currentUser._id !== e.target.ariaRequired) {
@@ -162,7 +156,7 @@ const Comment = ({ comment, socket, id }) => {
         seen: false,
       });
     }
-    if (e.target.ariaAtomic) getReplyComment(axiosJWT, comment._id, currentUser.accessToken, dispatch);
+    if (e.target.ariaAtomic) getReplyComment(comment._id, dispatch);
   };
 
   // Get reply
@@ -170,7 +164,7 @@ const Comment = ({ comment, socket, id }) => {
     if (replyComment.length > 0) {
       setReplyComment([]);
     } else {
-      getReplyComment(axiosJWT, comment._id, currentUser.accessToken, dispatch);
+      getReplyComment( comment._id, dispatch);
     }
   };
 
@@ -189,10 +183,8 @@ const Comment = ({ comment, socket, id }) => {
   const receiveData = (data) => {
     if (data.delete) {
       deleteComment(
-        axiosJWT,
         data.user,
         { comment: data.comment, post: comment.post },
-        currentUser.accessToken,
         dispatch
       );
       setReplyComment(replyComment.filter((e) => e._id !== data.comment));

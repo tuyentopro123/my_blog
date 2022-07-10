@@ -3,7 +3,7 @@ const postControllers = require('../controllers/postControllers');
 const router = require('express').Router();
 
 // CREATE POST
-router.post('/post/:id',middlewareControllers.verifyToken,postControllers.createPost);
+router.post('/post/:id',postControllers.createPost);
 
 // GET ALL POST (FIELD: PROGRAM)
 router.get('/program',postControllers.getAllPost)
@@ -18,7 +18,7 @@ router.get('/:id',postControllers.getPost)
 router.get('/path/result',postControllers.postSearch)
 
 // UPDATE POST
-router.post('/update/:id',middlewareControllers.verifyToken,postControllers.updatePost)
+router.post('/update/:id',postControllers.updatePost)
 
 // RATE POSTS BY LIKE
 router.get('/path/highlight',postControllers.postHighLight)
@@ -36,9 +36,9 @@ router.get('/path/random',postControllers.getRanDomPost)
 router.get('/path/view',postControllers.postView)
 
 // UPLOAD IMAGE POST 
-router.post('/upload/post/:id',middlewareControllers.verifyToken,postControllers.uploadImagePost);
+router.post('/upload/post/:id',postControllers.uploadImagePost);
 
 // UPLOAD THUMBNAIL POST 
-router.post('/upload/thumb/:id',middlewareControllers.verifyToken,postControllers.uploadThumbPost);
+router.post('/upload/thumb/:id',postControllers.uploadThumbPost);
 
 module.exports = router;

@@ -4,15 +4,13 @@ const postSlice = createSlice({
     name:"post",
     initialState: {
         post: {
-            Post: null,
             AllPost: null,
             currentPost: null,
-            userPost:null,
             firstLoading:true,
-            relatedPost: null,
             isFetching: false,
             error: false,
         },
+        isFetching: false,
         commentpost: {
             commentOfPost:null,
             ReplyComment:null,
@@ -20,10 +18,8 @@ const postSlice = createSlice({
             error: false,
         },
         msg:{
-            success: "",
             content:"",
             title:"",
-            comment:""
         },
     },
     reducers: {
@@ -31,18 +27,16 @@ const postSlice = createSlice({
         // CREATE POST
         createPostStart: (state) => {
             state.post.isFetching = true;
+            state.post.error = false;
         },
         createPostSuccess: (state,action) => {
             state.post.isFetching = false;
-            state.post.Post = action.payload;
-            state.msg.content = "";
-            state.msg.title = "";
+            state.msg= "success";
             state.post.error = false;
         },
         createPostFailed: (state,action) => {
             state.post.isFetching = false;
-            state.msg.content = action.payload.response.data.errors.content?.message;
-            state.msg.title = action.payload.response.data.errors.title?.message;
+            state.msg = "error";
             state.post.error = true;
 
         },
@@ -57,22 +51,6 @@ const postSlice = createSlice({
             state.post.error = false;
         },
         getAllPostFailed: (state) => {
-            state.post.isFetching = false;
-            state.post.error = true;
-        },
-
-        // GET USER POST
-        getUserPostStart: (state) => {
-            state.post.isFetching = true;
-        },
-        getUserPostSuccess: (state,action) => {
-            state.post.isFetching = false;
-            state.post.firstLoading = true;
-            state.post.userPost = action.payload.userPost;
-            state.post.relatedPost = action.payload.relatedPost;
-            state.post.error = false;
-        },
-        getUserPostFailed: (state) => {
             state.post.isFetching = false;
             state.post.error = true;
         },
@@ -92,9 +70,16 @@ const postSlice = createSlice({
         },
 
         // FirstLoading
+        startFirstLoading: (state) => {
+            state.post.firstLoading = true;
+            state.post.isFetching = true;
+        },
         resetFirstLoading: (state) => {
             state.post.firstLoading = false;
-        }
+        },
+        FinishLoading: (state) => {
+            state.post.isFetching = false;
+        },
 
     }
 })
@@ -110,13 +95,12 @@ export const {
     updateLikeStart,
     updateLikeSuccess,
     updateLikeFailed,
-    getUserPostStart,
-    getUserPostSuccess,
-    getUserPostFailed,
     getAllPostStart,
     getAllPostSuccess,
     getAllPostFailed,
-    resetFirstLoading
+    resetFirstLoading,
+    FinishLoading,
+    startFirstLoading
 } = postSlice.actions;
 
 export default postSlice.reducer;

@@ -37,6 +37,7 @@ body {
     // overflow-x: hidden;
     // overflow-y: clip;
     font-family: 'Nunito', sans-serif;
+    background-color: $dark-color;
 }
 
 .bg-img {
@@ -85,7 +86,8 @@ h1, h2, h3, h4, h5 {
 }
 
 h1, h2, h3, h4, h5 , span,p {
-    color:$txt-color;
+    // color:$txt-color;
+    color:$dark-txt-color;
 }
 
 button {

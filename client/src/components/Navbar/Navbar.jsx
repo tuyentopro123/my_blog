@@ -1,11 +1,12 @@
 import React,{useEffect} from 'react'
 import './Navbar.scss'
-import { useLocation,useNavigate } from 'react-router-dom';
+import { useLocation,useNavigate,Link } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import HomeIcon from '@mui/icons-material/Home';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import FaceIcon from '@mui/icons-material/Face';
 import DevicesIcon from '@mui/icons-material/Devices';
+import {amber} from '@mui/material/colors';
 import { getAllPost } from '../../redux/apiRequest'
 
 
@@ -29,37 +30,25 @@ const Navbar = () => {
     },
     {
       Icon:FaceIcon,
-      h4:"Author",
-      path:'/author'
+      h4:"About me",
+      path:'/about'
     },
   ]
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const handleLink = async(e) => {
-    if(e === '/program') {
-      await getAllPost(dispatch,navigate,1,"program",null)
-      window.location.href= "/program"
-    }
-    if(e ==='/life') {
-      await getAllPost(dispatch,navigate,1,"life",null)
-      window.location.href= "/life"
-    }
-    navigate(`${e}`)
-
-  }
   return (
     <div className="navbar">
         <div className="navbar__container">
           {navbar.map((item, index) =>(
-            <div 
+            <Link 
+              to={`${item.path}`} 
               key={index}
-              onClick={() => handleLink(item.path)} 
               className={`navbar__icon ${item.path === currentPath ? "active" : ""}`} 
               >
-              <item.Icon sx={{ fontSize: 35 }} />
-              <h4>{item.h4}</h4>
-            </div>
+                <item.Icon sx={{ fontSize: 35,color:amber[800] }} />
+                <h4>{item.h4}</h4>
+            </Link>
           ))}
         </div>
     </div>

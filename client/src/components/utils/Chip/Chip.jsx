@@ -9,8 +9,8 @@ const Chip = ({text,className,field,image}) => {
   const navigate = useNavigate()
 
     const handleClick = async(e) => {
-      await getAllPost(dispatch,navigate,1,field,text)
-      window.location.href= `/${field}?category=${text}&pagePost=1`
+      // await getAllPost(dispatch,navigate,1,field,text)
+      navigate(`/${field}?category=${text}`)
     }
   return (
     <div 

@@ -5,23 +5,26 @@ import PaginationItem from '@mui/material/PaginationItem';
 import { Link } from 'react-router-dom';
 
 
-const PaginationType = ({type,page,func,numb}) => {
+const PaginationType = ({func,numb,defaultPage}) => {
   return (
     <Pagination 
         className= "pagination"
+        key={`slider-${defaultPage}`} 
         count={numb} 
         color="primary"  
+        defaultPage={defaultPage}
         showFirstButton
         variant="outlined"
+        shape="rounded"
         showLastButton 
         onChange={func}
-        renderItem={(item) => (
-          <PaginationItem
-            component={Link}
-            to={`/${type}${item.page === 1 ? '' : `?${page}=${item.page}`}`}
-            {...item}
-          />
-        )}
+        // renderItem={(item) => (
+        //   <PaginationItem
+        //     component={Link}
+        //     to={`/${type}${item.page === 1 ? '' : `?${page}=${item.page}`}`}
+        //     {...item}
+        //   />
+        // )}
     />
   )
 }

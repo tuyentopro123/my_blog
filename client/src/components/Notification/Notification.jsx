@@ -6,8 +6,7 @@ import GetTime from "../../utils/GetTime"
 import {useNavigate } from 'react-router-dom';
 import { useDispatch,useSelector} from "react-redux";
 import { grey } from "@mui/material/colors";
-import {loginSuccess} from "../../redux/authSlice"
-import { createAxios } from "../../createInstance";
+import axios from 'axios';
 import { getUserPost } from "../../redux/apiRequest"
 
 import {redirectNotificationStart,
@@ -19,7 +18,6 @@ const Notification = ({data}) => {
   const user = useSelector((state)=> state.auth.login?.currentUser)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  let axiosJWT = createAxios(user, dispatch, loginSuccess);
     const emojiNoti = [
         {
             name: "like",
@@ -60,12 +58,9 @@ const Notification = ({data}) => {
     // ACCESS NOTIFICATION
     const accessNotification = async() => {
         try {
-          const res = await axiosJWT.post("v1/user/check/" + user._id,noti,{
-            headers: { token: `Bearer ${user.accessToken}` },
-          });
-          await getUserPost(dispatch,res.data.post._id)
+          const res = await axios.post("http://localhost:3000/v1/user/check/" + user._id,noti);
           res.data.action && dispatch(redirectNotificationStart(noti))
-          navigate(`/post/${res.data.post.slug}`)
+          navigate(`/post/${res.data.post.slug}`,{state:res.data.post._id})
         } catch (err) {
           console.log(err)
         }

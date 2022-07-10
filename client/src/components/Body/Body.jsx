@@ -4,6 +4,7 @@ import List from "../utils/List/List";
 import Grid from "../utils/Grid/Grid";
 import Thumbnail from "../Thumbnail/Thumbnail";
 import Chip from "../utils/Chip/Chip";
+import {useNavigate} from "react-router-dom"
 
 // Import material ui
 import Skeleton from "@mui/material/Skeleton";
@@ -12,7 +13,13 @@ import axios from "axios";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import { red } from "@mui/material/colors";
+import { red,blue,purple,orange,indigo } from "@mui/material/colors";
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import TwitterIcon from '@mui/icons-material/Twitter';
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -38,6 +45,7 @@ const Body = () => {
   const [viewPost, setViewPost] = useState([]);
   const [popularPost, setPopularPost] = useState([]);
   const [randomPost, setRandomPost] = useState({});
+  const navigate = useNavigate()
 
 
   const [loading, setLoading] = useState(true);
@@ -74,9 +82,48 @@ const Body = () => {
       text: "drama",
       field: "life",
       image:
-        "https://webgiadinh.vn/wp-content/uploads/2021/09/hit-drama-tao-drama.jpg",
+        "https://meta.vn/Data/image/2021/06/21/drama-la-gi-2.jpg",
     },
   ];
+
+  const social = [
+    {
+      title: "Facebook",
+      href: "https://www.facebook.com/tea.live.167/",
+      icon: FacebookIcon,
+      color:indigo,
+    },
+    {
+      title: "instagram",
+      href: "https://www.facebook.com/tea.live.167/",
+      icon: InstagramIcon,
+      color:orange,
+    },
+    {
+      title: "linkedin",
+      href: "https://www.facebook.com/tea.live.167/",
+      icon: LinkedInIcon,
+      color:purple,
+    },
+    {
+      title: "github",
+      href: "https://www.facebook.com/tea.live.167/",
+      icon: GitHubIcon,
+      color:null,
+    },
+    {
+      title: "youtube",
+      href: "https://www.facebook.com/tea.live.167/",
+      icon: YouTubeIcon,
+      color:red,
+    },
+    {
+      title: "twitter",
+      href: "https://www.facebook.com/tea.live.167/",
+      icon: TwitterIcon,
+      color:blue
+    },
+  ]
 
   const swiperOptionsV1 = {
     modules: [Navigation, Autoplay],
@@ -128,8 +175,7 @@ const Body = () => {
   };
 
   const swiperOptionsV3 = {
-    modules: [Navigation, EffectFlip],
-    navigation: { clickable: true },
+    modules: [EffectFlip],
     slidesPerView: 1,
     grabCursor: true,
     centeredSlides: true,
@@ -148,6 +194,12 @@ const Body = () => {
       },
     },
   };
+
+      // GET POST
+    const handleGetPost = (post) => {
+        navigate(`/post/${post.slug}`,{state: post._id})
+    }
+
   useEffect(() => {
     let controller = new AbortController();
     // HIGHLIGHT POST
@@ -210,7 +262,14 @@ const Body = () => {
     commentPost();
     randomPost();
     setLoading(false);
-    return () => controller?.abort();
+    return () => {
+      setTopPost([]);
+      setListPost([]);
+      setPopularPost([]);
+      setRandomPost({});
+      setViewPost([]);
+      controller?.abort()
+    };
   }, []);
   return (
     <section className="body">
@@ -262,7 +321,7 @@ const Body = () => {
           </div>
 
           <div className="body__banner">
-            <div className="body__banner__overlay overlay"></div>
+            <div className="body__banner__overlay"></div>
             <div
               className="body__banner__img"
               style={{
@@ -333,6 +392,7 @@ const Body = () => {
                         key={index}
                         className="body__post__thirdForm__memorable"
                         style={{ backgroundImage: `url(${post.imgPost})` }}
+                        onClick={() => handleGetPost(post)}
                       >
                         <div className="body__post__thirdForm__item">
                           <div className="body__post__thirdForm__title">
@@ -368,6 +428,7 @@ const Body = () => {
                         key={index}
                         className="body__post__thirdForm__memorable"
                         style={{ backgroundImage: `url(${post.imgPost})` }}
+                        onClick={() => handleGetPost(post)}
                       >
                         <div className="body__post__thirdForm__item">
                           <div className="body__post__thirdForm__title">
@@ -399,12 +460,27 @@ const Body = () => {
               </div>
             </List>
             <div className="body__post__firstForm__sidebar">
-              <List header="featured author" active="active">
-                <Grid col={1} md={2} sm={1} gapCol={20} gapRow={25}>
-                  {viewPost.map((post, index) => (
-                    <MiniPost key={index} post={post} />
-                  ))}
-                </Grid>
+              <List header="Contact me" active="active">
+                <div className="follow">
+                  <div className="follow__image">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Statue_of_Tran_Hung_Dao%2C_Nam_Dinh_City%2C_Vietnam_%2803%29.jpg/1200px-Statue_of_Tran_Hung_Dao%2C_Nam_Dinh_City%2C_Vietnam_%2803%29.jpg" alt="" />
+                  </div>
+                  <div className="follow__social">
+                    <Grid col={2} md={2} sm={1} gapCol={15} gapRow={15}>
+                      {social.map((item, index) => (
+                        <div key={index} className="follow__social__item">
+                          <a href={item.href}>
+                            <item.icon sx={{ fontSize: 60,color: item.color ? item.color[500] : "disabled"}} />
+                            <div className="follow__social__item__content">
+                              <span className="follow__social__item__title" >{item.title}</span>
+                              <span className="follow__social__item__like" >200k</span>
+                            </div>
+                          </a>
+                        </div>
+                      ))}
+                    </Grid>
+                  </div>
+                </div>
               </List>
             </div>
           </div>

@@ -2,30 +2,22 @@ import React,{useState} from 'react'
 import './Thumbnail.scss'
 import bgEmty from '../../assets/img/thumbnail_emty.jpg'
 import { useDispatch,useSelector } from "react-redux";
-import { getUserPost } from "../../redux/apiRequest"
 import { useNavigate } from "react-router-dom";
 import male from '../../assets/img/male.png'
 import female from '../../assets/img/female.png'
-import { getUsers } from "../../redux/apiRequest"
-import { createAxios } from "../../createInstance";
-import { loginSuccess } from '../../redux/authSlice';
 import GetTime from '../../utils/GetTime'
 
 const Thumbnail = ({post,infor}) => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  let axiosJWT = createAxios(post.user, dispatch, loginSuccess);
   const currentUser = useSelector((state)=> state.auth.login?.currentUser)
 // GET USER 
-  const handleGetUser = async () => {
-    await getUsers(post.user._id,currentUser.accessToken,dispatch)
-    navigate(`/infor/${post.user._id}`)
+  const handleGetUser = () => {
+    navigate(`/infor/${post.user._id}`,{state:post.user._id})
   }
 
 // GET POST
-  const handleGetPost = async() => {
-    await getUserPost(dispatch,post._id)
-    navigate(`/post/${post.slug}`)
+  const handleGetPost = () => {
+    navigate(`/post/${post.slug}`,{state: post._id})
   }
 
   return (

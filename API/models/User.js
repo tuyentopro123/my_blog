@@ -4,6 +4,7 @@ const Post = require("./Post");
 
 const userSchema = new mongoose.Schema(
     {
+        socialId: String,
         username: {
             type: String,
             required: true,
@@ -13,14 +14,10 @@ const userSchema = new mongoose.Schema(
         },
         email: {
             type: String,
-            required: true,
-            minlength: 10,
-            maxlength: 50,
             unique: true,
         },
         password: {
             type: String,
-            required: true,
             minlength: 10,
         },
         isAdmin: {

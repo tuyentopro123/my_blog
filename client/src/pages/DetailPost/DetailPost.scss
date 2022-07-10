@@ -3,15 +3,17 @@
 .detailpost {
     position: relative;
     top:$header;
-    padding-top: 5rem;
+    padding: 5rem 2rem;
+    max-width:120rem;
+    margin:auto;
+    @include flex(flex-start, space-between);
     &__container {
-        max-width:900px;
-        margin:auto;
+        max-width:70%;
     }
 
     &__header {
         h1 {
-            font-size: 4rem;
+            font-size: 3rem;
         }
         &__infor {
             @include flex(center,space-between);
@@ -104,7 +106,7 @@
             @include flex(center,flex-start);
             margin-bottom: 2rem;
             & > * {
-                margin-right:1.5rem;
+                margin-right:4rem;
                 cursor: pointer;
             }
             &__like {
@@ -116,22 +118,31 @@
         }
 
         &__tags {
-            h3 {
+            @include flex(baseline,flex-start);
+            span {
                 font-size: 2rem;
+                font-weight: bold;
                 margin-bottom: 1.5rem;
+            }
+
+            &__item {
+                margin:0 .5rem;
+                border-radius:0!important;
+                padding: .5rem 1rem!important;
+                span {
+                    font-size: 1.3rem!important;
+                }
             }
         }
     }
 
     &__inter {  
         width:100%;
+        padding-top: 3rem;
         h1 {
             font-size: 3rem;
             margin-bottom: 3rem;
         }      
-        &__related {
-            min-height: 100vh;
-        }
     }
 
     &__idea {
@@ -176,8 +187,16 @@
         }
         &__overlay {
             animation:Fade ease .2s;
-            &.active {
-                display: block!important;
+            ::before {
+                position: fixed;
+                content: '';
+                display: block;
+                width: 100%;
+                height: 100%;
+                z-index: 100;
+                top: 0;
+                left: 0;
+                background-color: rgba(0, 0, 0, 0.4);
             }
         }
        
@@ -208,13 +227,13 @@
                     line-height: 1.5;
                     border-radius: 1.5rem;
                     border: 1px solid #000;
-                    &.active {
-                        &::before {
-                            display: none;
-                            width: 0;
-                        }
-                    }
-                    &::before {
+                    // &.active {
+                    //     &::before {
+                    //         display: none;
+                    //         width: 0;
+                    //     }
+                    // }
+                    &:empty::before {
                         color: #999;
                         content: attr(placeholder);
                         cursor: text;
@@ -256,6 +275,67 @@
             }
         }
         
+    }
+
+    // SIDEBAR
+    &__sidebar {
+        width: 27%;
+        padding: 2rem;
+        position:sticky;
+        top: 10rem;
+    }
+
+
+    &__popular {
+        margin-top: 2rem;
+        padding: 2rem 0 1rem 0;
+        border-top: 1px solid #000;
+        h2 {
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        &__item {
+            @include flex(flex-start,center);
+            margin-bottom: 2rem;
+            cursor: pointer;
+        }
+        &__image {
+            margin-right: 1rem;
+            overflow: hidden;
+            width: 12rem;
+            min-width: 12rem;
+            height: 7rem;
+            object-fit: cover;
+            border-radius:.5rem;
+            outline:1px solid #ccc;
+            img {
+                width: 12rem;
+                min-width: 12rem;
+                height: 7rem;
+                object-fit: cover;
+                &:hover {
+                    transform: scale(1.1);
+                }
+           }
+        }
+
+        &__body {
+            &__header {
+                margin-bottom: 1rem;
+                h3 {
+                    width:15rem;
+                    line-height: 1.5;
+                    min-height: 3rem;
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                    &:hover {
+                        color:$main-color;
+                    }
+                }
+            }
+        }
     }
 }
 

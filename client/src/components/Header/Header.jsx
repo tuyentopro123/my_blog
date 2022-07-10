@@ -3,15 +3,12 @@ import "./Header.scss";
 import { logOut } from "../../redux/apiRequest";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createAxios } from "../../createInstance";
-import { loginSuccess } from "../../redux/authSlice";
 import SearchIcon from "@mui/icons-material/Search";
 import logo from "../../assets/img/logo.png";
 import male from "../../assets/img/male.png";
 import female from "../../assets/img/female.png";
 import CreateSlug from "../utils/CreateSlug/CreateSlug";
-import { getUserPost, getUsers, getNotification } from "../../redux/apiRequest";
-import { getCurrentUser } from '../../redux/apiRequest';
+import { getNotification } from "../../redux/apiRequest";
 import axios from "axios";
 
 // Material ui
@@ -60,33 +57,20 @@ const Header = ({ socket }) => {
 
   useEffect(() => {
     socket?.on("getNotification", (data) => {
-      console.log(data)
-      getCurrentUser(user?._id,dispatch)
       setNotification((prev) => [...prev, data]);
     });
   }, [socket]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  let axiosJWT = createAxios(user, dispatch, loginSuccess);
-  const id = user?._id;
   const handleLogout = () => {
-    logOut(user?.accessToken, dispatch, id, axiosJWT, navigate);
+    logOut(dispatch, navigate);
   };
 
   const edit = useRef(null);
-  const avatar = useRef(null);
   const handleClick = () => {
     edit.current.classList.toggle("active");
   };
-
-  useEffect(() => {
-    if (window.innerWidth > 480) {
-      avatar.current.addEventListener("click", handleClick);
-    } else {
-      avatar.current.addEventListener("click", toggleDrawer(true));
-    }
-  }, []);
 
   useEffect(() => {
     setNotification(notificationUser)
@@ -95,7 +79,7 @@ const Header = ({ socket }) => {
   // GET NOTIFICATION
   const handleGetNotification = async (e) => {
     setLoading(true);
-    await getNotification(user.accessToken, dispatch, user._id, axiosJWT);
+    await getNotification(dispatch, user._id);
     setLoading(false);
   };
 
@@ -103,10 +87,8 @@ const Header = ({ socket }) => {
 
 
   // GET USER
-  const handleGetUser = async () => {
-    await getUsers(user._id, user.accessToken, dispatch);
-    navigate(`/infor/${user._id}`);
-    window.location.href= `/infor/${user._id}`
+  const handleGetUser = () => {
+    navigate(`/infor/${user._id}`,{state: user._id});
   };
 
   // GET POST USER
@@ -115,8 +97,7 @@ const Header = ({ socket }) => {
   const handleGetPost = async (item) => {
     input.current.value = "";
     listResult.current.classList.remove("active");
-    await getUserPost(dispatch, item._id, user.accessToken);
-    navigate(`/post/${item.slug}`, { state: item });
+    navigate(`/post/${item.slug}`, { state: item._id });
   };
   // Header Search
   const useDebounce = (value, delay) => {
@@ -241,7 +222,8 @@ const Header = ({ socket }) => {
       </div>
 
       <div className="header__actions">
-        <span> Hi, {user.username} </span>
+        
+        <span> {user ? `Hi, ${user.username}` : ""} </span>
 
         <Tippy
           arrow={false}
@@ -256,10 +238,10 @@ const Header = ({ socket }) => {
         >
           <div className="header__notification" onClick={(e) => handleGetNotification(e)}>
             <IconButton size="small">
-              <StyledBadge badgeContent={user.notification_count} color="error">
+              <StyledBadge badgeContent={user?.notification_count} color="error">
                 <div
                   className={`header__notification__icon ${
-                    user.notification_count > 0 && "active"
+                    user?.notification_count > 0 && "active"
                   }`}
                 >
                   <NotificationsIcon sx={{ fontSize: 25, color: grey[700] }} />
@@ -268,73 +250,27 @@ const Header = ({ socket }) => {
             </IconButton>
           </div>
         </Tippy>
-
+            
         <div className="header__account">
-          <IconButton size="small" ref={avatar}>
-            <Avatar
-              sx={{ width: 32, height: 32 }}
-              src={
-                user.image ? user.image : user.sex === "male" ? male : female
-              }
-            />
-          </IconButton>
-          <div ref={edit} className="header__account__edit">
-            <div className="header__account__body">
-              <Link
-                to={`/infor/${user._id}`}
-                state={user}
-                className="header__account__info"
-              >
+          {user ?
+            <div className="header__account__container">
+              <IconButton size="small" onClick={handleClick}>
                 <Avatar
-                  sx={{ width: 80, height: 80 }}
+                  sx={{ width: 32, height: 32 }}
                   src={
-                    user.image
-                      ? user.image
-                      : user.sex === "male"
-                      ? male
-                      : female
+                    user.image ? user.image : user.sex === "male" ? male : female
                   }
-                  alt=""
                 />
-                <h3>{user.username}</h3>
-                <span>{user.email}</span>
-              </Link>
-              <ul>
-                <li onClick={handleCloseMenu}>
-                  <Link to="/">Trang chủ</Link>
-                </li>
-                <li onClick={handleCloseMenu}>
-                  <div onClick={handleGetUser} style={{ cursor: "pointer" }}>
-                    Thông tin cá nhân
-                  </div>
-                </li>
-                <li onClick={handleCloseMenu}>
-                  <Link to="/logout" onClick={handleLogout}>
-                    LOGOUT
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <React.Fragment key="right">
-              <SwipeableDrawer
-                anchor="right"
-                open={state}
-                onClose={toggleDrawer(false)}
-                onOpen={toggleDrawer(true)}
-              >
-                <div className="mobile-menu">
+              </IconButton>
+              <div ref={edit} className="header__account__edit">
+                <div className="header__account__body">
                   <Link
                     to={`/infor/${user._id}`}
-                    state={user}
-                    className="mobile-menu__infor"
+                    state={user._id}
+                    className="header__account__info"
                   >
                     <Avatar
-                      sx={{
-                        width: 120,
-                        height: 120,
-                        border: ".2rem solid #000",
-                      }}
+                      sx={{ width: 80, height: 80 }}
                       src={
                         user.image
                           ? user.image
@@ -342,39 +278,98 @@ const Header = ({ socket }) => {
                           ? male
                           : female
                       }
+                      alt=""
                     />
                     <h3>{user.username}</h3>
                     <span>{user.email}</span>
                   </Link>
                   <ul>
-                    <li onClick={handleCloseMenuMobile}>
-                      <HomeIcon sx={{ fontSize: 30 }} />
+                    <li onClick={handleCloseMenu}>
                       <Link to="/">Trang chủ</Link>
                     </li>
-                    <li onClick={handleCloseMenuMobile}>
-                      <PermIdentityIcon sx={{ fontSize: 30 }} />
-                      <div
-                        onClick={handleGetUser}
-                        style={{ cursor: "pointer" }}
-                      >
+                    <li onClick={handleCloseMenu}>
+                      <div onClick={handleGetUser} style={{ cursor: "pointer" }}>
                         Thông tin cá nhân
                       </div>
                     </li>
-                    <li onClick={handleCloseMenuMobile}>
-                      <SearchIcon sx={{ fontSize: 30 }} />
-                      <Link to="/">Tìm kiếm</Link>
-                    </li>
-                    <li>
-                      <LogoutIcon sx={{ fontSize: 30 }} />
+                    <li onClick={handleCloseMenu}>
                       <Link to="/logout" onClick={handleLogout}>
                         LOGOUT
                       </Link>
                     </li>
                   </ul>
                 </div>
-              </SwipeableDrawer>
-            </React.Fragment>
-          </div>
+
+                <React.Fragment key="right">
+                  <SwipeableDrawer
+                    anchor="right"
+                    open={state}
+                    onClose={toggleDrawer(false)}
+                    onOpen={toggleDrawer(true)}
+                  >
+                    <div className="mobile-menu">
+                      <Link
+                        to={`/infor/${user._id}`}
+                        state={user}
+                        className="mobile-menu__infor"
+                      >
+                        <Avatar
+                          sx={{
+                            width: 120,
+                            height: 120,
+                            border: ".2rem solid #000",
+                          }}
+                          src={
+                            user.image
+                              ? user.image
+                              : user.sex === "male"
+                              ? male
+                              : female
+                          }
+                        />
+                        <h3>{user.username}</h3>
+                        <span>{user.email}</span>
+                      </Link>
+                      <ul>
+                        <li onClick={handleCloseMenuMobile}>
+                          <HomeIcon sx={{ fontSize: 30 }} />
+                          <Link to="/">Trang chủ</Link>
+                        </li>
+                        <li onClick={handleCloseMenuMobile}>
+                          <PermIdentityIcon sx={{ fontSize: 30 }} />
+                          <div
+                            onClick={handleGetUser}
+                            style={{ cursor: "pointer" }}
+                          >
+                            Thông tin cá nhân
+                          </div>
+                        </li>
+                        <li onClick={handleCloseMenuMobile}>
+                          <SearchIcon sx={{ fontSize: 30 }} />
+                          <Link to="/">Tìm kiếm</Link>
+                        </li>
+                        <li>
+                          <LogoutIcon sx={{ fontSize: 30 }} />
+                          <Link to="/logout" onClick={handleLogout}>
+                            LOGOUT
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                  </SwipeableDrawer>
+                </React.Fragment>
+              </div>
+            </div>
+            :
+            <div className="header__account__login" >
+               <Link
+                    to={`/login`}
+                  >
+                <button>Đăng nhập</button>
+              </Link>
+            </div>
+
+          }
         </div>
       </div>
     </div>

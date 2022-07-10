@@ -11,11 +11,6 @@ import Helmet from '../../components/Helmet/Helmet'
 const Home = () => {
   const user = useSelector((state)=> state.auth.login?.currentUser)
   const navigate = useNavigate()
-    useEffect(() => {
-      if(!user) {
-        navigate("/login")
-      }
-    },[])
 
   return (
     <Helmet title="Home">

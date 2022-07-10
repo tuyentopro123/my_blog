@@ -16,7 +16,7 @@ const postControllers = {
             const newPost = await post.save()
             user.posts.push(newPost._id)
             await user.save()
-            return res.status(200).json(newPost)
+            return res.status(200).json("Create post successfully")
         }catch(err) {
             return res.status(500).json(err)
         }
@@ -24,6 +24,7 @@ const postControllers = {
 
     // GET ALL POST 
     getAllPost: async (req, res) => {
+        console.log("hah")
         const field =  req._parsedUrl.pathname.slice(1)
         const category = req.query.category
         const pageSize = 4
@@ -82,12 +83,12 @@ const postControllers = {
         try {
             const randomPosts1 = await Post.aggregate([
                 {
-                    $sample: {size: 3},
+                    $sample: {size: 4},
                 }
             ])
             const randomPosts2 = await Post.aggregate([
                 {
-                    $sample: {size: 3},
+                    $sample: {size: 4},
                 }
             ])
             return res.status(200).json({

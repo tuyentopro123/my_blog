@@ -2,32 +2,24 @@ import React, { useRef, useState, useEffect } from "react";
 import "./BlogItem.scss";
 import GetTime from "../../utils/GetTime";
 import { useDispatch, useSelector } from "react-redux";
-import { createAxios } from "../../createInstance";
-import { loginSuccess } from "../../redux/authSlice";
-import { getUserPost } from "../../redux/apiRequest";
 import { useNavigate } from "react-router-dom";
 import male from "../../assets/img/male.png";
 import female from "../../assets/img/female.png";
-import { getUsers } from "../../redux/apiRequest";
 
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import Chip from "../utils/Chip/Chip";
 
 const BlogItem = ({ post }) => {
   const content = useRef(null);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.auth.login?.currentUser);
-  let axiosJWT = createAxios(post.user, dispatch, loginSuccess);
 
   // GET USER
   const handleGetUser = async () => {
-    await getUsers(post.user._id, post.user.accessToken, dispatch);
-    navigate(`/infor/${post.user._id}`);
+    navigate(`/infor/${post.user._id}`,{state: post.user_id});
   };
-  const handleGetPost = async () => {
-    await getUserPost(dispatch,post._id);
-    navigate(`/post/${post.slug}`);
+  const handleGetPost = () => {
+    navigate(`/post/${post.slug}`,{state: post._id});
   };
   useEffect(() => {
     let domParser = new DOMParser();

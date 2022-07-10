@@ -10,13 +10,13 @@ router.get('/author',userController.getAllUsers);
 router.get('/top',userController.getTopUsers);
 
 // GET USER
-router.get('/:id',middlewareControllers.verifyToken,userController.getUser);
+router.get('/:id',userController.getUser);
 
 // DELETE USER
 router.delete('/:id',middlewareControllers.verifyTokenAndAdminAuth,userController.deleteUser); 
 
 // GET NOTIFICATION OF USER
-router.get('/noti/:id',middlewareControllers.verifyToken,userController.getNofitication); 
+router.get('/noti/:id',userController.getNofitication); 
 
 // GET NOTIFICATION OF USER
 router.post('/check/:id',middlewareControllers.verifyTokenAndAdminAuth,userController.accessNofitication); 

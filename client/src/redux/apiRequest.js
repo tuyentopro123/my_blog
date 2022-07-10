@@ -12,9 +12,6 @@ import {loginStart,
         updateUserStart,
         updateUserSuccess,
         updateUserFailed,
-        getCurrentUserStart,
-        getCurrentUserSuccess,
-        getCurrentUserFailed,
         getNotificationStart,
         getNotificationSuccess,
         getNotificationFailed
@@ -34,9 +31,6 @@ import {createPostStart,
         updateLikeStart,
         updateLikeSuccess,
         updateLikeFailed,
-        getUserPostStart,
-        getUserPostSuccess,
-        getUserPostFailed,
         getAllPostStart,
         getAllPostSuccess,
         getAllPostFailed,
@@ -70,12 +64,12 @@ const options = {
 }
 // <-- ( AUTH ) ----------------------------->
     // LOGIN
-    export const loginUser = async(user,dispatch,navigate) => {
+    export const loginUser = async(dispatch) => {
       dispatch(loginStart())
       try {
-          const res = await axios.post("v1/auth/login",user)
+          const res = await axios.get("/v1/auth/login")
           dispatch(loginSuccess(res.data));
-          navigate("/");
+          // navigate("/");
         }catch(err) {
           dispatch(loginFailed(err))
       }
@@ -92,55 +86,27 @@ const options = {
       }
     };
     // LOGOUT
-    export const logOut = async (accessToken,dispatch, id, axiosJWT,navigate) => {
+    export const logOut = async (dispatch,navigate) => {
       dispatch(logOutStart());
       try {
-        await axiosJWT.post("v1/auth/logout", id, {
-          headers: { token: `Bearer ${accessToken}` },
-        });
+        await axios.get("http://localhost:3000/v1/auth/logout");
         dispatch(logOutSuccess());
-        navigate("/login");
+        navigate("/");
       } catch (err) {
         dispatch(logOutFailed());
       }
     };  
-
-    //  GET CURRENT USER
-    export const getCurrentUser = async (id, dispatch) => {
-      dispatch(getCurrentUserStart());
-      try {
-        const res = await axios.get("v1/auth/current/" + id);
-        dispatch(getCurrentUserSuccess(res.data));
-      } catch (err) {
-        dispatch(getCurrentUserFailed(err));
-      }
-    };
 
     
 
 
 // <-- ( USER ) ----------------------------->
 
-    // GET USER
-    export const getUsers = async(id,accessToken,dispatch) => {
-        dispatch(getUsersStart());
-      try {
-        const res = await axios.get(`/v1/user/` + id,{
-          headers: { token: `Bearer ${accessToken}` },
-        });
-        dispatch(getUsersSuccess(res.data));
-      } catch (err) {
-        dispatch(getUsersFailed(err));
-      }
-    };
-
     // UPDATE USER
-    export const updateUsers = async (user,accessToken, dispatch,id) => {
+    export const updateUsers = async (user, dispatch,id) => {
       dispatch(updateUserStart());
       try {
-        const res = await axios.put(`/v1/auth/` + id, user,{
-          headers: { token: `Bearer ${accessToken}` },
-        });
+        const res = await axios.put(`/v1/auth/` + id, user);
         dispatch(updateUserSuccess(res.data));
       } catch (err) {
         console.log(err)
@@ -149,12 +115,10 @@ const options = {
     };
 
     // NOTIFICATION
-    export const getNotification = async(accessToken,dispatch, id, axiosJWT) => {
+    export const getNotification = async(dispatch, id)  => {
       dispatch(getNotificationStart());
       try {
-        const res = await axiosJWT.get("v1/user/noti/" + id, {
-          headers: { token: `Bearer ${accessToken}` },
-        });
+        const res = await axios.get("http://localhost:3000/v1/user/noti/" + id);
         dispatch(getNotificationSuccess(res.data));
       } catch (err) {
         dispatch(getNotificationFailed(err));
@@ -163,11 +127,11 @@ const options = {
 
 
     // DELETE USER  
-    //   export const deleteUser = async (accessToken, dispatch, id, axiosJWT) => {
+    //   export const deleteUser = async ( dispatch, id,  => {
     //     dispatch(deleteUserStart());
     //     try {
-    //       const res = await axiosJWT.delete("/v1/user/" + id, {
-    //         headers: { token: `Bearer ${accessToken}` },
+    //       const res = await axios.delete("/v1/user/" + id, {
+    //         headers: { token: `Bearer ${accessToken` },
     //       });
     //       dispatch(deleteUsersSuccess(res.data));
     //     } catch (err) {
@@ -178,12 +142,10 @@ const options = {
 
 // <-- ( POST ) ----------------------------->
     // CREATE POST
-    export const createPost = async (post,id,accessToken, dispatch, axiosJWT,navigate) => {
+    export const createPost = async (post,id, dispatch, navigate) => {
       dispatch(createPostStart());
       try {
-        const res = await axiosJWT.post(`/v1/post/post/` + id, post ,{
-          headers: { token: `Bearer ${accessToken}` },
-        });
+        const res = await axios.post(`/v1/post/post/` + id, post );
         dispatch(createPostSuccess(res.data));
         const navigation = () => {
           navigate(`/`)
@@ -195,13 +157,12 @@ const options = {
     };
 
     // GET ALL POST
-    export const getAllPost = async (dispatch,navigate,currentPagePost,field,category) => {
+    export const getAllPost = async (dispatch,currentPagePost,field,category) => {
       dispatch(getAllPostStart());
       try {
         if(category) {
           const res = await axios.get(`/v1/post/${field}?category=${category}&pagePost=${currentPagePost}`);
           dispatch(getAllPostSuccess(res.data));
-          navigate(`/${field}?category=${category}&pagePost=${currentPagePost}`)
         } else {
           const res = await axios.get(`/v1/post/${field}?pagePost=${currentPagePost}`);
           dispatch(getAllPostSuccess(res.data));
@@ -211,24 +172,11 @@ const options = {
       }
     };
 
-    // GET USER POST
-    export const getUserPost = async (dispatch,id,user) => {
-      dispatch(getUserPostStart());
-      try {
-        const res = await axios.get("/v1/post/" + id,user);
-        dispatch(getUserPostSuccess(res.data));
-      } catch (err) {
-        dispatch(getUserPostFailed());
-      }
-    };
-
     // UPDATE POST
-    export const updatePost = async (like,axiosJWT,id,accessToken,dispatch) => {
+    export const updatePost = async (user,id,dispatch) => {
       dispatch(updateLikeStart());
       try {
-        const res = await axiosJWT.post("/v1/post/update/" + id,like,{
-          headers: { token: `Bearer ${accessToken}` },
-        });
+        const res = await axios.post("/v1/post/update/" + id,user);
         dispatch(updateLikeSuccess(res.data));
       } catch (err) {
         dispatch(updateLikeFailed());
@@ -238,12 +186,10 @@ const options = {
 // <-- ( COMMENT ) ----------------------------->
 
     // CREATE COMMENT
-    export const createComment = async (comment,axiosJWT,accessToken,dispatch) => {
+    export const createComment = async (comment,dispatch) => {
       dispatch(createCommentStart());
       try {
-        const res = await axiosJWT.post("/v1/comment/comment",comment,{
-          headers: { token: `Bearer ${accessToken}` },
-        });
+        const res = await axios.post("/v1/comment/comment",comment);
         dispatch(createCommentSuccess(res.data));
       } catch (err) {
         dispatch(createCommentFailed(err));
@@ -251,12 +197,10 @@ const options = {
     };
 
     // GET COMMENT
-    export const getComment = async (axiosJWT,id,accessToken,dispatch) => {
+    export const getComment = async (id,dispatch) => {
       dispatch(getCommentStart());
       try {
-        const res = await axiosJWT.get("/v1/comment/comment/" + id,{
-          headers: { token: `Bearer ${accessToken}` },
-        });
+        const res = await axios.get("/v1/comment/comment/" + id);
         dispatch(getCommentSuccess(res.data));
         dispatch(resetFirstLoading())
       } catch (err) {
@@ -265,12 +209,10 @@ const options = {
     };
 
     // DELETE COMMENT
-    export const deleteComment = async (axiosJWT,id,comment,accessToken,dispatch) => {
+    export const deleteComment = async (id,comment,dispatch) => {
       dispatch(deleteCommentStart());
       try {
-        const res = await axiosJWT.post("/v1/comment/" + id,comment,{
-          headers: { token: `Bearer ${accessToken}` },
-        });
+        const res = await axios.post("/v1/comment/" + id,comment);
         dispatch(deleteCommentSuccess(res.data));
       } catch (err) {
         dispatch(deleteCommentFailed(err));
@@ -278,12 +220,10 @@ const options = {
     };
 
     // INTER OF COMMENT
-    export const interComment = async (inter,axiosJWT,id,accessToken,dispatch) => {
+    export const interComment = async (inter,id,dispatch) => {
       dispatch(interCommentStart());
       try {
-        const res = await axiosJWT.post("/v1/comment/inter/" + id,inter,{
-          headers: { token: `Bearer ${accessToken}` },
-        });
+        const res = await axios.post("/v1/comment/inter/" + id,inter);
         dispatch(interCommentSuccess(res.data));
       } catch (err) {
         dispatch(interCommentFailed(err));
@@ -291,12 +231,10 @@ const options = {
     };
 
     // GET REPLY OF COMMENT
-    export const getReplyComment = async (axiosJWT,id,accessToken,dispatch) => {
+    export const getReplyComment = async (id,dispatch) => {
       dispatch(getReplyCommentStart());
       try {
-        const res = await axiosJWT.get("/v1/comment/reply/" + id,{
-          headers: { token: `Bearer ${accessToken}` },
-        });
+        const res = await axios.get("/v1/comment/reply/" + id);
         dispatch(getReplyCommentSuccess(res.data));
       } catch (err) {
         dispatch(getReplyCommentFailed(err));

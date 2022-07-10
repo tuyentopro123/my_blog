@@ -3,9 +3,10 @@ import './Login.scss'
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../redux/apiRequest";
-import bgLogin from '../../assets/img/bg-login.gif'
+import bgLogin from '../../assets/img/bg-mobile.webp'
 import Helmet from '../../components/Helmet/Helmet';
-
+import facebook from '../../assets/img/facebook.png'
+import google from '../../assets/img/google.png'
 
 const Login = () => {
 
@@ -64,20 +65,22 @@ const Login = () => {
         },
       ]
 
+      
+  const handleSocial = async() => {
+    window.open('http://localhost:8000/auth/google',"_self")
+  }
+
       useEffect(() => {
         document.getElementById("password").addEventListener("focus", () => {
           document.querySelectorAll(".form__error")[1].style.display = "none"
         })
-        if(user) {
-          navigate("/")
-        }
       },[])
 
   return (
     <Helmet title="Login">
       <div className="login">
-          <div className="login_bg" style={{backgroundImage: `url(${bgLogin})`}}></div>
-          <div className="login_container">
+          <div className="login__bg" style={{backgroundImage: `url(${bgLogin})`}}></div>
+          <div className="login__container">
               <h1>Login</h1>
               <form onSubmit={handleLogin}>
                   {
@@ -87,7 +90,20 @@ const Login = () => {
                   }
                   <button type="submit"> đăng nhập </button>
               </form>
-              <div className="login_footer">
+              <div className="login__society">
+                  <div className="login__society__text">
+                    <span>Hoặc</span>
+                  </div>
+                  <div className="login__society__item" onClick={handleSocial}>
+                    <img src={google} alt="" />
+                    <span>đăng nhập với google</span>
+                  </div>
+                  <div className="login__society__item">
+                    <img src={facebook} alt="" />
+                    <span>đăng nhập với facebook</span>
+                  </div>
+              </div>
+              <div className="login__footer">
                   Bạn chưa có tài khoản?
                   <Link to='/register'>
                       <button>Đăng ký</button>

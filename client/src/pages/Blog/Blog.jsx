@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Blog.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation,useParams } from "react-router-dom";
 import Helmet from "../../components/Helmet/Helmet";
 import Navbar from "../../components/Navbar/Navbar";
 import BlogItem from "../../components/BlogItem/BlogItem";
@@ -9,32 +9,36 @@ import PaginationType from "../../components/Pagination/Pagination";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { getAllPost } from "../../redux/apiRequest";
 
+
 const Blog = ({ fields }) => {
-  const search = useLocation().search;
-  const query = new URLSearchParams(search);
+  const location = useLocation();
+  const pathname = location.pathname;
+  const query = new URLSearchParams(location.search);
+  const currentPage = query.get("pagePost");
   const category = query.get("category");
-  const [currentPage, setCurrentPage] = useState(1);
   const allPost = useSelector((state) => state.post.post.AllPost);
+
   const pageNumber =
     allPost.totalPost % 4 === 0
       ? Math.floor(allPost.totalPost / 4)
       : Math.floor(allPost.totalPost / 4) + 1;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
   useEffect(() => {
     if (category) {
-      getAllPost(dispatch, navigate, currentPage, fields, category);
+      getAllPost(dispatch, currentPage ? currentPage : 1, fields, category);
     } else {
-      getAllPost(dispatch, navigate, currentPage, fields, null);
+      getAllPost(dispatch, currentPage ? currentPage : 1, fields, null);
     }
-  }, []);
+  }, [pathname,category]);
+  
   const HandleSetPage = async (e, value) => {
-    if (category) {
-      await getAllPost(dispatch, navigate, value, fields, category);
+    if(category) {
+      navigate(`/${fields}?category=${category}${value === 1 ? '' : `&pagePost=${value}`}`)
     } else {
-      await getAllPost(dispatch, navigate, value, fields, null);
+      navigate(`/${fields}${value === 1 ? '' : `?pagePost=${value}`}`)
     }
-    setCurrentPage(value);
   };
   return (
     <Helmet title="Blog">
@@ -44,6 +48,7 @@ const Blog = ({ fields }) => {
           <div className="blog__title">
             {category ? <span>category : {category}</span> : <span>{fields}</span>}
           </div>
+          {console.log("allPost: ",allPost)}
           <div className="blog__content">
             <div className="blog__content__list">
               {allPost.post.length > 0 ? (
@@ -56,13 +61,10 @@ const Blog = ({ fields }) => {
             </div>
             {allPost.post.length > 0 && (
               <PaginationType
-                type={fields}
-                page="pagePost"
-                func={HandleSetPage}
+                defaultPage={currentPage ? parseInt(currentPage) : 1}
+                func={HandleSetPage} 
                 numb={pageNumber}
-                variant="outlined"
-                shape="rounded"
-              />
+              />  
             )}
           </div>
         </div>

@@ -9,14 +9,16 @@ const authRoute = require('./routes/auth');
 const userRoute = require('./routes/user');
 const postRoute = require('./routes/post');
 const commentRoute = require('./routes/comment');
-
+const passport = require('passport');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 dotenv.config()
 const app = express();
 const PORT = process.env.port || 8000
 
 // Connect database
-mongoose.connect(process.env.MONGO_URL,
+mongoose.connect(process.env.MONGODB_URL,
     (err) => {
         if(err) console.log(err) 
         else console.log("database is active");
@@ -28,11 +30,25 @@ app.use(express.json({ limit: '50mb' }));
 
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-app.use(cors())
-
 app.use(cookieParser())
 
 app.use(express.json());
+
+require("./utils/passport");
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials:true,
+  optionSuccessStatus:200
+}
+)) 
+app.use(session({
+  secret: 'somethingsecret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 2*24*60*60*1000},
+  store: MongoStore.create({ mongoUrl: process.env.MONGODB_URL })
+}));
+app.use(passport.authenticate("session"));
 
 // ROUTES
 app.use("/v1/auth",authRoute);
@@ -42,6 +58,19 @@ app.use("/v1/user",userRoute);
 app.use("/v1/post",postRoute);
 
 app.use("/v1/comment",commentRoute);
+
+// REQUEST TO GOOGLE
+app.get('/auth/google',passport.authenticate('google', {
+  scope: ['profile', 'email']
+}));
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    successRedirect: "http://localhost:3000/"
+  })
+);
+
 
 
 app.listen(PORT, () => {

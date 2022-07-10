@@ -7,8 +7,7 @@
   height: $header;
   width: 100%;
   z-index: 1000;
-  background-color: #fff;
-  border-bottom: solid 1px #ccc;
+  background-color: $bg-color;
   & > * {
     height: 100%;
     flex: 1 1;
@@ -49,6 +48,7 @@
       input {
         width: 85%;
         line-height: 2;
+        background-color: $bg-color;
         font-size: 1.4rem;
         border-radius: 4rem;
       }
@@ -189,6 +189,14 @@
         height: 1px;
         background-color: rgb(185, 185, 185);
         bottom: 0;
+      }
+    }
+
+    &__login {
+      button {
+        text-transform: capitalize!important;
+        font-size: 1.5rem;
+        font-weight: 500;
       }
     }
   }

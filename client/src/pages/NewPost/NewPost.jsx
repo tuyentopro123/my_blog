@@ -1,4 +1,4 @@
-import React,{useState,useMemo,useRef} from 'react'
+import React,{useState,useMemo,useRef,useEffect} from 'react'
 import './NewPost.scss'
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
@@ -14,29 +14,20 @@ import 'react-quill/dist/quill.snow.css';
 import CreateSlug from "../../components/utils/CreateSlug/CreateSlug"
 import axios from "axios";
 
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 
+import toast, { Toaster } from 'react-hot-toast';
+const notifySuccess = () => toast.success('Đăng bài thành công');
+const notifyError = (e) => toast.error(e);
+
 var quillObj = ReactQuill;
 const NewPost = () => {
-    const [open, setOpen] = useState(false);
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-    
-        setOpen(false)
-    };
-
-
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const currentUser = useSelector((state)=> state.auth.login?.currentUser)
-    const errTitle = useSelector((state)=> state.post.msg.title)
-    const errContent = useSelector((state)=> state.post.msg.content)
-    const err = useSelector((state)=> state.post.post.error)
+    const message = useSelector((state)=> state.post.msg)
+
     
 
     // Quill
@@ -57,10 +48,7 @@ const NewPost = () => {
                 reader.onloadend = () => {
                     const uploadImagePost = async() => {
                         try {
-                            const res = await axios.post(`/v1/post/upload/post/${currentUser._id}`, {data: reader.result},{
-                                headers: { token: `Bearer ${currentUser.accessToken}` }
-                            })
-                            console.log(res)
+                            const res = await axios.post(`/v1/post/upload/post/${currentUser._id}`, {data: reader.result})
                             quillObj.getEditor().insertEmbed(range.index, 'image', res.data.url);  
                         } catch(err) {
                             console.error(err)
@@ -113,7 +101,6 @@ const NewPost = () => {
 
       
     const user = useSelector((state)=> state.auth.login?.currentUser)
-    let axiosJWT = createAxios(user, dispatch, loginSuccess);
     const [post, setPost] = useState({
         title: "",
         imgPost: "",
@@ -133,10 +120,18 @@ const NewPost = () => {
         setPost({...post, [e.target.name]: value})
     }
 
-    const handleCreatePost = async(newPost) => {
-        await createPost(newPost,user._id,user.accessToken,dispatch,axiosJWT,navigate)
-        setOpen(true)
-    }
+    const handleCreatePost = async (post,id) => {
+        try {
+          await axios.post(`/v1/post/post/` + id, post );
+          notifySuccess()
+          const navigation = () => {
+            navigate(`/`)
+          }
+          setTimeout(navigation,1600)
+        } catch (err) {
+          notifyError("vui lòng nhập đủ thông tin")
+        }
+      };
     
     const handleClick =(e) => {
         e.preventDefault()
@@ -149,7 +144,7 @@ const NewPost = () => {
             fields: post.fields,
             user:user._id
         }
-        handleCreatePost(newPost)
+        handleCreatePost(newPost,user._id)
     }
 
     // Add category
@@ -180,9 +175,17 @@ const NewPost = () => {
     }
 
 
-
   return (
     <Helmet title="New Post">
+         <Toaster
+                toastOptions={{
+                    className: '',
+                    style: {
+                        padding: '16px',
+                        fontSize:'14px',
+                    },
+                }}
+            />
         <main className="new">
             <Navbar/>
             <div className="new__container">
@@ -257,23 +260,6 @@ const NewPost = () => {
                 </div>
             </div>
         </main>
-        <Snackbar
-            open={open}
-            autoHideDuration={1500}
-            anchorOrigin={{ 
-                vertical:"top",
-                horizontal :"center"
-            }}
-            onClose={handleClose} 
-            >
-            <Alert 
-                sx={{ width: '100%',fontSize: 15}} 
-                variant="filled" 
-                severity={err ? "error" : "success"}
-                >
-                {err ? (errTitle || errContent) : "đăng bài thành công"}
-            </Alert>
-        </Snackbar>
       </Helmet>
   )
 }

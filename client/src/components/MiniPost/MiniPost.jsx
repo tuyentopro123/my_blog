@@ -18,13 +18,11 @@ import { red } from '@mui/material/colors';
 const MiniPost = ({post}) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  let axiosJWT = createAxios(post.user, dispatch, loginSuccess);
   const currentUser = useSelector((state)=> state.auth.login?.currentUser)
 
 // GET POST
   const handleGetPost = async() => {
-    await getUserPost(dispatch,post._id)
-    navigate(`/post/${post.slug}`)
+    navigate(`/post/${post.slug}`,{state: post._id})
   }
   return (
     <div className="miniPost">

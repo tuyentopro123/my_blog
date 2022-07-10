@@ -1,14 +1,20 @@
 import { Avatar } from '@mui/material';
 import React from 'react'
 import "./PostItem.scss";
+import {useNavigate} from "react-router-dom"
 import getTimeString from '../../utils/GetTimeString';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 
 const PostItem = ({post}) => {
+    const navigate = useNavigate()
+    // GET POST
+  const handleGetPost = () => {
+    navigate(`/post/${post.slug}`,{state: post._id})
+  }
   return (
-    <div className="postItem">
+    <div className="postItem" onClick={handleGetPost}>
         <div className="postItem__container" style={{backgroundImage: `url(${post.imgPost})`}}>
             <div className="postItem__content">
                 <div className={`postItem__content__label ${post.fields}`}>

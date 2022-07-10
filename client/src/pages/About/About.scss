@@ -1,0 +1,239 @@
+@use '../../sass/index.scss' as *;
+
+.about {
+    &__banner {
+        height:70vh;
+        width: 100%;
+        background-image: url("https://scr.vn/wp-content/uploads/2020/08/Phong-c%E1%BA%A3nh-ho%C3%A0ng-h%C3%B4n.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        margin-bottom: 5rem;
+    }
+
+    &__container {
+        max-width:120rem;
+        margin: auto;
+        @include flex(flex-start,center);
+        & > * {
+            margin:0 .8rem ;
+        }
+        p,span {
+            font-size: 1.5rem;
+            line-height: 1.3;
+        }
+
+
+    }
+
+    // INFORMATION
+    &__info {
+        flex: 2.5 1;
+        padding: 2rem;
+        background-color: $bg-color;
+        border-radius: .3rem;
+        h1 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 4rem;
+        }
+
+        a {
+            font-weight: bold;
+            color:$main-color;
+        }
+
+        &__content {
+            & > * {
+                margin: 2rem 0;
+            }
+
+        }
+    }
+
+
+    // SIDE BAR
+    &__sidebar {
+        position: relative;
+        flex: 1 1;
+        border-radius: .3rem;
+        overflow:hidden;
+        & > * {
+            background-color: $bg-color;
+        }
+
+        &__title {
+            text-transform:uppercase;
+            letter-spacing:.2rem;
+            overflow: hidden;
+            text-align: center;
+            margin-bottom: 2rem;
+            span {
+                position: relative;
+                font-size: 1.4rem;
+                font-weight: bold;
+                &::before {
+                    content: " ";
+                    position: absolute;
+                    right: 100%;
+                    margin-right: 15px;
+                    border-bottom: 2px solid rgb(209, 161, 98);
+                    transform:translateY(-80%);
+                    top: 50%;
+                    height:2px;
+                    width: 100%;
+                }
+
+                &::after {
+                    content: " ";
+                    position: absolute;
+                    left: 100%;
+                    margin-left: 15px;
+                    border-bottom: 2px solid rgb(209, 161, 98);
+                    transform:translateY(-80%);
+                    top: 50%;
+                    height:2px;
+                    width: 100%;
+                }
+            }
+
+            
+        }
+    }
+    
+    // SIDE BAR PERSONAL INFORMATION
+    &__personal {
+        margin-bottom: 2rem;
+        h2,span,p {
+            text-align: center;
+            width: 100%;
+        }
+        &__banner {
+            position: absolute;
+            height:14rem;
+            width: 100%;
+            background-image: url("https://scr.vn/wp-content/uploads/2020/08/Phong-c%E1%BA%A3nh-ho%C3%A0ng-h%C3%B4n.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        &__box {
+            position: relative;
+            padding: 7rem 2rem 2rem 2rem;
+        }
+
+        &__avatar {
+            @include flex(center,center);
+            margin-bottom: 2rem;
+        }
+
+        &__content {
+            h2 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+            &__address {
+                @include flex(center,center);
+                color: #fbc02d;
+                font-size: 1.2rem;
+                font-weight: bold;
+                text-align: center;
+                margin-bottom: 2rem;
+                & > * {
+                    margin:0 .4rem;
+                }
+            }
+
+            &__social {
+                @include flex(center,center);
+                margin: 3rem 0;
+            }
+
+            &__item {
+                margin: 0 .3rem;
+            }
+        }
+    }
+
+    // SIDE BAR MORE
+
+    &__more {
+        padding: 2rem;
+        margin-bottom: 2rem;
+        & > * {
+            margin-bottom: 5rem;
+        }
+        &__category {
+            li {
+                font-size: 1.4rem;
+                color: $dark-txt-color;
+                letter-spacing:.2rem;
+                line-height: 2;
+                border-bottom: 1px solid $border-color;
+                margin-bottom: 1rem;
+                cursor: pointer;
+                &:hover {
+                    color: $hover-txt-color;
+                }
+            }
+        }
+
+        &__popular {
+            margin-top: 2rem;
+            padding: 2rem 0 1rem 0;
+            border-top: 1px solid #000;
+            h2 {
+                margin-bottom: 2rem;
+                font-size: 2rem;
+            }
+            &__item {
+                @include flex(flex-start,center);
+                margin-bottom: 2rem;
+                cursor: pointer;
+            }
+            &__image {
+                margin-right: 1rem;
+                overflow: hidden;
+                width: 12rem;
+                min-width: 12rem;
+                height: 7rem;
+                object-fit: cover;
+                border-radius:.5rem;
+                img {
+                    width: 12rem;
+                    min-width: 12rem;
+                    height: 7rem;
+                    object-fit: cover;
+               }
+            }
+    
+            &__body {
+                &__header {
+                    margin-bottom: 1rem;
+                    h3 {
+                        width:15rem;
+                        line-height: 1.5;
+                        min-height: 3rem;
+                        overflow: hidden;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 2;
+                        &:hover {
+                            color:$hover-txt-color;
+                        }
+                    }
+                }
+                span {
+                    font-size: 1.3rem;
+                }
+            }
+        }
+    }
+
+    // SIDE BAR EMAIL
+
+    &__mail {
+        padding: 2rem;
+    }
+}

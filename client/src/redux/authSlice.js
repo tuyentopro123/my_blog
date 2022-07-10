@@ -8,16 +8,14 @@ const authSlice = createSlice({
             notification:[],
             redirectNoti:null,
             showNotification:false,
-            isFetching: false,
             error: false,
         },
+        isFetching: false,
         register: {
-            isFetching: false,
             error: false,
             success: false
         },
         logout: {
-            isFetching: false,
             error: false,
         },
         msg:"",
@@ -25,61 +23,61 @@ const authSlice = createSlice({
     reducers: {
         // LOGIN
         loginStart: (state) => {
-            state.login.isFetching = true;
+            state.isFetching = true;
         },
         loginSuccess: (state,action) => {
-            state.login.isFetching = false;
-            state.login.currentUser = action.payload;
+            state.isFetching = false;
+            state.login.currentUser = action.payload.user;
             state.login.notification = [];
             state.login.error = false;
             state.msg = action.payload;
         },
         loginFailed: (state,action) => {
-            state.login.isFetching = false;
+            state.isFetching = false;
             state.login.error = true;
             state.msg = action.payload;
         },
 
         // REGISTER
         registerStart: (state) => {
-            state.register.isFetching = true;
+            state.isFetching = true;
         },
         registerSuccess: (state) => {
-            state.register.isFetching = false;
+            state.isFetching = false;
             state.register.success = true;
             state.register.error = false;
         },
         registerFailed: (state) => {
-            state.register.isFetching = false;
+            state.isFetching = false;
             state.register.error = true;
             state.register.success = false;
         },
 
         // UPDATE USER
         updateUserStart: (state) => {
-            state.login.isFetching = true;
+            state.isFetching = true;
         },
         updateUserSuccess: (state,action) => {
-            state.login.isFetching = false;
+            state.isFetching = false;
             state.login.currentUser = action.payload;
             state.login.error = false;
         },
         updateUserFailed: (state) => {
-            state.login.isFetching = false;
+            state.isFetching = false;
             state.login.error = true;
         },
 
         // NOTIFICATION
         getNotificationStart: (state) => {
-            state.login.isFetching = true;
+            state.isFetching = true;
         },
         getNotificationSuccess: (state,action) => {
-            state.login.isFetching = false;
+            state.isFetching = false;
             state.login.currentUser.notification_count = 0;
             state.login.notification = action.payload;
         },
         getNotificationFailed: (state) => {
-            state.login.isFetching = false;
+            state.isFetching = false;
             state.login.error = true;
         },
 
@@ -95,27 +93,27 @@ const authSlice = createSlice({
 
         // GET CURRENT USER
         getCurrentUserStart: (state) => {
-            state.login.isFetching = true;
+            state.isFetching = true;
         },
         getCurrentUserSuccess: (state,action) => {
-            state.login.isFetching = false;
+            state.isFetching = false;
             state.login.currentUser = action.payload;
         },
         getCurrentUserFailed: (state) => {
-            state.login.isFetching = false;
+            state.isFetching = false;
             state.login.error = true;
         },
         
         // LOGOUT
         logOutStart: (state) => {
-            state.logout.isFetching = true;
+            state.isFetching = true;
         },
         logOutSuccess: (state) => {
-            state.logout.isFetching = false;
+            state.isFetching = false;
             state.login.currentUser = null;
         },
         logOutFailed: (state) => {
-            state.logout.isFetching = false;
+            state.isFetching = false;
             state.logout.error = true;
         },
     }

@@ -1,56 +1,87 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./DetailPost.scss";
 
+// UI material
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import { red } from "@mui/material/colors";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import Stack from "@mui/material/Stack";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 
 import Helmet from "../../components/Helmet/Helmet";
 import GetTime from "../../utils/GetTime";
+import axios from "axios";
 
 import { useSelector, useDispatch } from "react-redux";
-import { createAxios } from "../../createInstance";
-import { useLocation } from "react-router-dom";
+import { useLocation,useParams,Link } from "react-router-dom";
 import { updatePost, createComment, getComment, getReplyComment } from "../../redux/apiRequest";
-import { loginSuccess } from "../../redux/authSlice";
 import { redirectNotificationFinish } from "../../redux/authSlice";
+import {startFirstLoading,FinishLoading} from "../../redux/postSlice"
+import LazyLoad from "react-lazyload";
 
 import Comment from "../../components/Comment/Comment";
 import Chip from "../../components/utils/Chip/Chip";
 import RelatedPost from "../../components/RelatedPost/RelatedPost";
 
 const DetailPost = ({ socket }) => {
+  const location = useLocation()
+  const {slug} = useParams()
+  
   const dispatch = useDispatch();
-
+  
   const currentUser = useSelector((state) => state.auth.login?.currentUser);
   const showComment = useSelector(
     (state) => state.auth.login?.showNotification
-  );
-  const redirectNoti = useSelector((state) => state.auth.login?.redirectNoti);
-  const { firstLoading, relatedPost } = useSelector((state) => state.post.post);
-  const post = useSelector((state) => state.post.post.userPost);
+    );
+    const redirectNoti = useSelector((state) => state.auth.login?.redirectNoti);
+    const { firstLoading} = useSelector((state) => state.post.post);
+    const [post,setPost] = useState()
+
+    const [relatedPost,setRelatedPost] = useState({})
+
+    const [randomPost,setRandomPost] = useState()
+
   const { commentOfPost } = useSelector(
     (state) => state.comment.commentpost
   );
 
   const [comment, setComment] = useState([]);
-  let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
   const body = useRef(null);
   const active = useRef(null);
   const negative = useRef(null);
+  const number = useRef(null);
 
   const [newComment, setNewComment] = useState({
     user_name: currentUser.username,
     user_img: currentUser.image,
     user: currentUser._id,
-    user_receiver: post.user._id,
-    post: post._id,
+    user_receiver: "",
+    post: "",
     comment: "",
     inter_user: [],
   });
+// GET POST
+  const getUserPost = async (id) => {
+    dispatch(startFirstLoading())
+    try {
+      const res = await axios.get("/v1/post/" + id);
+      dispatch(FinishLoading())
+      setPost(res.data.userPost)
+      setRelatedPost(res.data.relatedPost)
+    } catch (err) {
+      console.log(err)
+    }
+  };
+
+ // RANDOM POST
+ const getRandomPost = async () => {
+  try {
+    const res = await axios.get("/v1/post/path/random");
+    setRandomPost(res.data.randomPosts1);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   // Handle like
   const handleLike = async () => {
@@ -58,11 +89,10 @@ const DetailPost = ({ socket }) => {
     negative.current.classList.toggle("active");
     await updatePost(
       { user: currentUser._id },
-      axiosJWT,
       post._id,
-      currentUser?.accessToken,
       dispatch
     );
+    getUserPost(location.state);
     if (post.like_user.filter((e) => e._id === currentUser._id).length === 0) {
       socket.emit("sendNotification", {
         sender_img: currentUser.image,
@@ -79,23 +109,20 @@ const DetailPost = ({ socket }) => {
 
   // Get value comment from textarea
   const handleChange = (e) => {
-    if (e.target.innerText !== "") {
-      e.target.classList.add("active");
-    } else {
-      e.target.classList.remove("active");
-    }
     const value = e.target.innerText;
-    setNewComment({ ...newComment, comment: value });
+    setNewComment({ ...newComment,
+      user_receiver: post.user._id,
+      post: post._id, 
+      comment: value 
+    });
   };
 
   // Submit comment
   const handleSubmit = async (e) => {
     e.preventDefault();
-    document.getElementById("txt").value = "";
+    document.getElementById("txt").innerText = "";
     await createComment(
       newComment,
-      axiosJWT,
-      currentUser?.accessToken,
       dispatch
     );
     socket.emit("sendNotification", {
@@ -114,29 +141,19 @@ const DetailPost = ({ socket }) => {
   // Focus input
   const handleFocusComment = async () => {
     if (firstLoading) {
-      await getComment(axiosJWT, post._id, currentUser.accessToken, dispatch);
+      await getComment( post._id, dispatch);
     }
     document.getElementById("comment").classList.add("active");
     document.getElementById("overlay").classList.add("active");
   };
 
-  const handleOffComment = async () => {
+  const handleOffComment =() => {
     document.getElementById("comment").classList.remove("active");
     document.getElementById("overlay").classList.remove("active");
+    document.getElementById("txt").innerText = "";
   };
 
-  useEffect(() => {
-    let domParser = new DOMParser();
-    let doc = domParser.parseFromString(post.content, "text/html");
-    doc.body.childNodes.forEach((node) => {
-      body.current.appendChild(node.cloneNode(true));
-    });
-    if (post.like_user.filter((e) => e._id === currentUser._id).length > 0) {
-      active.current.classList.add("active");
-    } else {
-      negative.current.classList.add("active");
-    }
-  }, []);
+
 
   const handleScrollElement = async(id,reply) => {
     document.getElementById(id)?.scrollIntoView({
@@ -145,13 +162,42 @@ const DetailPost = ({ socket }) => {
       inline: "nearest",
     });
     if(reply) {
-      await getReplyComment(axiosJWT, redirectNoti?.reaction, currentUser.accessToken, dispatch);
+      await getReplyComment(redirectNoti?.reaction, dispatch);
     }
     setTimeout(() => {
       document.getElementById(reply ? reply : id)?.classList.add("active");
     }, 500);
   };
 
+
+
+  useEffect(() => {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    })
+      getUserPost(location.state)
+      getRandomPost()
+  }, [slug]);
+
+  useEffect(() => {
+    if(post) {
+      body.current.innerHTML = "";
+      let domParser = new DOMParser();
+      let doc = domParser.parseFromString(post?.content, "text/html");
+      doc.body.childNodes.forEach((node) => {
+        body.current?.appendChild(node.cloneNode(true));
+      });
+      if (post?.like_user.filter((e) => e._id === currentUser._id).length > 0) {
+        active.current.classList.add("active");
+      } else {
+        negative.current.classList.add("active");
+      }
+    }
+  }, [post]);
+
+ 
   useEffect(() => {
     if (commentOfPost) {
       setComment(commentOfPost);
@@ -176,6 +222,8 @@ const DetailPost = ({ socket }) => {
     }
   }, [firstLoading]);
   return (
+    <>
+    {post &&
     <Helmet title="Blog">
       <section className="detailpost">
         <div className="detailpost__container">
@@ -205,7 +253,7 @@ const DetailPost = ({ socket }) => {
           <div ref={body} className="detailpost__body"></div>
 
           <div className="detailpost__footer">
-            <div className="detailpost__footer__inter">
+            {/* <div className="detailpost__footer__inter">
               <div onClick={handleLike}>
                 <FavoriteOutlinedIcon
                   className="detailpost__footer__inter__like"
@@ -225,11 +273,10 @@ const DetailPost = ({ socket }) => {
                 <ChatBubbleOutlineIcon fontSize="large" sx={{ fontSize: 30 }} />
                 <span>{post.commentCount}</span>
               </div>
-            </div>
+            </div> */}
 
             <div className="detailpost__footer__tags">
-              <h3>Tags :</h3>
-              <Stack direction="row" spacing={1}>
+                <span>Tags :</span>
                 {post.category.map((category, index) => (
                   <Chip
                     key={index}
@@ -238,7 +285,6 @@ const DetailPost = ({ socket }) => {
                     field={post.fields}
                   />
                 ))}
-              </Stack>
             </div>
           </div>
 
@@ -256,59 +302,119 @@ const DetailPost = ({ socket }) => {
               </div>
             </div>
           </div>
-
-          <div
-            id="overlay"
-            className="detailpost__idea__overlay overlay"
-            onClick={handleOffComment}
-          ></div>
-          <div id="comment" className="detailpost__idea">
-            <div className="detailpost__idea__container">
-              <div className="detailpost__idea__commentCount">
-                <h1>{post.commentCount} bình luận</h1>
+        </div>
+        <div className="detailpost__sidebar">
+          <div className="detailpost__icon">
+          <div className="detailpost__footer__inter">
+              <div onClick={handleLike}>
+                <FavoriteOutlinedIcon
+                  className="detailpost__footer__inter__like"
+                  ref={active}
+                  sx={{ color: red[500], fontSize: 30 }}
+                  fontSize="large"
+                />
+                <FavoriteBorderOutlinedIcon
+                  className="detailpost__footer__inter__like"
+                  ref={negative}
+                  fontSize="large"
+                  sx={{ fontSize: 30 }}
+                />
+                <span ref={number}>{post.likes}</span>
               </div>
-              <div className="detailpost__idea__comment">
-                <div className="detailpost__idea__comment__txt">
-                  <img src={currentUser.image} alt="" />
-                  <div
-                    id="txt"
-                    className="txt"
-                    type="text"
-                    contentEditable="true"
-                    onKeyUp={(e) => handleChange(e)}
-                    placeholder="Để lại bình luận của bạn"
-                  ></div>
-                </div>
-                <div className="detailpost__idea__comment__btn">
-                  <button onClick={handleSubmit}>Bình luận</button>
-                </div>
-              </div>
-              <div className="detailpost__idea__listComment">
-                <div
-                  className={`detailpost__idea__listComment__content ${
-                    comment.length === 0 ? "active" : ""
-                  }`}
-                >
-                  {comment.length === 0 ? (
-                    <span>Chưa có bình luận</span>
-                  ) : (
-                    comment.map((comment, key) => (
-                      <div key={key}>
-                        <Comment
-                          id={comment._id}
-                          comment={comment}
-                          socket={socket}
-                        />
-                      </div>
-                    ))
-                  )}
-                </div>
+              <div onClick={handleFocusComment}>
+                <ChatBubbleOutlineIcon fontSize="large" sx={{ fontSize: 30 }} />
+                <span>{post.commentCount}</span>
               </div>
             </div>
           </div>
+          <div className="detailpost__popular">
+            <h2>Popular post</h2>
+            {
+              randomPost && 
+              <div className="detailpost__popular__list">
+                {
+                  randomPost.map((item,index) => (
+                    <Link to={`/post/${item.slug}`} 
+                          state={item._id} 
+                          key={index} 
+                          className="detailpost__popular__item">
+                      <span className="detailpost__popular__image">
+                        <LazyLoad height={250} width={150} once>
+                                <img src={item.imgPost} alt="" />
+                        </LazyLoad>
+                      </span>
+                      <div className="detailpost__popular__body">
+                        <div className="detailpost__popular__body__header">
+                            <h3>{item.title}</h3>
+                        </div>
+                        <span>{GetTime(item.createdAt)}</span>
+                      </div>
+                    </Link>
+                  ))
+                }
+              </div>
+            }
+          </div>
         </div>
+            
       </section>
+
+      {/* OVERLAY COMMENT */}
+      <div className="detailpost__comment">
+          <div
+              id="overlay"
+              className="detailpost__idea__overlay"
+              onClick={handleOffComment}
+            ></div>
+          <div id="comment" className="detailpost__idea">
+              <div className="detailpost__idea__container">
+                <div className="detailpost__idea__commentCount">
+                  <h1>{post.commentCount} bình luận</h1>
+                </div>
+                <div className="detailpost__idea__comment">
+                  <div className="detailpost__idea__comment__txt">
+                    <img src={currentUser.image} alt="" />
+                    <div
+                      id="txt"
+                      className="txt"
+                      type="text"
+                      contentEditable="true"
+                      onKeyUp={(e) => handleChange(e)}
+                      placeholder="Để lại bình luận của bạn"
+                    ></div>
+                  </div>
+                  <div className="detailpost__idea__comment__btn">
+                    <button onClick={handleSubmit}>Bình luận</button>
+                  </div>
+                </div>
+                <div className="detailpost__idea__listComment">
+                  <div
+                    className={`detailpost__idea__listComment__content ${
+                      comment.length === 0 ? "active" : ""
+                    }`}
+                  >
+                    {comment.length === 0 ? (
+                      <span>Chưa có bình luận</span>
+                    ) : (
+                      comment.map((comment, key) => (
+                        <div key={key}>
+                          <Comment
+                            id={comment._id}
+                            comment={comment}
+                            socket={socket}
+                          />
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+
     </Helmet>
+    }
+    </>
   );
 };
 
