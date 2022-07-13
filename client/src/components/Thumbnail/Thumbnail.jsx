@@ -20,6 +20,7 @@ const Thumbnail = ({post,infor}) => {
     navigate(`/post/${post.slug}`,{state: post._id})
   }
 
+
   return (
     <div className="thumbnail">
         <div className={`thumbnail__container ${infor ? infor : ''}`} >
@@ -32,23 +33,18 @@ const Thumbnail = ({post,infor}) => {
                 </div>
             </div>
             <div className="thumbnail__desc">
+              <span>{post.fields}</span>
               <div onClick={handleGetPost}>
                 <h2>{post.title}</h2>
               </div>
               <div className="thumbnail__inter">
                   <div onClick={handleGetUser} className="thumbnail__inter__infor">
-                      <img src={post.user.image ? post.user.image : post.user.sex === 'male' ? male : female } alt="" />
-                      <span>{post.user.username}</span>
-                  </div>
-                  <div className="thumbnail__inter__time">
-                    <span style={{userSelect:"none"}}>{GetTime(post.createdAt)}</span>
+                      <h4>by <span>{post.user.username}</span> since {GetTime(post.createdAt)}</h4>
                   </div>
               </div>
             </div>
 
-            <div className={`thumbnail__fields ${post.fields}`}>
-              <span>{post.fields}</span>
-            </div>
+       
         </div>
     </div>
   )

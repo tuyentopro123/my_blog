@@ -8,6 +8,7 @@ import BlogItem from "../../components/BlogItem/BlogItem";
 import PaginationType from "../../components/Pagination/Pagination";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { getAllPost } from "../../redux/apiRequest";
+import Grid from "../../components/utils/Grid/Grid";
 
 
 const Blog = ({ fields }) => {
@@ -26,14 +27,20 @@ const Blog = ({ fields }) => {
   const navigate = useNavigate();
   
   useEffect(() => {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    })
     if (category) {
       getAllPost(dispatch, currentPage ? currentPage : 1, fields, category);
     } else {
       getAllPost(dispatch, currentPage ? currentPage : 1, fields, null);
     }
-  }, [pathname,category]);
+  }, [pathname,category,currentPage]);
   
   const HandleSetPage = async (e, value) => {
+    console.log(value);
     if(category) {
       navigate(`/${fields}?category=${category}${value === 1 ? '' : `&pagePost=${value}`}`)
     } else {
@@ -48,16 +55,17 @@ const Blog = ({ fields }) => {
           <div className="blog__title">
             {category ? <span>category : {category}</span> : <span>{fields}</span>}
           </div>
-          {console.log("allPost: ",allPost)}
           <div className="blog__content">
             <div className="blog__content__list">
-              {allPost.post.length > 0 ? (
-                allPost.post.map((post, index) => (
-                  <BlogItem key={index} post={post} field={fields} />
-                ))
-              ) : (
-                <span>Chưa có bài viết nào</span>
-              )}
+              <Grid col={2} md={2} sm={1} gapCol={15} gapRow={10}>
+                {allPost.post.length > 0 ? (
+                  allPost.post.map((post, index) => (
+                    <BlogItem key={index} post={post} field={fields} />
+                  ))
+                ) : (
+                  <span>{`Chưa có bài viết nào về "${category}"`}</span>
+                )}
+              </Grid>
             </div>
             {allPost.post.length > 0 && (
               <PaginationType

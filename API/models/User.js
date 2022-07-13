@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+
 const Post = require("./Post");
 
 const userSchema = new mongoose.Schema(
@@ -50,12 +51,6 @@ const userSchema = new mongoose.Schema(
                 ref: "Post" 
             }
         ],
-        posts_save: [
-            { 
-                type: Schema.Types.ObjectId, 
-                ref: "Post" 
-            }
-        ],
         notification_count: {
             type:Number,
             default: 0,
@@ -66,5 +61,6 @@ const userSchema = new mongoose.Schema(
         }
     },{timestamps: true,}
 );
+
 
 module.exports = mongoose.model("User",userSchema);

@@ -1,13 +1,16 @@
 @use "../../sass/index.scss" as *;
 
 .header {
-  position: fixed;
+  position: relative;
   @include flex(center, space-between);
   padding: 0 2rem;
   height: $header;
   width: 100%;
   z-index: 1000;
   background-color: $bg-color;
+  @include tablet {
+    position: fixed;
+  }
   & > * {
     height: 100%;
     flex: 1 1;
@@ -22,9 +25,9 @@
   }
   &__logo {
     @include flex(center, flex-start);
-    img {
-      height: 5rem;
-      width: 16rem;
+    h2 {
+      font-size: 3rem;
+      color: $hover-txt-color;
     }
   }
 
@@ -39,17 +42,22 @@
       & > * {
         padding: 0.5rem;
       }
+      
+      &.active {
+        border: 1px solid $hover-txt-color;
+      }
       border-radius: 4rem;
       @include flex(center, center);
-      width: 80%;
+      border: 1px solid $dark-txt-color;
+      width: 60%;
       height: 60%;
-      border: solid rgb(196, 196, 196) 2px;
       transition: border ease 0.2s;
       input {
         width: 85%;
         line-height: 2;
         background-color: $bg-color;
         font-size: 1.4rem;
+        color:$dark-txt-color;
         border-radius: 4rem;
       }
     }
@@ -59,17 +67,26 @@
       display: none;
       background-color: #fff;
       box-shadow: 0 -4px 32px rgb(0 0 0 / 20%);
-      border-radius: 1rem;
-      width: 80%;
+      border-radius: .5rem;
+      width: 60%;
+      background-color: $bg-second-color;
       top: 100%;
       overflow: hidden;
       margin: 0px;
+      h2 {
+        color: $dark-txt-color;
+      }
       &.active {
         animation: Fade ease-in 0.2s;
         display: block;
       }
+      &__title {
+        padding: 2rem 0rem 1rem 0rem;
+        margin:0 2rem;
+        border-bottom: 1px solid rgb(124, 124, 124);
+      }
       ul {
-        padding: 2rem;
+        padding: 0rem 2rem 2rem 2rem;
         max-height: 77vh;
         overflow-y: auto;
         li {
@@ -82,19 +99,29 @@
       &__item {
         @include flex(flex-start, center);
         cursor: pointer;
+        & > * {
+          margin: 0 .7rem;
+        }
         h2 {
           min-width: 34rem;
           max-width: 34rem;
           font-size: 1.3rem;
           line-height: 1.4;
+            // min-height: 5rem;
+            // font-size: 2.2rem;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
         }
         &__img {
           border-radius: 1rem;
+          border-radius: 50%;
           background-repeat: no-repeat;
           background-size: cover;
           background-position: center;
-          width: 20rem;
-          height: 10rem;
+          width: 8rem;
+          height: 8rem;
         }
       }
     }
@@ -118,6 +145,23 @@
   }
 
   &__account {
+    &__avatar {
+      @include tablet {
+        display: none;
+      }
+      &.tablet {
+        display: none;
+        @include tablet {
+          display: block;
+        }
+      }
+    }
+
+    &__body {
+      h3,a,div {
+        color:$txt-color;
+      }
+    }
     &__edit {
       position: fixed;
       display: none;
@@ -152,7 +196,7 @@
           text-align: center;
           margin: 2rem 0;
           font-size: 1.5rem;
-          color: $txt-color;
+          color: $dark-txt-color;
           text-transform: uppercase;
           &:hover {
             color: $main-color;

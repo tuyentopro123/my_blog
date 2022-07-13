@@ -1,3 +1,4 @@
+@use '../../sass/index.scss' as *;
 
 .pagination {
     padding: 3rem;
@@ -12,4 +13,13 @@
             }
         }
     }
+}
+
+.MuiButtonBase-root {
+    color: $dark-txt-color!important;
+    border-color: $hover-txt-color!important;
+}
+
+.MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
+    background-color:$hover-txt-color!important;
 }

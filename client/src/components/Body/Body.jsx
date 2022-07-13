@@ -126,7 +126,7 @@ const Body = () => {
   ]
 
   const swiperOptionsV1 = {
-    modules: [Navigation, Autoplay],
+    modules: [Navigation,Autoplay],
     navigation: { clickable: true },
     slidesPerView: 1,
     grabCursor: true,
@@ -140,6 +140,11 @@ const Body = () => {
     loop: true,
     loopAdditionalSlides: 2,
     breakpoints: {
+      320: {
+        slidesPerView: 1,
+        spaceBetween: 10,
+        width: 400,
+      },
       768: {
         slidesPerView: 1,
         spaceBetween: 10,
@@ -153,19 +158,23 @@ const Body = () => {
 
   const swiperOptionsV2 = {
     modules: [Navigation],
-    navigation: { clickable: true },
+    navigation: { clickable: false },
     slidesPerView: 4,
     grabCursor: true,
-    centeredSlides: true,
     speed: 300,
     loop: true,
-    loopAdditionalSlides: 1,
-    // loopedSlides:,
     initialSlide: 4,
     breakpoints: {
+      320: {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        width: 350,
+      },
       768: {
-        slidesPerView: 4,
+        slidesPerView: 1,
         spaceBetween: 10,
+        initialSlide: 0,
+        width: 750,
       },
       1200: {
         slidesPerView: 4,
@@ -176,17 +185,19 @@ const Body = () => {
 
   const swiperOptionsV3 = {
     modules: [EffectFlip],
-    slidesPerView: 1,
     grabCursor: true,
     centeredSlides: true,
     speed: 400,
+    // width:400,
     loop: true,
     effect: "flip",
     loopAdditionalSlides: 2,
     breakpoints: {
+      320: {
+        width: 340,
+      },
       768: {
-        slidesPerView: 4,
-        spaceBetween: 10,
+        width:320,
       },
       1200: {
         slidesPerView: 1,
@@ -290,7 +301,7 @@ const Body = () => {
           {/* <-----------First form------------>*/}
           <div className="body__post__firstForm">
             <List header="Recent Stories">
-              <Grid col={2} md={2} sm={1} gapCol={30} gapRow={30}>
+              <Grid col={2} md={2} sm={1} gapCol={10} gapRow={10}>
                 {listPost.map((post, index) => (
                   <Thumbnail key={index} post={post} />
                 ))}
@@ -392,10 +403,9 @@ const Body = () => {
                         key={index}
                         className="body__post__thirdForm__memorable"
                         style={{ backgroundImage: `url(${post.imgPost})` }}
-                        onClick={() => handleGetPost(post)}
                       >
                         <div className="body__post__thirdForm__item">
-                          <div className="body__post__thirdForm__title">
+                          <div className="body__post__thirdForm__title" onClick={() => handleGetPost(post)}>
                             <h1>{post.title}</h1>
                           </div>
                           <div className="body__post__thirdForm__desc">
@@ -466,11 +476,11 @@ const Body = () => {
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Statue_of_Tran_Hung_Dao%2C_Nam_Dinh_City%2C_Vietnam_%2803%29.jpg/1200px-Statue_of_Tran_Hung_Dao%2C_Nam_Dinh_City%2C_Vietnam_%2803%29.jpg" alt="" />
                   </div>
                   <div className="follow__social">
-                    <Grid col={2} md={2} sm={1} gapCol={15} gapRow={15}>
+                    <Grid col={2} md={3} sm={2} gapCol={15} gapRow={15}>
                       {social.map((item, index) => (
                         <div key={index} className="follow__social__item">
                           <a href={item.href}>
-                            <item.icon sx={{ fontSize: 60,color: item.color ? item.color[500] : "disabled"}} />
+                            <item.icon sx={{ fontSize: 40,color: item.color ? item.color[500] : "disabled"}} />
                             <div className="follow__social__item__content">
                               <span className="follow__social__item__title" >{item.title}</span>
                               <span className="follow__social__item__like" >200k</span>

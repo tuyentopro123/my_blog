@@ -1,10 +1,13 @@
 import React,{useState,useEffect} from 'react'
 import './Sidebar.scss'
 import Avatar from '@mui/material/Avatar';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import {teal,amber,grey,blueGrey} from '@mui/material/colors';
 import axios from 'axios';
 import Chip from '../utils/Chip/Chip';
 import List  from '../utils/List/List';
+import { Link } from 'react-router-dom';
 
 const Sidebar = ({type}) => {
   const [topUsers,setTopUsers] = useState([])
@@ -32,7 +35,12 @@ const Sidebar = ({type}) => {
             <div className="sidebar__topUser">
               <List header="Top Author" active="active">
                 {topUsers?.map((user,index) => (
-                    <div key={index} className="sidebar__topUser__content">
+                  <Link 
+                    to={`/infor/${user._id}`}
+                    state={user._id}
+                    key={index} 
+                    className="sidebar__topUser__content"
+                  >
                       <div className="sidebar__topUser__content__listUser">
                         <div className="sidebar__topUser__content__user">
                           <div className="sidebar__topUser__content__img">
@@ -46,15 +54,32 @@ const Sidebar = ({type}) => {
 
                         </div>
                         <div className="sidebar__topUser__content__like">
-                            <FavoriteBorderOutlinedIcon 
-                              className="sidebar__topUser__content__like"
-                              fontSize="large"
-                              sx={{ fontSize: 25 }} 
-                            />
-                              <span>{user.favorite}</span><br/>
+                          {index === 0 ? 
+                          <WorkspacePremiumIcon 
+                            className="sidebar__topUser__content__like"
+                            sx={{ fontSize: 35,color: teal[300] }} 
+                          />
+                          :
+                          index === 1 ?
+                          <WorkspacePremiumIcon 
+                            className="sidebar__topUser__content__like"
+                            sx={{ fontSize: 35,color: amber[300] }} 
+                          />
+                          :
+                          index === 2 ?
+                          <WorkspacePremiumIcon 
+                            className="sidebar__topUser__content__like"
+                            sx={{ fontSize: 35,color: grey[200] }} 
+                          /> 
+                          :
+                          <MilitaryTechIcon 
+                            className="sidebar__topUser__content__like"
+                            sx={{ fontSize: 25,color: blueGrey[300] }} 
+                          /> 
+                        }
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
               </List>
 

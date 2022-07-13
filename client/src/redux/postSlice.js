@@ -57,15 +57,15 @@ const postSlice = createSlice({
 
         // UPDATE POST
         updateLikeStart: (state) => {
-            state.post.isFetching = true;
+            state.isFetching = true;
         },
         updateLikeSuccess: (state,action) => {
-            state.post.isFetching = false;
+            state.isFetching = false;
             state.post.userPost = action.payload;
             state.post.error = false;
         },
         updateLikeFailed: (state) => {
-            state.post.isFetching = false;
+            state.isFetching = false;
             state.post.error = true;
         },
 

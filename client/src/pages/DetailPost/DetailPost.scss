@@ -2,12 +2,19 @@
 
 .detailpost {
     position: relative;
-    top:$header;
     padding: 5rem 2rem;
     max-width:120rem;
     margin:auto;
     @include flex(flex-start, space-between);
+    @include tablet {
+        flex-direction: column;
+        &__container {
+            max-width: 100% !important;;
+        }
+    }
     &__container {
+        background-color:$bg-color;
+        padding: 2rem;
         max-width:70%;
     }
 
@@ -46,6 +53,12 @@
             }
         }
 
+        &__icon {
+            @include flex(center,flex-start);
+            & > * {
+                margin:0 .2rem;
+            }
+        }
         
     }
 
@@ -54,6 +67,11 @@
         & > * {
             line-height: 1.4;
             margin:2rem 0;
+            color: $dark-txt-color;
+        }
+
+        code {
+            background-color: $hover-txt-color!important;
         }
         
         h2 {
@@ -109,12 +127,7 @@
                 margin-right:4rem;
                 cursor: pointer;
             }
-            &__like {
-                display: none!important;
-                &.active {
-                    display: inline-block!important;
-                }
-            }
+
         }
 
         &__tags {
@@ -154,17 +167,23 @@
         border-radius: 1rem;
         transform: translate(-50%,-45%);
         height: 80%;
-        width: 700px;
+        width: 50%;
         margin: auto;
         z-index: 100;
         overflow: hidden;
         animation:Fade ease .2s;
         border: 1px solid rgb(152, 152, 152);
+        @include tablet {
+            width: 90%;
+        }
         &__container {
             overflow-x: hidden;
             overflow-y: auto;
             max-height: 100%;
             padding: 2rem;
+            h1,h5,span {
+                color: $txt-color;
+            }
             & > * {
                 padding:1rem;
             }
@@ -185,9 +204,11 @@
         &.active {
             display: block!important;
         }
+
         &__overlay {
             animation:Fade ease .2s;
-            ::before {
+            display: none;
+            &::before {
                 position: fixed;
                 content: '';
                 display: block;
@@ -197,6 +218,10 @@
                 top: 0;
                 left: 0;
                 background-color: rgba(0, 0, 0, 0.4);
+            }
+
+            &.active {
+                display: block;
             }
         }
        
@@ -221,8 +246,9 @@
                 flex: 5 1;
                 .txt {
                     width: 85%;
-                    max-width: 40vw;
+                    // max-width: 40vw;
                     padding: 1rem;
+                    margin: 0 .5rem;
                     font-size: 1.5rem;    
                     line-height: 1.5;
                     border-radius: 1.5rem;
@@ -274,6 +300,18 @@
                 }
             }
         }
+
+        &__commentCount {
+            p {
+                color: $txt-blur-color;
+                font-size: 1.3rem;
+                font-style: italic;
+                letter-spacing:.05rem;
+            }
+            & > * {
+                margin:1.5rem 0;
+            }
+        }
         
     }
 
@@ -283,13 +321,17 @@
         padding: 2rem;
         position:sticky;
         top: 10rem;
+        @include tablet {
+            position: static;
+            width: 100%;
+        }
     }
 
 
     &__popular {
         margin-top: 2rem;
         padding: 2rem 0 1rem 0;
-        border-top: 1px solid #000;
+        border-top: 1px solid $dark-txt-color;
         h2 {
             margin-bottom: 2rem;
             font-size: 2rem;
@@ -298,6 +340,9 @@
             @include flex(flex-start,center);
             margin-bottom: 2rem;
             cursor: pointer;
+            @include tablet {
+                @include flex(flex-start,flex-start);
+            }
         }
         &__image {
             margin-right: 1rem;
@@ -308,11 +353,21 @@
             object-fit: cover;
             border-radius:.5rem;
             outline:1px solid #ccc;
+            @include tablet {
+                width: 20rem;
+                min-width: 20rem;
+                height: 12rem;
+            }
             img {
                 width: 12rem;
                 min-width: 12rem;
                 height: 7rem;
                 object-fit: cover;
+                @include tablet {
+                    width: 20rem;
+                    min-width: 20rem;
+                    height: 12rem;
+                }
                 &:hover {
                     transform: scale(1.1);
                 }
@@ -320,10 +375,11 @@
         }
 
         &__body {
+            flex: 1;
             &__header {
                 margin-bottom: 1rem;
                 h3 {
-                    width:15rem;
+                    // width:15rem;
                     line-height: 1.5;
                     min-height: 3rem;
                     overflow: hidden;

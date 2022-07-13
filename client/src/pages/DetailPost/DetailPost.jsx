@@ -4,8 +4,10 @@ import "./DetailPost.scss";
 // UI material
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
-import { red } from "@mui/material/colors";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import { red,amber } from "@mui/material/colors";
+import BookmarksOutlinedIcon from '@mui/icons-material/BookmarksOutlined';
+import BookmarkOutlinedIcon from '@mui/icons-material/BookmarkOutlined';
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 
 import Helmet from "../../components/Helmet/Helmet";
@@ -14,14 +16,17 @@ import axios from "axios";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation,useParams,Link } from "react-router-dom";
-import { updatePost, createComment, getComment, getReplyComment } from "../../redux/apiRequest";
+import {  createComment } from "../../redux/apiRequest";
+import {getReplyCommentNoti} from "../../redux/commentSlice"
 import { redirectNotificationFinish } from "../../redux/authSlice";
-import {startFirstLoading,FinishLoading} from "../../redux/postSlice"
+import {startFirstLoading,FinishLoading,resetFirstLoading} from "../../redux/postSlice"
 import LazyLoad from "react-lazyload";
 
 import Comment from "../../components/Comment/Comment";
 import Chip from "../../components/utils/Chip/Chip";
 import RelatedPost from "../../components/RelatedPost/RelatedPost";
+
+import toast, { Toaster } from 'react-hot-toast';
 
 const DetailPost = ({ socket }) => {
   const location = useLocation()
@@ -45,7 +50,7 @@ const DetailPost = ({ socket }) => {
     (state) => state.comment.commentpost
   );
 
-  const [comment, setComment] = useState([]);
+  const [comment, setComment] = useState();
   const body = useRef(null);
   const active = useRef(null);
   const negative = useRef(null);
@@ -61,10 +66,10 @@ const DetailPost = ({ socket }) => {
     inter_user: [],
   });
 // GET POST
-  const getUserPost = async (id) => {
+  const getUserPost = async (slug) => {
     dispatch(startFirstLoading())
     try {
-      const res = await axios.get("/v1/post/" + id);
+      const res = await axios.get("/v1/post/" + slug);
       dispatch(FinishLoading())
       setPost(res.data.userPost)
       setRelatedPost(res.data.relatedPost)
@@ -72,6 +77,38 @@ const DetailPost = ({ socket }) => {
       console.log(err)
     }
   };
+
+
+  // GET COMMENT
+  const getComment = async (id) => {
+    try {
+      const res = await axios.get("/v1/comment/comment/" + id);
+      setComment(res.data)
+      dispatch(resetFirstLoading())
+    } catch (err) {
+      console.log(err)
+    }
+  };
+
+  // UPDATE LIKE
+  const updatePost = async (user,id) => {
+    try {
+      const res = await axios.post("/v1/post/update/" + id,user);
+      setPost(res.data)
+    } catch (err) {
+      console.log(err)
+    }
+  };
+
+    // SAVE POST
+    const savePost = async (user,id) => {
+      try {
+        const res = await axios.post("/v1/post/save/" + id,user);
+        setPost(res.data)
+      } catch (err) {
+        console.log(err)
+      }
+    };
 
  // RANDOM POST
  const getRandomPost = async () => {
@@ -85,14 +122,20 @@ const DetailPost = ({ socket }) => {
 
   // Handle like
   const handleLike = async () => {
-    active.current.classList.toggle("active");
-    negative.current.classList.toggle("active");
-    await updatePost(
+    let noti = ""
+    if(post.like_user.filter((e) => e._id === currentUser._id).length === 0) {
+      noti = "Bạn đã like bài viết thành công";
+    } else {
+      noti = "Bạn đã bỏ like bài viết";
+    }
+    await toast.promise(updatePost(
       { user: currentUser._id },
       post._id,
-      dispatch
-    );
-    getUserPost(location.state);
+    ), {
+      loading: 'Đang tải...',
+      success: noti,
+      error: 'lỗi đường truyền',
+    });
     if (post.like_user.filter((e) => e._id === currentUser._id).length === 0) {
       socket.emit("sendNotification", {
         sender_img: currentUser.image,
@@ -106,6 +149,24 @@ const DetailPost = ({ socket }) => {
       });
     }
   };
+
+  // Handle save 
+  const handleSave = async() => {
+    let mess = ""
+    if(post.user_save.includes(currentUser._id)) {
+      mess = "Bạn đã bỏ lưu bài viết";
+    } else {
+      mess = "Bạn đã lưu bài viết thành công";
+    }
+    await toast.promise(savePost(
+      { user: currentUser._id },
+      post._id,
+    ), {
+      loading: 'Đang tải...',
+      success: mess,
+      error: 'lỗi đường truyền',
+    });
+  }
 
   // Get value comment from textarea
   const handleChange = (e) => {
@@ -121,10 +182,15 @@ const DetailPost = ({ socket }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     document.getElementById("txt").innerText = "";
-    await createComment(
+    await toast.promise(createComment(
       newComment,
       dispatch
-    );
+      ), {
+        loading: 'Đang tải...',
+        success: "Bình luận thành công",
+        error: 'lỗi đường truyền',
+      });
+    await getComment(post._id)
     socket.emit("sendNotification", {
       sender_img: currentUser.image,
       sender_user: currentUser.username,
@@ -141,7 +207,7 @@ const DetailPost = ({ socket }) => {
   // Focus input
   const handleFocusComment = async () => {
     if (firstLoading) {
-      await getComment( post._id, dispatch);
+      await getComment( post._id);
     }
     document.getElementById("comment").classList.add("active");
     document.getElementById("overlay").classList.add("active");
@@ -162,13 +228,12 @@ const DetailPost = ({ socket }) => {
       inline: "nearest",
     });
     if(reply) {
-      await getReplyComment(redirectNoti?.reaction, dispatch);
+      dispatch(getReplyCommentNoti(redirectNoti?.reaction))
     }
     setTimeout(() => {
       document.getElementById(reply ? reply : id)?.classList.add("active");
     }, 500);
   };
-
 
 
   useEffect(() => {
@@ -177,7 +242,8 @@ const DetailPost = ({ socket }) => {
       left: 0,
       behavior: 'smooth'
     })
-      getUserPost(location.state)
+      setComment([]);
+      getUserPost(location.pathname.slice(6))
       getRandomPost()
   }, [slug]);
 
@@ -189,20 +255,8 @@ const DetailPost = ({ socket }) => {
       doc.body.childNodes.forEach((node) => {
         body.current?.appendChild(node.cloneNode(true));
       });
-      if (post?.like_user.filter((e) => e._id === currentUser._id).length > 0) {
-        active.current.classList.add("active");
-      } else {
-        negative.current.classList.add("active");
-      }
     }
   }, [post]);
-
- 
-  useEffect(() => {
-    if (commentOfPost) {
-      setComment(commentOfPost);
-    }
-  }, [commentOfPost]);
 
   useEffect(() => {
     if (showComment) {
@@ -225,6 +279,15 @@ const DetailPost = ({ socket }) => {
     <>
     {post &&
     <Helmet title="Blog">
+      <Toaster
+                toastOptions={{
+                    className: '',
+                    style: {
+                        padding: '16px',
+                        fontSize:'14px',
+                    },
+                }}
+            />
       <section className="detailpost">
         <div className="detailpost__container">
           <div className="detailpost__header">
@@ -237,15 +300,31 @@ const DetailPost = ({ socket }) => {
                   <span style={{ userSelect: "none" }}>
                     {GetTime(post.createdAt)}
                   </span>
+                  <span>Lượt xem: {post.view}</span>
                 </div>
               </div>
-              <div className="detailpost__header__icon">
-                <RemoveRedEyeOutlinedIcon
-                  className="detailpost__header__icon__unlike"
-                  sx={{ fontSize: 25 }}
+              <div className="detailpost__header__icon" >
+                <div className="detailpost__header__save" onClick={handleSave}>
+                  {post.user_save.includes(currentUser._id) ? 
+                  <BookmarkOutlinedIcon
+                  className="detailpost__header__icon__saved"
+                  sx={{ fontSize: 25,color: amber[400] }}
                   fontSize="large"
-                />
-                <span>{post.view}</span>
+                  />
+                  :
+                  <BookmarksOutlinedIcon
+                    className="detailpost__header__icon__save"
+                    sx={{ fontSize: 25,color: amber[400] }}
+                    fontSize="large"
+                  />
+                  }
+                </div>
+                <div
+                    className="detailpost__header__share"
+                    // onClick={(e) => handleSetting(e)}
+                  >
+                    <MoreHorizIcon sx={{ fontSize: 25,color: amber[400] }} />
+                </div>
               </div>
             </div>
           </div>
@@ -253,27 +332,6 @@ const DetailPost = ({ socket }) => {
           <div ref={body} className="detailpost__body"></div>
 
           <div className="detailpost__footer">
-            {/* <div className="detailpost__footer__inter">
-              <div onClick={handleLike}>
-                <FavoriteOutlinedIcon
-                  className="detailpost__footer__inter__like"
-                  ref={active}
-                  sx={{ color: red[500], fontSize: 30 }}
-                  fontSize="large"
-                />
-                <FavoriteBorderOutlinedIcon
-                  className="detailpost__footer__inter__like"
-                  ref={negative}
-                  fontSize="large"
-                  sx={{ fontSize: 30 }}
-                />
-                <span>{post.likes}</span>
-              </div>
-              <div onClick={handleFocusComment}>
-                <ChatBubbleOutlineIcon fontSize="large" sx={{ fontSize: 30 }} />
-                <span>{post.commentCount}</span>
-              </div>
-            </div> */}
 
             <div className="detailpost__footer__tags">
                 <span>Tags :</span>
@@ -307,22 +365,24 @@ const DetailPost = ({ socket }) => {
           <div className="detailpost__icon">
           <div className="detailpost__footer__inter">
               <div onClick={handleLike}>
+                {post?.like_user.filter((e) => e._id === currentUser._id).length > 0 ? 
                 <FavoriteOutlinedIcon
                   className="detailpost__footer__inter__like"
                   ref={active}
                   sx={{ color: red[500], fontSize: 30 }}
                   fontSize="large"
-                />
-                <FavoriteBorderOutlinedIcon
-                  className="detailpost__footer__inter__like"
-                  ref={negative}
-                  fontSize="large"
-                  sx={{ fontSize: 30 }}
-                />
+                /> : 
+                  <FavoriteBorderOutlinedIcon
+                    className="detailpost__footer__inter__like"
+                    ref={negative}
+                    fontSize="large"
+                    sx={{ fontSize: 30,color: amber[400] }}
+                  />
+                }
                 <span ref={number}>{post.likes}</span>
               </div>
               <div onClick={handleFocusComment}>
-                <ChatBubbleOutlineIcon fontSize="large" sx={{ fontSize: 30 }} />
+                <ChatBubbleOutlineIcon fontSize="large" sx={{ fontSize: 30,color: amber[400] }} />
                 <span>{post.commentCount}</span>
               </div>
             </div>
@@ -370,6 +430,7 @@ const DetailPost = ({ socket }) => {
               <div className="detailpost__idea__container">
                 <div className="detailpost__idea__commentCount">
                   <h1>{post.commentCount} bình luận</h1>
+                  <p>(Vui lòng không spam các nội dung không lành mạnh hoặc gây war!)</p>
                 </div>
                 <div className="detailpost__idea__comment">
                   <div className="detailpost__idea__comment__txt">
@@ -388,25 +449,27 @@ const DetailPost = ({ socket }) => {
                   </div>
                 </div>
                 <div className="detailpost__idea__listComment">
-                  <div
-                    className={`detailpost__idea__listComment__content ${
-                      comment.length === 0 ? "active" : ""
-                    }`}
-                  >
-                    {comment.length === 0 ? (
-                      <span>Chưa có bình luận</span>
-                    ) : (
-                      comment.map((comment, key) => (
-                        <div key={key}>
-                          <Comment
-                            id={comment._id}
-                            comment={comment}
-                            socket={socket}
-                          />
-                        </div>
-                      ))
-                    )}
-                  </div>
+                  {comment && 
+                    <div
+                      className={`detailpost__idea__listComment__content ${
+                        comment.length === 0 ? "active" : ""
+                      }`}
+                    >
+                      {comment.length === 0 ? (
+                        <span>Chưa có bình luận</span>
+                      ) : (
+                        comment.map((comment, key) => (
+                          <div key={key}>
+                            <Comment
+                              id={comment._id}
+                              comment={comment}
+                              socket={socket}
+                            />
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  }
                 </div>
               </div>
           </div>

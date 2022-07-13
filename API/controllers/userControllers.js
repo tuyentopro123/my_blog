@@ -88,7 +88,6 @@ const userControllers = {
 
     // GET NOTIFICATION OF USER 
     getNofitication: async (req, res) => {
-        console.log(req.get("host"))
         try {
             const notification = await Notification.find({user_receiver:req.params.id}).sort({createdAt:-1})
             const user = await User.findById(req.params.id)

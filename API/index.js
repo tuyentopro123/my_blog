@@ -44,11 +44,13 @@ app.use(cors({
 app.use(session({
   secret: 'somethingsecret',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: { maxAge: 2*24*60*60*1000},
   store: MongoStore.create({ mongoUrl: process.env.MONGODB_URL })
 }));
 app.use(passport.authenticate("session"));
+
+// app.use(resetCookieExprise)
 
 // ROUTES
 app.use("/v1/auth",authRoute);

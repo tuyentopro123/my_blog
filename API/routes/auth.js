@@ -9,6 +9,9 @@ router.post('/register',authControllers.resigterUser)
 // LOGIN
 router.get('/login',authControllers.loginUser)
 
+// GET CURRENT USEr
+router.get('/current/:id',authControllers.getCurrentUser)
+
 // UPDATE USER
 router.put('/:id',middlewareControllers.verifyTokenAndAdminAuth,authControllers.updateUser)
 

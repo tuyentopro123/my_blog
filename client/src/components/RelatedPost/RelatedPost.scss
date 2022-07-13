@@ -3,13 +3,11 @@
 .related {
     margin: 3rem 0;
     cursor: pointer;
-    &__container {
-        @include flex(flex-start,flex-start);
-    }   
+    width: 100%;
     
     &__thumbnail {
-        width:40rem;
-        height:20rem;
+        width:100%;
+        height:50rem;
         margin-right: 2rem;
         background-position: center;
         background-repeat: no-repeat;
@@ -18,16 +16,20 @@
         border-radius:1.5rem;
     }
 
-    &__content {
+    &__title {
         flex: 3 1;
         @include flex(flex-start, space-between);
         flex-direction: column;
-        height: 20rem;
+        // height: 20rem;
+        & > * {
+            margin: 1rem;
+        }
         &__header {
             h1 {
                 cursor: pointer;
                 line-height: 1.5;
                 min-height: 1rem;
+                font-size: 2.5rem;
                 margin: 0;
                 overflow: hidden;
                 display: -webkit-box;
@@ -36,20 +38,9 @@
             }
         }
 
-        &__category {
-            @include flex(center,flex-start);
-            flex-wrap: wrap;
-            &__item {
-                margin-right: 1rem;
-                padding:1rem 2rem;
-                span {
-                    font-size: 1.2rem!important;
-                }
-            }
-        }
-
         &__author {
             font-size: 1.6rem;
+            margin-bottom: 2rem;
             span {
                 font-weight: bold;
                 margin: 0 .5rem;
@@ -58,4 +49,34 @@
 
     }
 
+    &__content {
+        margin-top: 2rem;
+        font-size: 1.5rem;
+        max-height:35rem;
+        overflow: hidden;
+        mask-image: linear-gradient($bg-color,$bg-color,hsla(0,0%,100%,0));
+        -webkit-mask-image: linear-gradient($bg-color,$bg-color,hsla(0,0%,100%,0));
+        & > * {
+            margin: 1rem 0;
+            line-height:1.5;
+        }
+
+        img {
+            display: none;
+        }
+
+        a {
+            color: $hover-txt-color!important;
+        }
+    }
+
+    &__navigate {
+        @include flex(center,center);
+        span {
+            font-size: 1.7rem;
+            &:hover {
+                color:$hover-txt-color;
+            }
+        }
+    }
 }

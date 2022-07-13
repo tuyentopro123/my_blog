@@ -24,7 +24,6 @@ const postControllers = {
 
     // GET ALL POST 
     getAllPost: async (req, res) => {
-        console.log("hah")
         const field =  req._parsedUrl.pathname.slice(1)
         const category = req.query.category
         const pageSize = 4
@@ -62,15 +61,15 @@ const postControllers = {
     // GET POST
     getPost: async (req, res) => {
         try {
-            const userPost = await Post.findById(req.params.id).populate('user').populate('like_user')
+            const userPost = await Post.find({slug:req.params.id}).populate('user').populate('like_user')
             const relatedPost = await Post.find({
-                _id:{ $nin: [req.params.id]},
-                user: userPost.user
+                _id:{ $nin: [userPost[0]._id]},
+                user: userPost[0].user
             }).populate('user')
-            userPost.view++;
-            await userPost.save()
+            userPost[0].view++;
+            await userPost[0].save()
             return res.status(200).json({
-                userPost,
+                userPost: userPost[0],
                 relatedPost
             })
         } catch(err) {
@@ -139,6 +138,43 @@ const postControllers = {
         }
     },
 
+    // SAVE POST
+    savePost: async (req, res) => {
+        const user = req.body.user
+        const postId = req.params.id
+        try {
+            const post = await Post.findById(postId);
+            if(post.user_save.includes(user)) {
+                await post.user_save.pull(user)
+            } else {
+                await post.user_save.push(user)
+            }
+            await post.save()
+            const postRequest = await Post.findById(postId).populate('user').populate('like_user')
+            return res.status(200).json(postRequest)
+        } catch(err) {
+            console.log(err)
+            return res.status(500).json(err)
+        }
+    },
+
+    // GET POST SAVE
+    getPostSave: async (req,res) => {
+        const userId = req.params.id;
+        try {
+            const user = await User.findById(userId);
+            const post = await Post.find({
+                user_save: {
+                    $in: userId
+                }
+            })
+            
+            return res.status(200).json(post)
+        } catch(err) {
+            console.log(err)
+            return res.status(500).json(err)
+        }
+    },
 
     // POST SEARCH
     postSearch: async (req, res) => {
@@ -189,7 +225,7 @@ const postControllers = {
     // RATE POSTS BY VIEW
     postView: async (req, res) => {
         try {
-            const post = await Post.find().sort({view:-1}).limit(4).populate("user")
+            const post = await Post.find().sort({view:-1}).limit(5).populate("user")
             return res.status(200).json(post)
         } catch(err) {
             console.error(err)

@@ -2,10 +2,21 @@
 
 .home {
     position: relative;
-    top: 8rem;
+    top: 1rem;
     display: flex;
-    min-height:400vh;
+    min-height:410vh;
     @include mobile {
-        display:inherit;
+        min-height:initial;
     }
+
+    @include tablet {
+        display:inherit;
+        min-height:435vh;
+    }
+
+    // @include tablet-mini {
+    //     display:inherit;
+    //     min-height:380vh;
+    // }
+    
 }

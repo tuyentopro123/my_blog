@@ -7,7 +7,9 @@ import male from "../../assets/img/male.png";
 import female from "../../assets/img/female.png";
 
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import {yellow} from "@mui/material/colors";
 import Chip from "../utils/Chip/Chip";
+import { Avatar } from "@mui/material";
 
 const BlogItem = ({ post }) => {
   const content = useRef(null);
@@ -31,10 +33,20 @@ const BlogItem = ({ post }) => {
 
   return (
     <div className="blogitem">
+      <div
+        className="blogitem__thumbnail"
+        style={
+          post.imgPost
+            ? { backgroundImage: `url(${post.imgPost})` }
+            : { display: "none" }
+        }
+      >
+      </div>
+
       <div className="blogitem__container">
         <div className="blogitem__header">
           <div onClick={handleGetUser} className="blogitem__header__user">
-            <img
+            <Avatar
               src={
                 post.user.image
                   ? post.user.image
@@ -49,7 +61,7 @@ const BlogItem = ({ post }) => {
           <div className="blogitem__header__icon">
             <RemoveRedEyeOutlinedIcon
               className="blogitem__header__icon__view"
-              sx={{ fontSize: 25 }}
+              sx={{ fontSize: 25,color: yellow[800] }}
               fontSize="large"
             />
             <span>{post.view}</span>
@@ -82,23 +94,6 @@ const BlogItem = ({ post }) => {
 
         <div className="blogitem__time">
           <span style={{ userSelect: "none" }}>{GetTime(post.createdAt)}</span>
-        </div>
-      </div>
-
-      <div
-        className="blogitem__thumbnail"
-        style={
-          post.imgPost
-            ? { backgroundImage: `url(${post.imgPost})` }
-            : { display: "none" }
-        }
-      >
-        <div className="overlay"></div>
-        <div
-          className="blogitem__thumbnail__detail category"
-          onClick={handleGetPost}
-        >
-          <span>Chi tiết</span>
         </div>
       </div>
     </div>

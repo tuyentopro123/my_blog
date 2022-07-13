@@ -30,6 +30,10 @@ const postSchema = new mongoose.Schema(
             required: true,
             default: "",
         },
+        user_save: {
+            type: Array,
+            default: [],
+        },
         like_user: [
             {
                 type: Schema.Types.ObjectId, ref: "User" 
@@ -59,15 +63,5 @@ const postSchema = new mongoose.Schema(
     },{timestamps: true,}
 )
 
-// postSchema.pre("save", async function (next) {
-//     try {
-//       const post = this;
-//       const user = await User.findById(post.user);
-//       await user.posts.pull(post);
-//       await user.save();
-//     } catch (err) {
-//       next(err);
-//     }
-//   });
 
 module.exports = mongoose.model("Post",postSchema);

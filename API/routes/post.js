@@ -20,6 +20,12 @@ router.get('/path/result',postControllers.postSearch)
 // UPDATE POST
 router.post('/update/:id',postControllers.updatePost)
 
+// SAVE POST
+router.post('/save/:id',postControllers.savePost)
+
+// SAVE POST
+router.get('/saved/:id',postControllers.getPostSave)
+
 // RATE POSTS BY LIKE
 router.get('/path/highlight',postControllers.postHighLight)
 

@@ -3,37 +3,22 @@
 .blogitem {
         position: relative;
         max-width: 100%;
-        margin:5rem 0;
-        outline: 1px solid #ccc;
-        border-radius:1rem;
+        margin-top:4rem;
         overflow: hidden;
+        background-color: $bg-color;
         &__container {
-                width: 50%;
-                padding:2rem;
+                width: 100%;
+                padding:2.5rem;
         }
 
         &__thumbnail {
-                position: absolute;
-                top: 0;
-                right: 0;
-                max-width: 50%;
-                min-width: 50%;
-                height: 100%;
+                width:50rem;
+                height: 25rem;
                 @include flex(center,center);
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: cover;
                 cursor: pointer;
-                &:hover {
-                        .overlay {
-                                display: block;
-                        }
-                        
-                        .blogitem__thumbnail__detail {
-                                transform: translateX(0);
-                                opacity: 1;  
-                        }
-                }
                 &__detail {
                         transform: translateX(200%);
                         opacity: 0;
@@ -96,7 +81,7 @@
                 @include flex(center,space-between);
                 &:hover {
                         h1 {
-                                color: $main-color;
+                                color: $hover-txt-color;
                         }
                 }
                 & > * {
@@ -112,6 +97,7 @@
                                         // user-select: none;
                                         cursor: pointer;
                                         line-height: 1.5;
+                                        max-width: 40rem;
                                         min-height: 3rem;
                                         overflow: hidden;
                                         display: -webkit-box;
@@ -133,6 +119,7 @@
                                         display: block;
                                 }
                                 line-height: 1.8;
+                                max-width: 40rem;
                                 min-height: 5rem;
                                 overflow: hidden;
                                 display: -webkit-box;

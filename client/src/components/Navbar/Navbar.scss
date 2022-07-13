@@ -5,35 +5,25 @@
     justify-content: space-around;
     align-items: flex-start;
     overflow: visible;
+    @include mobile {
+        display: none;
+    }
+
+    @include tablet {
+        display: none;
+    }
     &__container {
         @include flex(center,center);
         flex-direction: column;
         position: -webkit-sticky;
         position: sticky;
-        top: 8rem;
+        top: 1rem;
         padding: 0 1rem;
         z-index: 8;
         & > * {
             padding: 1.5rem;
             margin-bottom: .5rem;
             cursor: pointer;
-        }
-        @include mobile {
-            border-top: 1px solid #ccc;
-            & > * {
-                padding: 1rem 2rem;
-                margin-bottom: .5rem;
-                cursor: pointer;
-            }
-            position:fixed;
-            background-color:#fff;
-            justify-content:space-around;
-            bottom: 0;
-            right: 0;
-            padding: 1rem 0;
-            top: inherit;
-            width: 100%;
-            flex-direction: row;
         }
     }
 
@@ -67,29 +57,6 @@
 
         &.active {
             background-color: #434343;
-        }
-    }
-
-    &__add {
-        .icon {
-            @include flex(center,center);
-            width: 4.5rem;
-            height: 4.5rem;
-            background-color: rgb(70, 181, 224);
-            border-radius: 50%;
-            @include mobile {
-                width: 5.5rem;
-                height: 5.5rem; 
-            }
-        }
-
-        svg {
-            transition: transform .2s ease;
-        }
-        &:hover {
-            svg {
-                transform: scale(1.4)
-            }
         }
     }
 }

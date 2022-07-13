@@ -10,11 +10,9 @@ passport.use(
     callbackURL: '/auth/google/callback'
   }, async(accessToken,refreshToken,profile, done) => {  
     try {
-      console.log(profile)
       const user = await User.findOne({socialId: profile.id})
       console.log(`the user: ${user}`)
       if(user) {
-        console.log(`the current user: ${user}`)
         return done(null,user);
       } else {
         const newUser = new User({
@@ -23,7 +21,6 @@ passport.use(
           socialId: profile.id,
           email:profile.emails[0].value,
         });
-        console.log(`the new user: ${newUser}`)
         await newUser.save();
         return done(null,newUser);
       }

@@ -12,12 +12,15 @@ import { getNotification } from "../../redux/apiRequest";
 import axios from "axios";
 
 // Material ui
-import { Tooltip } from "@mui/material";
+import { yellow } from "@mui/material/colors";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Badge from "@mui/material/Badge";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
+import FaceIcon from '@mui/icons-material/Face';
+import DevicesIcon from '@mui/icons-material/Devices';
 import { grey } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
 
@@ -138,12 +141,11 @@ const Header = ({ socket }) => {
   }, [debounceSearchTerm]);
 
   const handleFocus = () => {
-    document.getElementById("search").style.border = "solid rgb(3 3 3) 2px";
+    document.getElementById("search").classList.add("active");
   };
 
   const handleBlur = () => {
-    document.getElementById("search").style.border =
-      "solid rgb(151, 151, 151) 2px";
+    document.getElementById("search").classList.remove("active");
   };
 
   // Material ui
@@ -173,14 +175,14 @@ const Header = ({ socket }) => {
     <div className="header">
       <div className="header__logo">
         <Link to="/" className="header__logo__img">
-          <img className="" src={logo} />
+          <h2>VANTUYEN</h2>
         </Link>
       </div>
 
       <div className="header__body">
         <div id="search" className="header__body__search">
           <div className="search">
-            <SearchIcon fontSize="large" />
+            <SearchIcon fontSize="large" sx={{color: yellow[800]}} />
           </div>
           <input
             type="text"
@@ -198,6 +200,9 @@ const Header = ({ socket }) => {
             searchTerm !== "" ? "active" : " "
           }`}
         >
+          <div className="header__body__result__title">
+            <h2>Bài viết</h2>
+          </div>
           <ul>
             {result.length > 0 ? (
               result.map((item, key) => (
@@ -206,16 +211,15 @@ const Header = ({ socket }) => {
                     className="header__body__result__item"
                     onClick={() => handleGetPost(item)}
                   >
+                    <Avatar
+                      src={item.imgPost}
+                    />
                     <h2>{item.title}</h2>
-                    <div
-                      className="header__body__result__item__img"
-                      style={{ backgroundImage: `url(${item.imgPost})` }}
-                    ></div>
                   </div>
                 </li>
               ))
             ) : (
-              <li>{`Không có kết quả cho "${debounceSearchTerm}"`}</li>
+              <li><h2>{`Không có kết quả cho "${debounceSearchTerm}"`}</h2></li>
             )}
           </ul>
         </div>
@@ -254,22 +258,34 @@ const Header = ({ socket }) => {
         <div className="header__account">
           {user ?
             <div className="header__account__container">
-              <IconButton size="small" onClick={handleClick}>
-                <Avatar
-                  sx={{ width: 32, height: 32 }}
-                  src={
-                    user.image ? user.image : user.sex === "male" ? male : female
-                  }
-                />
-              </IconButton>
+              <div className="header__account__avatar ">
+                <IconButton size="small" onClick={handleClick}>
+                  <Avatar
+                    sx={{ width: 32, height: 32 }}
+                    src={
+                      user.image ? user.image : user.sex === "male" ? male : female
+                    }
+                  />
+                </IconButton>
+              </div>
+
+              <div className="header__account__avatar tablet">
+                <IconButton size="small" onClick={toggleDrawer(true)}>
+                  <Avatar
+                    sx={{ width: 32, height: 32 }}
+                    src={
+                      user.image ? user.image : user.sex === "male" ? male : female
+                    }
+                  />
+                </IconButton>
+              </div>
               <div ref={edit} className="header__account__edit">
                 <div className="header__account__body">
-                  <Link
-                    to={`/infor/${user._id}`}
-                    state={user._id}
+                  <div
                     className="header__account__info"
-                  >
+                    >
                     <Avatar
+                    onClick={handleGetUser}
                       sx={{ width: 80, height: 80 }}
                       src={
                         user.image
@@ -282,7 +298,7 @@ const Header = ({ socket }) => {
                     />
                     <h3>{user.username}</h3>
                     <span>{user.email}</span>
-                  </Link>
+                  </div>
                   <ul>
                     <li onClick={handleCloseMenu}>
                       <Link to="/">Trang chủ</Link>
@@ -299,7 +315,6 @@ const Header = ({ socket }) => {
                     </li>
                   </ul>
                 </div>
-
                 <React.Fragment key="right">
                   <SwipeableDrawer
                     anchor="right"
@@ -330,6 +345,22 @@ const Header = ({ socket }) => {
                         <h3>{user.username}</h3>
                         <span>{user.email}</span>
                       </Link>
+                      <ul>
+                        <li onClick={handleCloseMenuMobile}>
+                          <DevicesIcon sx={{ fontSize: 30 }} />
+                          <Link to="/program">Program</Link>
+                        </li>
+                        <li onClick={handleCloseMenuMobile}>
+                          <AccessibilityNewIcon sx={{ fontSize: 30 }} />
+                          <Link to="/life">Life</Link>
+                        </li>
+                        <li onClick={handleCloseMenuMobile}>
+                          <FaceIcon sx={{ fontSize: 30 }} />
+                          <Link to="/About">
+                            About
+                          </Link>
+                        </li>
+                      </ul> 
                       <ul>
                         <li onClick={handleCloseMenuMobile}>
                           <HomeIcon sx={{ fontSize: 30 }} />

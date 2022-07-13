@@ -1,6 +1,6 @@
 import './App.scss';
 import React,{useRef,useState,useEffect} from 'react'
-import {BrowserRouter,Routes,Route, Navigate,useNavigate,useLocation} from 'react-router-dom'
+import {BrowserRouter,Routes,Route, Navigate,useNavigate,useLocation, Link} from 'react-router-dom'
 import { useDispatch,useSelector } from "react-redux";
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
@@ -12,7 +12,7 @@ import Infor from './pages/Infor/Infor';
 import NewPost from './pages/NewPost/NewPost';
 import DetailPost from './pages/DetailPost/DetailPost'
 import {io} from "socket.io-client"
-import { loginUser } from "./redux/apiRequest";
+import { loginUser,getCurrentUser } from "./redux/apiRequest";
 import ProgressBar from './components/ProgressBar/ProgressBar'
 
 // material ui
@@ -34,12 +34,25 @@ function App() {
   const dispatch = useDispatch()
   const [socket,setSocket] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const categories = ["Frontend",
+                      "Backend",
+                      "Scss",
+                      "NextJS",
+                      "Redux",
+                      "ReactJs",
+                      "game",
+                      "social",
+                      "drama",
+                      "music",
+                      "film",
+]
   
   // SOCKET IO
   useEffect(() => {
     setSocket(io("http://localhost:5000"))
     loginUser(dispatch)
   },[])
+
   
   useEffect(() => {
     socket?.emit("newUser",user)
@@ -64,26 +77,103 @@ function App() {
           <Route path='/program' element={<Blog fields="program"/>}/>
           <Route path='/life' element={<Blog fields="life"/>}/>
           <Route path='/about' element={<About/>}/>
-          <Route path='/infor/:id' element={user ? <Infor/> : <Login /> }/>
+          <Route path='/infor/:slug' element={user ? <Infor save={false}/> : <Login /> }/>
+          <Route path='/infor/save/:slug' element={user ? <Infor save={true}/> : <Login /> }/>
           <Route path='/newPost' element={<NewPost />}/>
           <Route path='/post/:slug' element={user ? <DetailPost socket={socket}/> : <Login /> }/>
         </Routes>
       </BrowserRouter>  
       <div className="footer">
-          
+          <div className="footer__address">
+              <div className="footer__address__title">
+                <h1>VANTUYEN</h1>
+                <span>never give up</span>
+              </div>
+              <div className="footer__address__content">
+                <span>Số điện thoại: 0844097999</span><br/><br/>
+                <span>Email: tuyentopro123@gmail.com</span><br/><br/>
+                <span>Địa chỉ: ngõ 5, Lương Ngọc Quyến, quận Hà Đông, Hà Nội</span><br/>
+              </div>
+          </div>
+          <div className="footer__container">
+
+            <div className="footer__categories">
+              <div className="footer__categories__title">
+                <h2>từ khóa phổ biến</h2>
+              </div>
+              <div className="footer__categories__content">
+                <ul 
+                  className="grid col-3 col-sm-4" 
+                  style={{gridColumnGap: `15px`}}  
+                >
+                  {categories.slice(0,6).map((item,index) => (
+                    <li key={index}>
+                      <a href={`/program?category=${item}`}>
+                        {item}
+                      </a>
+                    </li>
+                  ))}
+                  {categories.slice(6,11).map((item,index) => (
+                    <li key={index}>
+                      <a href={`/life?category=${item}`}>
+                        {item}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="footer__navigate">
+              <div className="footer__navigate__title">
+                <h2>Chuyển hướng</h2>
+              </div>
+              <div className="footer__navigate__content">
+                <ul>
+                  <li>
+                    <a href="/">
+                      Trang chủ
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/program">
+                      Program
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/life">
+                      Life
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/about">
+                      About
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="footer__navigate">
+              <div className="footer__navigate__title">
+                <h2>Blog bạn bè</h2>
+              </div>
+              <div className="footer__navigate__content">
+                <ul>
+                    <li>
+                      <a href="https://ankhangdev.cf/">Ankhangdev</a>
+                    </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div className="copyRight">
+        <span>© 2022 vantuyen. All rights reserved.</span>
       </div>
     </div>
   );
 }
-// const AnimationApp = () => {
-//   return (
-//     <BrowserRouter>
-//       <Routes>
-//         <Route element={<App />} path="*" />
-//       </Routes>
-//     </BrowserRouter>
-//   )
-// }
 export default App;
 
 function SpeedDialTooltip() {

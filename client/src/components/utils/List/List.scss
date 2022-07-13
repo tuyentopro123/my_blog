@@ -2,7 +2,17 @@
 
 .list {
     position: relative;
-    padding: 0 1rem;
+    padding: 2rem;
+    border-radius: .5rem;
+    background-color:$bg-color;
+    margin: 1rem auto;
+    @include mobile {
+        width:95%;
+    }
+
+    @include tablet {
+        width:95%;
+    }
     & > * {
         margin: 1rem 0;
     }
@@ -10,9 +20,10 @@
         flex: 2 1;
     }
     &__header {
-        border-left: .4rem solid red;
+        border-left: .4rem solid $hover-txt-color;
         padding-left: 1rem;
-        margin-bottom: 2.5rem;
+        margin-bottom: 2rem;
+        overflow: hidden;
         h2 {
             width:fit-content;
             position: relative;
@@ -29,20 +40,44 @@
                 font-size: 2.5rem;
                 text-transform:capitalize;
                 font-weight: bolder;
+                @include tablet {
+                    margin: auto !important;
+                    &::before {
+                        content: " ";
+                        position: absolute;
+                        right: 100%;
+                        margin-right: 15px;
+                        border-bottom: 2px solid $hover-txt-color;
+                        transform: translateY(-80%);
+                        top: 50%;
+                        height: 3px;
+                        width: 600rem;
+                    }
+                }
                 &::after {
                     content: " ";
                     position: absolute;
-                    height:3px;
-                    width: 6rem;
+                    left: 100%;
+                    margin-left: 15px;
+                    border-bottom: 2px solid $hover-txt-color;
+                    transform: translateY(-80%);
                     top: 50%;
-                    transform: translate(20%,-50%);
-                    background-color: red;
+                    height: 3px;
+                    width: 50%;
+                    @include mobile {
+                        width: 600rem;
+                    }
+
+                    @include tablet {
+                        width: 600rem;
+                    }
                 }
             }
         }
     }
 
     &__post {
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
+        overflow: hidden;
     }
 }

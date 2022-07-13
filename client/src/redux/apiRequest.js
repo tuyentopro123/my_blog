@@ -14,7 +14,10 @@ import {loginStart,
         updateUserFailed,
         getNotificationStart,
         getNotificationSuccess,
-        getNotificationFailed
+        getNotificationFailed,
+        getCurrentUserStart,
+        getCurrentUserSuccess,
+        getCurrentUserFailed
       } from "./authSlice"
       
 import {getUsersStart,
@@ -97,6 +100,16 @@ const options = {
       }
     };  
 
+    // GET CURRENT USER
+    export const getCurrentUser = async (dispatch,id) => {
+      dispatch(getCurrentUserStart());
+      try {
+        await axios.get("http://localhost:3000/v1/auth/current/" + id);
+        dispatch(getCurrentUserSuccess());
+      } catch (err) {
+        dispatch(getCurrentUserFailed());
+      }
+    };  
     
 
 
@@ -196,17 +209,6 @@ const options = {
       }
     };
 
-    // GET COMMENT
-    export const getComment = async (id,dispatch) => {
-      dispatch(getCommentStart());
-      try {
-        const res = await axios.get("/v1/comment/comment/" + id);
-        dispatch(getCommentSuccess(res.data));
-        dispatch(resetFirstLoading())
-      } catch (err) {
-        dispatch(getCommentFailed(err));
-      }
-    };
 
     // DELETE COMMENT
     export const deleteComment = async (id,comment,dispatch) => {
@@ -227,16 +229,5 @@ const options = {
         dispatch(interCommentSuccess(res.data));
       } catch (err) {
         dispatch(interCommentFailed(err));
-      }
-    };
-
-    // GET REPLY OF COMMENT
-    export const getReplyComment = async (id,dispatch) => {
-      dispatch(getReplyCommentStart());
-      try {
-        const res = await axios.get("/v1/comment/reply/" + id);
-        dispatch(getReplyCommentSuccess(res.data));
-      } catch (err) {
-        dispatch(getReplyCommentFailed(err));
       }
     };

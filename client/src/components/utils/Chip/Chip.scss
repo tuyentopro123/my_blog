@@ -3,8 +3,7 @@
 .category {
     position: relative;
     padding:1rem 2rem;
-    border: 1px solid $main-color;
-    border-radius: 2rem;
+    border: 1px solid $hover-txt-color;
     z-index:100;
     background-position: center;
     background-repeat: no-repeat;
@@ -12,17 +11,18 @@
     overflow: hidden;
     cursor: pointer;
     &:hover {
-        background-color: $main-color;
+        background-color:  $hover-txt-color;
         span {
-            color: #fff;
+            color: $dark-txt-color;
         }
     }
     span {
         user-select: none;
         letter-spacing: 2px;
-        font-size: 1.8rem;
+        font-size: 1.5rem;
+        text-transform: uppercase;  
         z-index: 1;
-        color: $main-color;
+        color: $dark-txt-color;
     }
 
     &__overlay {

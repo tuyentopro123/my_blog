@@ -66,17 +66,12 @@ const commentSlice = createSlice({
         },
 
          // GET REPLY COMMENT
-        getReplyCommentStart: (state) => {
-            state.commentpost.isFetching = true;
-        },
-        getReplyCommentSuccess: (state,action) => {
-            state.commentpost.isFetching = false;
+        getReplyCommentNoti: (state,action) => {
             state.commentpost.replyComment = action.payload;
-            state.commentpost.error = false;
         },
-        getReplyCommentFailed: (state) => {
-            state.commentpost.isFetching = false;
-            state.commentpost.error = true;
+
+        setReplyCommentNoti: (state,action) => {
+            state.commentpost.replyComment = null;
         },
 
         // INTER OF COMMENT
@@ -106,9 +101,8 @@ export const {
     interCommentStart,
     interCommentSuccess,
     interCommentFailed,
-    getReplyCommentStart,
-    getReplyCommentSuccess,
-    getReplyCommentFailed,
+    getReplyCommentNoti,
+    setReplyCommentNoti,
     deleteCommentStart,
     deleteCommentSuccess,
     deleteCommentFailed,

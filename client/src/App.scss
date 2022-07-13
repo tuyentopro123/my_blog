@@ -1,25 +1,193 @@
 @use './sass/index.scss' as *;
-
-.footer {
-    height: 40vh;
-    width: 100%;
-    margin-top: 10rem;
-    background-color: #000;
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    transition: 
+        color .1s linear, 
+        transform .1s linear, 
+        opacity .1s linear,
+        visibility .1s linear
+    ;
 }
 
-.progressBar {
-    pointer-events: none;
-    opacity: 1;
-    transition: opacity 200ms ease 0s;
-    &__input {
-        position: fixed;
-        z-index: 1001;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 5px;
-        background-color: #09d3f7;
+html {
+    box-sizing: border-box;
+    overflow-x: hidden;
+    font-size: 62.5%;
+    line-height: 1;
+    scroll-behavior: smooth;
+    color: $txt-color;
+    font-weight: 500;
+    user-select: unset;
+
+    @include tablet {
+        font-size: 55%;
     }
+
+    @include mobile {
+        font-size: 50%;
+    }
+}
+
+body {
+    width: 100%;
+    // overflow-x: hidden;
+    // overflow-y: clip;
+    font-family: 'Nunito', sans-serif;
+    background-color: $dark-color;
+}
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+// ::-webkit-scrollbar-track {
+//   display:none;
+// }
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(55, 52, 52); 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: $hover-txt-color;
+}
+.footer {
+    @include flex(unset,unset);
+    padding: 2rem 15rem 1rem 15rem;
+    height: 45vh;
+    margin-top: 4rem;
+    @include mobile {
+        padding: 2rem;
+        margin-top: 2rem;
+        min-height: 95vh;
+        flex-direction: column;
+        &__container {
+            flex-direction: column;
+            align-items: center!important;
+            border-bottom-left-radius: .5rem;
+            border-bottom-right-radius: .5rem;
+            border-top-right-radius: 0!important;
+        }
+        
+        &__address {
+            border-top-left-radius: .5rem;
+            border-top-right-radius: .5rem;
+            border-bottom-left-radius: 0!important;
+        }
+    }
+
+    @include tablet {
+        padding: 2rem !important;   
+        &__container {
+            & > * {
+                margin:0 1rem !important;
+            }
+        }
+        
+        &__address {
+            border-top-left-radius: .5rem;
+            border-top-right-radius: .5rem;
+            border-bottom-left-radius: 0!important;
+        }
+    }
+    span,li {
+        font-size: 1.5rem;
+        line-height: 1.5;
+        @include mobile {
+            text-align: center;
+        }
+
+        @include tablet {
+            text-align: center;
+        }
+    }
+    
+    h1,h2 {
+        color: $hover-txt-color;
+        text-transform: uppercase;
+    }
+    &__address {
+        border-top-left-radius: .5rem;
+        border-bottom-left-radius: .5rem;
+        flex: 1 1;
+        padding: 3rem;
+        background-color:$bg-second-color;
+        &__title {
+            margin-bottom: 3rem;
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            & > span {
+                color: $hover-txt-color;
+            }
+        }
+    }
+
+    &__container {
+        @include flex(flex-start,space-around);
+        flex: 2 1;
+        padding: 3rem;
+        border-top-right-radius: .5rem;
+        border-bottom-right-radius: .5rem;
+        background-color:$bg-color;
+        h2 {
+            text-align: center;
+        }
+    }
+    &__categories {
+        &__title {
+            margin-bottom: 1rem;
+        }
+
+        &__content {
+            li {
+                margin: 1rem 0;
+                color: $dark-txt-color;
+                text-transform: capitalize;
+                &:hover {
+                    color: $hover-txt-color;
+                    cursor: pointer;
+                    }
+            }
+        }
+    }
+    &__navigate {
+        &__title {
+            margin-bottom: 2rem;
+        }
+        &__content {
+            li {
+                margin: 2rem 0;
+                color: $dark-txt-color;
+                text-transform: capitalize;
+                &:hover {
+                    color: $hover-txt-color;
+                    cursor: pointer;
+                    }
+            }
+        }
+    }
+
+}
+
+.copyRight {
+    @include flex(center,center);
+    padding: 1rem 0;
+    span {
+        font-size: 1.5rem;
+    }
+    
+    // @include mobile {
+    //     position: relative;
+    //     top: 30vh;
+    // }
 }
 
 .MuiSpeedDialIcon-root {

@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "./Comment.scss";
 import { useSelector, useDispatch } from "react-redux";
-import { createAxios } from "../../createInstance";
 import {
   interComment,
   createComment,
   deleteComment,
-  getReplyComment,
 } from "../../redux/apiRequest";
-import { loginSuccess } from "../../redux/authSlice";
 import DialogComponent from "../utils/Dialog/Dialog";
 import GetTime from "../../utils/GetTime";
-
+import {setReplyCommentNoti} from "../../redux/commentSlice"
 // Material UI
 import Stack from "@mui/material/Stack";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -20,6 +17,10 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away-extreme.css";
+
+import toast, { Toaster } from 'react-hot-toast';
+
+import axios from "axios";
 
 const Comment = ({ comment, socket, id }) => {
   const emoji = [
@@ -77,6 +78,7 @@ const Comment = ({ comment, socket, id }) => {
     inter_user: [],
   });
 
+
   // Get value comment from textarea
   const handleChange = (e) => {
     const value = e.target.value;
@@ -90,10 +92,15 @@ const Comment = ({ comment, socket, id }) => {
     document
       .getElementById(`reaction-${e.target.id}`)
       .classList.remove("active");
-    await createComment(
+    await toast.promise(createComment(
       newComment,
       dispatch
-    );
+      ), {
+        loading: 'Đang tải...',
+        success: "Bình luận thành công",
+        error: 'lỗi đường truyền',
+      });
+    await getReplyComment(comment._id)
     if (currentUser._id !== e.target.name) {
       socket.emit("sendNotification", {
         sender_img: currentUser.image,
@@ -106,7 +113,6 @@ const Comment = ({ comment, socket, id }) => {
         seen: false,
       });
     }
-    getReplyComment(comment._id, dispatch);
   };
 
   // cancel comment
@@ -117,11 +123,21 @@ const Comment = ({ comment, socket, id }) => {
   };
 
   const handleAnswers = (e) => {
+    setNewComment({
+      user_name: currentUser.username,
+      user_img: currentUser.image,
+      user: currentUser._id,
+      user_receiver: e.user,
+      post: e.post,
+      comment: "",
+      reaction: e._id,
+      inter_user: [],
+    })
     document
-      .getElementById(`reaction-${e.target.id}`)
+      .getElementById(`reaction-${e._id}`)
       .classList.toggle("active");
-    document.getElementById(`textarea-${e.target.id}`).value = "";
-    document.getElementById(`textarea-${e.target.id}`).focus();
+    document.getElementById(`textarea-${e._id}`).value = "";
+    document.getElementById(`textarea-${e._id}`).focus();
   };
 
   // Setting comment properties
@@ -156,23 +172,36 @@ const Comment = ({ comment, socket, id }) => {
         seen: false,
       });
     }
-    if (e.target.ariaAtomic) getReplyComment(comment._id, dispatch);
+    if (e.target.ariaAtomic) getReplyComment(comment._id);
   };
+
+      // GET REPLY OF COMMENT
+      const getReplyComment = async (id) => {
+        try {
+          const res = await axios.get("/v1/comment/reply/" + id);
+          setReplyComment(res.data.comment);
+        } catch (err) {
+          console.log(err)
+        }
+      };
 
   // Get reply
   const handleGetReply = () => {
     if (replyComment.length > 0) {
       setReplyComment([]);
     } else {
-      getReplyComment( comment._id, dispatch);
+      getReplyComment( comment._id);
     }
   };
 
   useEffect(() => {
-      if (reply?.comment && reply?.id === comment._id) {
-        setReplyComment(reply.comment);
-      }
-  }, [reply]);
+    if(reply) {
+      getReplyComment(comment._id);
+    }
+    dispatch(setReplyCommentNoti())
+  },[reply])
+
+
 
 
   // Delete comment
@@ -313,7 +342,7 @@ const Comment = ({ comment, socket, id }) => {
                 <span
                   className="text"
                   id={comment._id}
-                  onClick={(e) => handleAnswers(e)}
+                  onClick={() => handleAnswers(comment)}
                 >
                   Trả lời
                 </span>
@@ -366,7 +395,7 @@ const Comment = ({ comment, socket, id }) => {
           )}
         </div>
 
-        {replyComment.map((answer, index) => (
+        {replyComment &&replyComment.map((answer, index) => (
           <div
             id={answer._id}
             key={index}

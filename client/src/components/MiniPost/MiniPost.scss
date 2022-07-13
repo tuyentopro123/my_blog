@@ -4,7 +4,7 @@
     cursor: pointer;
     &:hover {
         h2 {
-            color: $main-color;
+            color: $hover-txt-color;
         }
     }
     &__container {
