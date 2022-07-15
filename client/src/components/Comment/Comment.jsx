@@ -22,7 +22,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import axios from "axios";
 
-const Comment = ({ comment, socket, id }) => {
+const Comment = ({ comment, socket, id,receive }) => {
   const emoji = [
     {
       title: "Thích",
@@ -61,8 +61,9 @@ const Comment = ({ comment, socket, id }) => {
     },
   ];
 
+  console.log(comment)
+
   const [replyComment, setReplyComment] = useState([]);
-  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.login?.currentUser);
   const reply = useSelector((state) => state.comment.commentpost.replyComment);
@@ -100,7 +101,9 @@ const Comment = ({ comment, socket, id }) => {
         success: "Bình luận thành công",
         error: 'lỗi đường truyền',
       });
+    await receive(comment.post)
     await getReplyComment(comment._id)
+
     if (currentUser._id !== e.target.name) {
       socket.emit("sendNotification", {
         sender_img: currentUser.image,
@@ -211,11 +214,16 @@ const Comment = ({ comment, socket, id }) => {
   };
   const receiveData = (data) => {
     if (data.delete) {
-      deleteComment(
+      toast.promise(deleteComment(
         data.user,
         { comment: data.comment, post: comment.post },
         dispatch
-      );
+      ), {
+          loading: 'Đang tải...',
+          success: "Xóa Bình luận thành công",
+          error: 'lỗi đường truyền',
+        });
+      
       setReplyComment(replyComment.filter((e) => e._id !== data.comment));
       setVisible(data.visible);
     } else {

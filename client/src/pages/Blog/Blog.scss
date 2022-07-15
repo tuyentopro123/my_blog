@@ -13,6 +13,7 @@
         width: 100%;
         @include tablet {
             width: initial;
+            margin-top: 9rem;
         }
     }
 
@@ -26,14 +27,20 @@
             font-weight: bold;
             text-transform:capitalize;
             color: #041B3A;
+            @include tablet {
+               font-size: 3rem;
+            }
         }
     }
 
-    &__content__list {
-        span {
-            font-size: 3rem;
-            width: 100%;
-            margin:4rem 0;
+    &__content {
+        min-height:50vh;
+        &__list {
+            span {
+                font-size: 3rem;
+                width: 100%;
+                margin:4rem 0;
+            }
         }
     }
 }

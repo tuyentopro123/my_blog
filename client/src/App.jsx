@@ -11,21 +11,20 @@ import About from './pages/About/About';
 import Infor from './pages/Infor/Infor';
 import NewPost from './pages/NewPost/NewPost';
 import DetailPost from './pages/DetailPost/DetailPost'
+import Setting from './pages/Setting/Setting'
 import {io} from "socket.io-client"
-import { loginUser,getCurrentUser } from "./redux/apiRequest";
+import { loginUser } from "./redux/apiRequest";
 import ProgressBar from './components/ProgressBar/ProgressBar'
 
 // material ui
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import Backdrop from '@mui/material/Backdrop';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
 import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
-
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import {amber} from '@mui/material/colors';
 
 function App() {
   // const location = useLocation()  
@@ -77,9 +76,10 @@ function App() {
           <Route path='/program' element={<Blog fields="program"/>}/>
           <Route path='/life' element={<Blog fields="life"/>}/>
           <Route path='/about' element={<About/>}/>
-          <Route path='/infor/:slug' element={user ? <Infor save={false}/> : <Login /> }/>
-          <Route path='/infor/save/:slug' element={user ? <Infor save={true}/> : <Login /> }/>
+          <Route path='/infor/:id' element={user ? <Infor save={false}/> : <Login /> }/>
+          <Route path='/infor/save/:id' element={user ? <Infor save={true}/> : <Login /> }/>
           <Route path='/newPost' element={<NewPost />}/>
+          <Route path='/setting' element={<Setting />}/>
           <Route path='/post/:slug' element={user ? <DetailPost socket={socket}/> : <Login /> }/>
         </Routes>
       </BrowserRouter>  
@@ -189,11 +189,11 @@ function SpeedDialTooltip() {
   }
   const actions = [
     { 
-      icon: <EditIcon onClick={handlePost} sx={{ fontSize:25 }}/>, 
+      icon: <EditIcon onClick={handlePost} sx={{ fontSize:25,color: amber[400] }}/>, 
       name: 'Add',
     },
     { 
-      icon: <HomeIcon onClick={handleHome} sx={{ fontSize:25 }}/>, 
+      icon: <HomeIcon onClick={handleHome} sx={{ fontSize:25,color: amber[400] }}/>, 
       name: 'Home',
     },
   ];

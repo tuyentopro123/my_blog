@@ -4,18 +4,25 @@
     position: relative;
     padding: 5rem 2rem;
     max-width:120rem;
+    min-height: 100vh;
     margin:auto;
     @include flex(flex-start, space-between);
     @include tablet {
         flex-direction: column;
         &__container {
-            max-width: 100% !important;;
+            margin-top: 7rem;
+            min-width:100%!important;
+            max-width:100%!important;
         }
     }
     &__container {
+        flex: 1;
         background-color:$bg-color;
         padding: 2rem;
         max-width:70%;
+        overflow: hidden;
+        min-height: 100vh;
+        border-radius: .3rem;
     }
 
     &__header {
@@ -68,6 +75,10 @@
             line-height: 1.4;
             margin:2rem 0;
             color: $dark-txt-color;
+        }
+
+        a {
+            word-break: break-all;
         }
 
         code {
@@ -409,6 +420,10 @@
         transform: scale(1.5);
         cursor:pointer;
     }
+}
+
+.MuiSkeleton-circular {
+    margin-right: 2rem;
 }
 
 @keyframes Fade {

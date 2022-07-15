@@ -9,6 +9,18 @@ const userSlice = createSlice({
         },
     },
     reducers: {
+        // UPDATE USER
+        updateUserStart: (state) => {
+            state.users.isFetching = true;
+        },
+        updateUserSuccess: (state) => {
+            state.users.isFetching = false;
+            state.users.error = false;
+        },
+        updateUserFailed: (state) => {
+            state.users.isFetching = false;
+            state.users.error = true;
+        },
 
         // DELETE USER
         deleteUserStart: (state) => {
@@ -28,6 +40,9 @@ const userSlice = createSlice({
 
 
 export const {
+    updateUserStart,
+    updateUserSuccess,
+    updateUserFailed,
     deleteUserStart,
     deleteUserSuccess,
     deleteUserFailed,

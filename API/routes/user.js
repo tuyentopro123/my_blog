@@ -12,6 +12,9 @@ router.get('/top',userController.getTopUsers);
 // GET USER
 router.get('/:id',userController.getUser);
 
+// UPDATE USER
+router.put('/:id',userController.updateUser)
+
 // DELETE USER
 router.delete('/:id',middlewareControllers.verifyTokenAndAdminAuth,userController.deleteUser); 
 

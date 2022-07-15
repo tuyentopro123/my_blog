@@ -62,29 +62,7 @@ const authControllers = {
         }
     },
 
-      // UPDATE USER
-    updateUser: async(req, res) => {
-        try {
-            const userUpdated = await User.findByIdAndUpdate(
-                req.params.id, 
-                {
-                    $set: req.body,
-                },
-                {new: true},
-            ).populate({
-                path:"posts",
-                model:"Post",
-                populate:{
-                    path:"user",
-                    model:"User"
-                }
-            })
-            return res.status(200).json(userUpdated)
-        } catch(err) {
-            console.log(err)
-            res.status(500).json(err)
-        }
-    },
+
 
         // LOGOUT
     userLogout: async(req,res) => {

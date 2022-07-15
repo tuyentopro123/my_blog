@@ -4,7 +4,7 @@ const commentSlice = createSlice({
     name:"comment",
     initialState: {
         commentpost: {
-            commentOfPost:[],
+            commentOfPost:null,
             replyComment:null,
             isFetching: false,
             error: false,
@@ -24,9 +24,8 @@ const commentSlice = createSlice({
         createCommentStart: (state) => {
             state.commentpost.isFetching = true;
         },
-        createCommentSuccess: (state,action) => {
+        createCommentSuccess: (state) => {
             state.commentpost.isFetching = false;
-            state.commentpost.commentOfPost = action.payload;
             state.msg.comment = "";
             state.commentpost.error = false;
         },
@@ -50,21 +49,6 @@ const commentSlice = createSlice({
             state.commentpost.error = true;
         },
 
-        // GET COMMENT
-        getCommentStart: (state) => {
-            state.commentpost.isFetching = true;
-        },
-        getCommentSuccess: (state,action) => {
-            state.commentpost.isFetching = false;
-            state.commentpost.commentOfPost = action.payload;
-            state.commentpost.replyComment = null;
-            state.commentpost.error = false;
-        },
-        getCommentFailed: (state) => {
-            state.commentpost.isFetching = false;
-            state.commentpost.error = true;
-        },
-
          // GET REPLY COMMENT
         getReplyCommentNoti: (state,action) => {
             state.commentpost.replyComment = action.payload;
@@ -84,11 +68,15 @@ const commentSlice = createSlice({
             // state.msg.comment = "";
             state.commentpost.error = false;
         },
-        interCommentFailed: (state,action) => {
+        interCommentFailed: (state) => {
             state.commentpost.isFetching = false;
-            // state.msg.comment = action.payload.response.data.errors.comment?.message;
             state.commentpost.error = true;
         },
+
+
+        resetCommentOfPost: (state) => {
+            state.commentpost.commentOfPost = null;
+        }
 
     }
 })
@@ -109,6 +97,7 @@ export const {
     getCommentStart,
     getCommentSuccess,
     getCommentFailed,
+    resetCommentOfPost
 } = commentSlice.actions;
 
 export default commentSlice.reducer;

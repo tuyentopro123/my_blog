@@ -21,7 +21,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import FaceIcon from '@mui/icons-material/Face';
 import DevicesIcon from '@mui/icons-material/Devices';
-import { grey } from "@mui/material/colors";
+import SettingsIcon from '@mui/icons-material/Settings';
+import { grey,amber } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
 
 
@@ -35,6 +36,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Notification from "../Notification/Notification";
+import ClearIcon from '@mui/icons-material/Clear';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -102,6 +104,13 @@ const Header = ({ socket }) => {
     listResult.current.classList.remove("active");
     navigate(`/post/${item.slug}`, { state: item._id });
   };
+
+  const handleGetPostMobile = async (item) => {
+    input.current.value = "";
+    listResult.current.classList.remove("active");
+    document.querySelector(".header__searchMobile").classList.remove("active");
+    navigate(`/post/${item.slug}`, { state: item._id });
+  };
   // Header Search
   const useDebounce = (value, delay) => {
     const [debounceValue, setDebounceValue] = useState(value);
@@ -147,6 +156,16 @@ const Header = ({ socket }) => {
   const handleBlur = () => {
     document.getElementById("search").classList.remove("active");
   };
+
+  const handleSearchMobile = () => {
+    document.querySelector(".header__searchMobile").classList.add("active");
+  }
+
+  const handleCancelSearch = () => {
+    document.querySelector(".header__searchMobile").classList.remove("active");
+    input.current.value = "";
+    listResult.current.classList.remove("active");
+  }
 
   // Material ui
 
@@ -301,14 +320,21 @@ const Header = ({ socket }) => {
                   </div>
                   <ul>
                     <li onClick={handleCloseMenu}>
+                      <HomeIcon sx={{ fontSize: 30 }} />
                       <Link to="/">Trang chủ</Link>
                     </li>
                     <li onClick={handleCloseMenu}>
+                      <PermIdentityIcon sx={{ fontSize: 30 }} />
                       <div onClick={handleGetUser} style={{ cursor: "pointer" }}>
                         Thông tin cá nhân
                       </div>
                     </li>
                     <li onClick={handleCloseMenu}>
+                      <SettingsIcon sx={{ fontSize: 30 }}/>
+                      <Link to="/setting">Cài đặt</Link>
+                    </li>
+                    <li onClick={handleCloseMenu}>
+                      <LogoutIcon sx={{ fontSize: 30 }} />
                       <Link to="/logout" onClick={handleLogout}>
                         LOGOUT
                       </Link>
@@ -347,6 +373,10 @@ const Header = ({ socket }) => {
                       </Link>
                       <ul>
                         <li onClick={handleCloseMenuMobile}>
+                          <HomeIcon sx={{ fontSize: 30 }} />
+                          <Link to="/">Trang chủ</Link>
+                        </li>
+                        <li onClick={handleCloseMenuMobile}>
                           <DevicesIcon sx={{ fontSize: 30 }} />
                           <Link to="/program">Program</Link>
                         </li>
@@ -363,8 +393,8 @@ const Header = ({ socket }) => {
                       </ul> 
                       <ul>
                         <li onClick={handleCloseMenuMobile}>
-                          <HomeIcon sx={{ fontSize: 30 }} />
-                          <Link to="/">Trang chủ</Link>
+                          <SettingsIcon sx={{ fontSize: 30 }}/>
+                          <Link to="/setting">Cài đặt</Link>
                         </li>
                         <li onClick={handleCloseMenuMobile}>
                           <PermIdentityIcon sx={{ fontSize: 30 }} />
@@ -377,7 +407,7 @@ const Header = ({ socket }) => {
                         </li>
                         <li onClick={handleCloseMenuMobile}>
                           <SearchIcon sx={{ fontSize: 30 }} />
-                          <Link to="/">Tìm kiếm</Link>
+                          <div onClick={handleSearchMobile}>Tìm kiếm</div>
                         </li>
                         <li>
                           <LogoutIcon sx={{ fontSize: 30 }} />
@@ -401,6 +431,57 @@ const Header = ({ socket }) => {
             </div>
 
           }
+        </div>
+      </div>
+
+      <div className="header__searchMobile">
+        <div className="header__searchInner">
+          <div className="header__searchInput">
+              <input 
+                type="text"
+                ref={input}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Bạn đang tìm kiếm điều gì"
+              />
+          </div>
+
+          <div className="header__searchResult">
+            <div
+                ref={listResult}
+                className={`header__body__result ${
+                  searchTerm !== "" ? "active" : " "
+                }`}
+              >
+                <div className="header__body__result__title">
+                  <h2>Bài viết</h2>
+                </div>
+                <ul>
+                  {result.length > 0 ? (
+                    result.map((item, key) => (
+                      <li key={key}>
+                        <div
+                          className="header__body__result__item"
+                          onClick={() => handleGetPostMobile(item)}
+                        >
+                          <Avatar
+                            src={item.imgPost}
+                            sx={{ width: 60, height: 60 }}
+                          />
+                          <h2>{item.title}</h2>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <li><h2>{`Không có kết quả cho "${debounceSearchTerm}"`}</h2></li>
+                  )}
+                </ul>
+            </div>
+          </div>
+        </div>
+        <div className="header__searchClear" onClick={handleCancelSearch}>
+          <ClearIcon sx={{ fontSize: 50,color:amber[500] }}/>
         </div>
       </div>
     </div>

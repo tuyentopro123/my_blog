@@ -10,7 +10,6 @@ import female from '../../assets/img/female.png'
 import Grid from '../../components/utils/Grid/Grid'
 
 import Thumbnail from '../../components/Thumbnail/Thumbnail'
-import RelatedPost from '../../components/RelatedPost/RelatedPost'
 import Helmet from '../../components/Helmet/Helmet';
 
 // MUI
@@ -28,12 +27,15 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import BoyIcon from '@mui/icons-material/Boy';
 import GirlIcon from '@mui/icons-material/Girl';
 
+// Skeleton
+import Skeleton from '@mui/material/Skeleton';
+
 import toast, { Toaster } from 'react-hot-toast';
 const notify = () => toast.success('Cập nhật ảnh đại diện thành công');
 
 const Infor = ({save}) => {
     const location = useLocation()
-    const {slug} = useParams()
+    const {id} = useParams()
     const currentUser = useSelector((state)=> state.auth.login?.currentUser)
     const [loading,setLoading] = useState(false) 
     const [user, setUser] = useState();
@@ -68,9 +70,9 @@ const Infor = ({save}) => {
 
     const handleSelect = (e) => {
         if(e.target.id === 'save') {
-            navigate(`/infor/save/${slug}`)
+            navigate(`/infor/save/${id}`)
         } else {
-            navigate(`/infor/${slug}`)
+            navigate(`/infor/${id}`)
         }
     }
 
@@ -95,8 +97,8 @@ const Infor = ({save}) => {
           left: 0,
           behavior: 'smooth'
         })
-          getUsers(slug)
-      }, [slug]);
+          getUsers(id)
+      }, [id]);
 
       useEffect(() => {
         
@@ -111,33 +113,27 @@ const Infor = ({save}) => {
         if(save) {
             getSavePost(user._id)
         } else {
-            getUsers(slug)
+            getUsers(id)
         }
 
       }, [save]);
 
   return (
-    <>
-    {user &&
-        <Helmet title={user.username}>
-            <Toaster
-                toastOptions={{
-                    className: '',
-                    style: {
-                        padding: '16px',
-                        fontSize:'14px',
-                    },
-                }}
-            />
+        <Helmet title={user?.username}>
             <section className="infor">
                 <div className="infor__container">
                     <div className="infor__simple">
+                        {user ? 
                         <div className="infor__simple__bg" style={{backgroundImage: `url(https://www.egeniq.nl/sites/default/files/2020-06/frontend_webdeveloper.jpg)`}}>
                         </div>
+                        :
+                        <Skeleton sx={{ bgcolor: 'grey.800' }} variant="rectangular" height={400} />
+                        }
                     </div>
 
                     <div className="infor__hard">
                         <div className="infor__hard__avatar" htmlFor="imgProfile">
+                            {user ? 
                             <div 
                                 className="infor__hard__avatar__img" 
                                 style={{backgroundImage: `url(${user.image ? user.image : user.sex === 'male' ? male : female})`}}
@@ -145,15 +141,17 @@ const Infor = ({save}) => {
                                 <div className={`loading overlay ${loading && "active"}`}>
                                     <CircularProgress/>    
                                 </div>
-                                <label htmlFor="imgProfile">
-                                    <div className="infor__hard__avatar__overlay overlay"></div>
-                                    <CameraAltIcon 
-                                        className="infor__hard__avatar__icon" 
-                                        sx={{ fontSize: 40,color: grey[800] }} 
-                                        style={{position: 'absolute'}}
-                                        htmlFor="imgProfile"
-                                    />
-                                </label>
+                                { currentUser._id === user._id && 
+                                    <label htmlFor="imgProfile">
+                                        <div className="infor__hard__avatar__overlay overlay"></div>
+                                        <CameraAltIcon 
+                                            className="infor__hard__avatar__icon" 
+                                            sx={{ fontSize: 40,color: grey[800] }} 
+                                            style={{position: 'absolute'}}
+                                            htmlFor="imgProfile"
+                                        />
+                                    </label>
+                                }
                                 {
                                 currentUser._id === user._id && <input 
                                                                     type="file" 
@@ -166,113 +164,133 @@ const Infor = ({save}) => {
                                                                 />
                                 }
                             </div>
+                            :
+                            <div className="skeleton">
+                                <Skeleton sx={{ bgcolor: 'grey.800' }} variant="circular" width={200} height={200} />
+                            </div>
+                            }
+                            {user && 
                             <h1>{user.username}</h1>
-                            {user.story && <span>{user.story}</span>}
+                            }
                         </div>
                     </div>
                     <div className="infor__detail">
-                        <div className="infor__detail__private">
-                            <div className="infor__detail__private__intro">
-                                <h1>Giới Thiệu</h1>
-                                <div className="infor__detail__private__form">
-                                    <div className="infor__detail__private__item">
-                                        <LocationOnIcon sx={{fontSize:30,color: amber[400] }}/>
-                                        <span>{textForm(user.address)}</span>
-                                    </div>
+                            <div className="infor__detail__private">
+                                {user ? 
+                                <div className="infor__detail__private__intro">
+                                    <h1>Giới Thiệu</h1>
+                                    <div className="infor__detail__private__form">
+                                        <div className="infor__detail__private__item">
+                                            <LocationOnIcon sx={{fontSize:30,color: amber[400] }}/>
+                                            <span>{textForm(user.address)}</span>
+                                        </div>
 
-                                    <div className="infor__detail__private__item">
-                                        <EmailIcon sx={{fontSize:30,color: amber[400] }}/>
-                                        <span>{textForm(user.email)}</span>
-                                    </div>
+                                        <div className="infor__detail__private__item">
+                                            <EmailIcon sx={{fontSize:30,color: amber[400] }}/>
+                                            <span>{textForm(user.email)}</span>
+                                        </div>
 
-                                    <div className="infor__detail__private__item">
-                                        <LocalPhoneIcon sx={{fontSize:30,color: amber[400] }}/>
-                                        <span>{textForm(user.number)}</span>
-                                    </div>
+                                        <div className="infor__detail__private__item">
+                                            <LocalPhoneIcon sx={{fontSize:30,color: amber[400] }}/>
+                                            <span>{textForm(user.number)}</span>
+                                        </div>
 
-                                </div>
-                            </div>
-
-                            <div className="infor__detail__private__body">
-                                <h1>thông tin chi tiết</h1>
-                                <div className="infor__detail__private__form">
-                                    <div className="infor__detail__private__item">
-                                        <AccountCircleIcon sx={{fontSize:30,color: amber[400] }}/>
-                                        <span>{user.isAdmin ? "Quản trị viên" : "Thành viên"}</span>
-                                    </div>
-
-                                    <div className="infor__detail__private__item">
-                                        {user.sex === 'male' ? 
-                                        <BoyIcon sx={{fontSize:30,color: amber[400] }}/>
-                                        :
-                                        <GirlIcon sx={{fontSize:30,color: amber[400] }}/>
-                                        }
-                                        <span>{textForm(user.sex)}</span>
-                                    </div>
-
-                                    <div className="infor__detail__private__item">
-                                        <ClassIcon sx={{fontSize:30,color: amber[400] }}/>
-                                        <span>{user.posts.length === 0 ? "chưa có bài viết" : `Đã đóng góp ${user.posts.length} bài viết`}</span>
-                                    </div>
-
-                                    <div className="infor__detail__private__item">
-                                        <FavoriteIcon sx={{fontSize:30,color: amber[400] }}/>
-                                        <span>{user.favorite === 0 ? 0 : `${user.favorite} lượt thích`}</span>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div className="infor__detail__product">
-                            <div className="infor__detail__product__option">
-                                <h1>bài viết</h1>
-                                <div className="infor__detail__product__selection" onClick={(e) => handleSelect(e)}>
-                                    <div id="all" className={`infor__detail__product__item ${save ? "" : "selected"}`}>
-                                        <ListIcon sx={{fontSize:20,color: amber[400] }}/>
-                                        <span>Bài viết của tác giả</span>
-                                    </div>
-                                    <div id="save" className={`infor__detail__product__item ${save ? "selected" : ""}`}>
-                                        <CollectionsBookmarkIcon sx={{fontSize:20,color: amber[400] }}/>
-                                        <span>Bài viết đã lưu</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="infor__detail__product__allPost">
-                                {save ? 
-                                <h1>Bài viết đã lưu</h1>
                                 :
-                                <h1>Tất cả bài viết</h1>
+                                <Skeleton sx={{ bgcolor: 'grey.800' }}  variant="rectangular" height={240} />
                                 }
-                                {post.length > 0 ? 
-                                            <Grid 
-                                                className="infor__detail__list"
-                                                col = {1}
-                                                md = {1}
-                                                sm = {1}
-                                                gapRow = {20}
-                                            >
-                                                {post.map((post,index) => (
-                                                        <Thumbnail key={index} infor="information" post={post}/> 
-                                                        // <RelatedPost key={index} post={post} />
-                                                ))}
-                                            </Grid>
+
+                                {user ? 
+                                <div className="infor__detail__private__body">
+                                    <h1>thông tin chi tiết</h1>
+                                    <div className="infor__detail__private__form">
+                                        <div className="infor__detail__private__item">
+                                            <AccountCircleIcon sx={{fontSize:30,color: amber[400] }}/>
+                                            <span>{user.isAdmin ? "Quản trị viên" : "Thành viên"}</span>
+                                        </div>
+
+                                        <div className="infor__detail__private__item">
+                                            {user.sex === 'male' ? 
+                                            <BoyIcon sx={{fontSize:30,color: amber[400] }}/>
                                             :
-                                            <div className="infor__detail__product__emty">
-                                                {save ? 
-                                                <h2>Người dùng chưa lưu bài viết nào</h2>
+                                            <GirlIcon sx={{fontSize:30,color: amber[400] }}/>
+                                            }
+                                            <span>{textForm(user.sex)}</span>
+                                        </div>
+
+                                        <div className="infor__detail__private__item">
+                                            <ClassIcon sx={{fontSize:30,color: amber[400] }}/>
+                                            <span>{user.posts.length === 0 ? "chưa có bài viết" : `Đã đóng góp ${user.posts.length} bài viết`}</span>
+                                        </div>
+
+                                        <div className="infor__detail__private__item">
+                                            <FavoriteIcon sx={{fontSize:30,color: amber[400] }}/>
+                                            <span>{user.favorite === 0 ? 0 : `${user.favorite} lượt thích`}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                :
+                                <Skeleton sx={{ bgcolor: 'grey.800' }}  variant="rectangular" height={290} />
+                                }
+                            </div>
+                            
+                            <div className="infor__detail__product">
+                                {user ? 
+                                <div className="infor__detail__product__option">
+                                    <h1>bài viết</h1>
+                                    <div className="infor__detail__product__selection" onClick={(e) => handleSelect(e)}>
+                                        <div id="all" className={`infor__detail__product__item ${save ? "" : "selected"}`}>
+                                            <ListIcon sx={{fontSize:20,color: amber[400] }}/>
+                                            <span>Bài viết của tác giả</span>
+                                        </div>
+                                        <div id="save" className={`infor__detail__product__item ${save ? "selected" : ""}`}>
+                                            <CollectionsBookmarkIcon sx={{fontSize:20,color: amber[400] }}/>
+                                            <span>Bài viết đã lưu</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                :
+                                <Skeleton sx={{ bgcolor: 'grey.800' }}  variant="rectangular" height={120} />
+                                }
+                                {user ? 
+                                <div className="infor__detail__product__allPost">
+                                    {save ? 
+                                    <h1>Bài viết đã lưu</h1>
+                                    :
+                                    <h1>Tất cả bài viết</h1>
+                                    }
+                                    {post.length > 0 ? 
+                                                <Grid 
+                                                    className="infor__detail__list"
+                                                    col = {1}
+                                                    md = {1}
+                                                    sm = {1}
+                                                    gapRow = {20}
+                                                >
+                                                    {post.map((post,index) => (
+                                                            <Thumbnail key={index} infor="information" post={post}/> 
+                                                            // <RelatedPost key={index} post={post} />
+                                                    ))}
+                                                </Grid>
                                                 :
-                                                <h2>Người dùng chưa cập nhật bài viết</h2>
-                                                }
-                                            </div>
-                                        }
-                            </div>        
-                        </div>
+                                                <div className="infor__detail__product__emty">
+                                                    {save ? 
+                                                    <h2>Người dùng chưa lưu bài viết nào</h2>
+                                                    :
+                                                    <h2>Người dùng chưa cập nhật bài viết</h2>
+                                                    }
+                                                </div>
+                                            }
+                                </div>        
+                                :
+                                <Skeleton sx={{ bgcolor: 'grey.800' }}  variant="rectangular" height={900} />
+                                }
+                            </div>
                     </div>
                 </div>
             </section>
         </Helmet>
-    }
-    </>
   )
 }
 

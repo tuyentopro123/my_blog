@@ -10,97 +10,32 @@ import google from '../../assets/img/google.png'
 
 const Login = () => {
 
-
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const user = useSelector((state)=> state.auth.login?.currentUser)
-  const msg = useSelector((state)=> state.auth.msg)
-  const [err,setErr] = useState(false)
-  const [values, setValues] = useState({
-    email: "",
-    password: "",
-  })
-  
-  useEffect(() => {
-    if(err) {
-      if(msg._id) {
-        console.log("thanh cong")
-      } else {
-        document.querySelectorAll(".form__error")[1].style.display = "block"
-        setErr(false)
-      }
-    }
-  },[msg])
-  
-  const handleChange = (e) => {
-    const value = e.target.value
-    setValues({...values, [e.target.name]: value})
-  }
-  
-  const handleLogin = (e) => {
-    e.preventDefault()
-    setErr(true)
-    const newUser = {
-      email: values.email,
-      password: values.password
-    };
-    loginUser(newUser,dispatch,navigate);
-  }
-
-    const listOptions = [
-        {
-          name: 'email',
-          label: 'Email',
-          type: 'email',
-          placeholder: 'abcxyz@gmail.com',
-          errorMessage: "It should be a valid email address!",
-          required: true,
-        },
-        {
-          name: 'password',
-          label: 'Password',
-          type: 'password',
-          errorMessage: "Incorrect account or password",
-          required: true,
-        },
-      ]
-
       
-  const handleSocial = async() => {
+  const handleGoogle = async() => {
     window.open('http://localhost:8000/auth/google',"_self")
   }
 
-      useEffect(() => {
-        document.getElementById("password").addEventListener("focus", () => {
-          document.querySelectorAll(".form__error")[1].style.display = "none"
-        })
-      },[])
+  const handleFacebook = async() => {
+    window.open('http://localhost:8000/auth/facebook',"_self")
+  }
+
 
   return (
     <Helmet title="Login">
       <div className="login">
           <div className="login__bg" style={{backgroundImage: `url(${bgLogin})`}}></div>
           <div className="login__container">
-              <h1>Login</h1>
-              <form onSubmit={handleLogin}>
-                  {
-                  listOptions.map((option, index) => (
-                      <FormItem key={index} onChange={handleChange} {...option}/>
-                  ))
-                  }
-                  <button type="submit"> đăng nhập </button>
-              </form>
+              <h2>VANTUYEN</h2>
+              <h1>ĐĂNG NHẬP VÀO TRANG CHỦ</h1>
+
               <div className="login__society">
-                  <div className="login__society__text">
-                    <span>Hoặc</span>
-                  </div>
-                  <div className="login__society__item" onClick={handleSocial}>
+                  <div className="login__society__item" onClick={handleGoogle}>
                     <img src={google} alt="" />
-                    <span>đăng nhập với google</span>
+                    <span>Đăng nhập với Google</span>
                   </div>
-                  <div className="login__society__item">
+                  <div className="login__society__item" onClick={handleFacebook}>
                     <img src={facebook} alt="" />
-                    <span>đăng nhập với facebook</span>
+                    <span>Đăng nhập với Facebook</span>
                   </div>
               </div>
               <div className="login__footer">

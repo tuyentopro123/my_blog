@@ -13,6 +13,12 @@
         }
     }
 
+    &__trailer {
+        @include tablet {
+            margin-top: 8rem;
+        }
+    }
+
     &__loading {
         display: none;
         &.active {
@@ -47,6 +53,7 @@
 
         // Second form
         &__secondForm {
+            margin-bottom: 2rem;
             .swiper {
                 overflow: initial;
             }
@@ -390,6 +397,27 @@
     &::after {
         color: white;
         font-size: 20px!important;
+    }
+}
+
+
+.skeleton {
+    &__recent {
+        flex: 2 1;
+        margin-right: 2rem;
+        @include tablet {
+            width: 95%;
+            margin: auto;
+        }
+    }
+
+    &__sidebar {
+        flex: 1 1;
+        @include tablet {
+            width: 95%;
+            margin: auto;
+            margin-top: 2rem;
+        }
     }
 }
 

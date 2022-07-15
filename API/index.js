@@ -26,7 +26,7 @@ mongoose.connect(process.env.MONGODB_URL,
 )
 
 
-app.use(express.json({ limit: '50mb' }));
+app.use(express.json({ limit: '50mb', extended: true }));
 
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
@@ -69,6 +69,18 @@ app.get('/auth/google',passport.authenticate('google', {
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
+    successRedirect: "http://localhost:3000/"
+  })
+);
+
+// REQUEST TO FACEBOOK
+app.get('/auth/facebook',passport.authenticate('facebook', {
+  scope: ['profile']
+}));
+
+app.get(
+  "/auth/facebook/callback",
+  passport.authenticate("facebook", {
     successRedirect: "http://localhost:3000/"
   })
 );

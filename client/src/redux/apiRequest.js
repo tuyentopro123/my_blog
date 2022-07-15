@@ -9,9 +9,6 @@ import {loginStart,
         logOutStart,
         logOutSuccess,
         logOutFailed,
-        updateUserStart,
-        updateUserSuccess,
-        updateUserFailed,
         getNotificationStart,
         getNotificationSuccess,
         getNotificationFailed,
@@ -23,6 +20,9 @@ import {loginStart,
 import {getUsersStart,
         getUsersSuccess,
         getUsersFailed,
+        updateUserStart,
+        updateUserSuccess,
+        updateUserFailed,
         deleteUserStart,
         deleteUserSuccess,
         deleteUserFailed,
@@ -92,7 +92,7 @@ const options = {
     export const logOut = async (dispatch,navigate) => {
       dispatch(logOutStart());
       try {
-        await axios.get("http://localhost:3000/v1/auth/logout");
+        await axios.get("/v1/auth/logout");
         dispatch(logOutSuccess());
         navigate("/");
       } catch (err) {
@@ -104,7 +104,7 @@ const options = {
     export const getCurrentUser = async (dispatch,id) => {
       dispatch(getCurrentUserStart());
       try {
-        await axios.get("http://localhost:3000/v1/auth/current/" + id);
+        await axios.get("/v1/auth/current/" + id);
         dispatch(getCurrentUserSuccess());
       } catch (err) {
         dispatch(getCurrentUserFailed());
@@ -119,7 +119,7 @@ const options = {
     export const updateUsers = async (user, dispatch,id) => {
       dispatch(updateUserStart());
       try {
-        const res = await axios.put(`/v1/auth/` + id, user);
+        const res = await axios.put(`/v1/user/` + id, user);
         dispatch(updateUserSuccess(res.data));
       } catch (err) {
         console.log(err)
@@ -131,7 +131,7 @@ const options = {
     export const getNotification = async(dispatch, id)  => {
       dispatch(getNotificationStart());
       try {
-        const res = await axios.get("http://localhost:3000/v1/user/noti/" + id);
+        const res = await axios.get("/v1/user/noti/" + id);
         dispatch(getNotificationSuccess(res.data));
       } catch (err) {
         dispatch(getNotificationFailed(err));

@@ -53,19 +53,7 @@ const authSlice = createSlice({
             state.register.success = false;
         },
 
-        // UPDATE USER
-        updateUserStart: (state) => {
-            state.isFetching = true;
-        },
-        updateUserSuccess: (state,action) => {
-            state.isFetching = false;
-            state.login.currentUser = action.payload;
-            state.login.error = false;
-        },
-        updateUserFailed: (state) => {
-            state.isFetching = false;
-            state.login.error = true;
-        },
+
 
         // NOTIFICATION
         getNotificationStart: (state) => {
@@ -130,9 +118,6 @@ export const {
     logOutStart,
     logOutSuccess,
     logOutFailed,
-    updateUserStart,
-    updateUserSuccess,
-    updateUserFailed,
     getNotificationStart,
     getNotificationSuccess,
     getNotificationFailed,

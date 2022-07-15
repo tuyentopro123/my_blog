@@ -6,12 +6,18 @@
     display: flex;
     min-height:100vh;
     &__container {
-        margin-left: 3rem;
         width: 100%;
+        @include tablet {
+            margin: 8rem auto 0 auto;
+            width: 90%;
+        }
     }
 
     &__body {
         @include flex(flex-start,space-around);
+        @include tablet {
+            flex-direction: column;
+        }
         margin:2rem 0;
         & > * {
             margin: 0 1rem;
@@ -48,10 +54,27 @@
                 &__input {
                     min-height: 4rem;
                     margin-top: 1.5rem;
+                    padding: 1rem 1.5rem;
                     border: 2px #e5e7eb solid;
+                    max-width:50vw;
+                    flex-wrap: wrap;
                 }
 
                 &__select {
+                    & > * {
+                        margin-right: 1.3rem;
+                        padding: 1rem 2rem;
+                        border-radius: .5rem;
+                        background-color: transparent;
+                        color: $dark-txt-color;
+                        font-size: 1.5rem;
+                        text-transform:capitalize;
+                    }
+                    select {
+                        option {
+                            color:$txt-color;
+                        }
+                    }
                     &.program {
                         #program {
                             display: inline-block;
@@ -68,10 +91,16 @@
     
             &__content {
                 margin-bottom: 3rem;
+                // h1,h2,h3,h4,h5,h6,span,p {
+                //     color: $txt-color;
+                // }
                 .content-area {
                     // width: 80%;
                     max-width: 50vw;
-                    min-width: 50vw;
+                    @include tablet {
+                        max-width: 100%;
+                    }
+                    // min-width: 50vw;
                     .ql-editor {
                         // overflow: hidden;
                         // overflow-y: clip;
@@ -87,4 +116,8 @@
 
 #program,#life {
     display: none;
+}
+
+.MuiChip-root {
+    margin: .8rem!important;
 }

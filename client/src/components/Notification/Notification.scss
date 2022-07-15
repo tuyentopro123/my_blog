@@ -1,11 +1,18 @@
 @use "../../sass/index.scss" as *;
 
 .notification {
+  
     &__tooltip {
       h2 {
         padding: 1rem;
       }
       
+    }
+
+    &__container {
+      p,h2,span {
+        color: $txt-color;
+      }
     }
 
 

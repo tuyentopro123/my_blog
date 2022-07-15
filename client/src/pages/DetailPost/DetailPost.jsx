@@ -10,6 +10,10 @@ import BookmarkOutlinedIcon from '@mui/icons-material/BookmarkOutlined';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 
+// Skeleton
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
+
 import Helmet from "../../components/Helmet/Helmet";
 import GetTime from "../../utils/GetTime";
 import axios from "axios";
@@ -17,7 +21,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation,useParams,Link } from "react-router-dom";
 import {  createComment } from "../../redux/apiRequest";
-import {getReplyCommentNoti} from "../../redux/commentSlice"
+import {getReplyCommentNoti,resetCommentOfPost} from "../../redux/commentSlice"
 import { redirectNotificationFinish } from "../../redux/authSlice";
 import {startFirstLoading,FinishLoading,resetFirstLoading} from "../../redux/postSlice"
 import LazyLoad from "react-lazyload";
@@ -27,6 +31,7 @@ import Chip from "../../components/utils/Chip/Chip";
 import RelatedPost from "../../components/RelatedPost/RelatedPost";
 
 import toast, { Toaster } from 'react-hot-toast';
+const notifyError = (e) => toast.error(e);
 
 const DetailPost = ({ socket }) => {
   const location = useLocation()
@@ -40,16 +45,13 @@ const DetailPost = ({ socket }) => {
     );
     const redirectNoti = useSelector((state) => state.auth.login?.redirectNoti);
     const { firstLoading} = useSelector((state) => state.post.post);
+    const  commentOfPost  = useSelector((state) => state.comment.commentpost.commentOfPost);
     const [post,setPost] = useState()
 
     const [relatedPost,setRelatedPost] = useState({})
 
     const [randomPost,setRandomPost] = useState()
-
-  const { commentOfPost } = useSelector(
-    (state) => state.comment.commentpost
-  );
-
+    
   const [comment, setComment] = useState();
   const body = useRef(null);
   const active = useRef(null);
@@ -182,26 +184,30 @@ const DetailPost = ({ socket }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     document.getElementById("txt").innerText = "";
-    await toast.promise(createComment(
-      newComment,
-      dispatch
-      ), {
-        loading: 'Đang tải...',
-        success: "Bình luận thành công",
-        error: 'lỗi đường truyền',
+    if(newComment.comment === "") {
+      notifyError("Bạn cần viết gì đó")
+    } else {
+      await toast.promise(createComment(
+        newComment,
+        dispatch
+        ), {
+          loading: 'Đang tải...',
+          success: "Bình luận thành công",
+          error: 'lỗi đường truyền',
+        });
+      await getComment(post._id)
+      socket.emit("sendNotification", {
+        sender_img: currentUser.image,
+        sender_user: currentUser.username,
+        action: "comment",
+        action_icon: "comment",
+        createdAt: Date().now,
+        reaction: post._id,
+        user_receiver: post.user._id,
+        seen: false,
       });
-    await getComment(post._id)
-    socket.emit("sendNotification", {
-      sender_img: currentUser.image,
-      sender_user: currentUser.username,
-      action: "comment",
-      action_icon: "comment",
-      createdAt: Date().now,
-      reaction: post._id,
-      user_receiver: post.user._id,
-      seen: false,
-    });
-    setNewComment({ ...newComment, comment: "" });
+      setNewComment({ ...newComment, comment: "" });
+    }
   };
 
   // Focus input
@@ -242,6 +248,7 @@ const DetailPost = ({ socket }) => {
       left: 0,
       behavior: 'smooth'
     })
+    dispatch(resetCommentOfPost())
       setComment([]);
       getUserPost(location.pathname.slice(6))
       getRandomPost()
@@ -257,6 +264,12 @@ const DetailPost = ({ socket }) => {
       });
     }
   }, [post]);
+
+  useEffect(() => {
+    if(commentOfPost) {
+      setComment(commentOfPost);
+    }
+  }, [commentOfPost]);
 
   useEffect(() => {
     if (showComment) {
@@ -276,8 +289,6 @@ const DetailPost = ({ socket }) => {
     }
   }, [firstLoading]);
   return (
-    <>
-    {post &&
     <Helmet title="Blog">
       <Toaster
                 toastOptions={{
@@ -291,102 +302,131 @@ const DetailPost = ({ socket }) => {
       <section className="detailpost">
         <div className="detailpost__container">
           <div className="detailpost__header">
+            {post ? 
             <h1>{post.title}</h1>
+            :
+            <Skeleton sx={{ bgcolor: 'grey.800' }} variant="text" height={100}/>
+            }
             <div className="detailpost__header__infor">
-              <div className="detailpost__header__infor__user">
-                <img src={post.user.image} alt="" />
-                <div className="detailpost__header__infor__txt">
-                  <h3>{post.user.username}</h3>
-                  <span style={{ userSelect: "none" }}>
-                    {GetTime(post.createdAt)}
-                  </span>
-                  <span>Lượt xem: {post.view}</span>
+              {post ? 
+                <div className="detailpost__header__infor__user">
+                  <img src={post.user.image} alt="" />
+                  <div className="detailpost__header__infor__txt">
+                    <h3>{post.user.username}</h3>
+                    <span style={{ userSelect: "none" }}>
+                      {GetTime(post.createdAt)}
+                    </span>
+                    <span>Lượt xem: {post.view}</span>
+                  </div>
                 </div>
-              </div>
-              <div className="detailpost__header__icon" >
-                <div className="detailpost__header__save" onClick={handleSave}>
-                  {post.user_save.includes(currentUser._id) ? 
-                  <BookmarkOutlinedIcon
-                  className="detailpost__header__icon__saved"
-                  sx={{ fontSize: 25,color: amber[400] }}
-                  fontSize="large"
-                  />
-                  :
-                  <BookmarksOutlinedIcon
-                    className="detailpost__header__icon__save"
+                :
+                <div className="detailpost__header__infor__user">
+                  <Skeleton sx={{ bgcolor: 'grey.800' }} variant="circular" width={60} height={60} />
+                  <div className="detailpost__header__infor__txt">
+                  <Stack spacing={.5}>
+                    <Skeleton sx={{ bgcolor: 'grey.800' }} variant="text" height={20} width={100} />
+                    <Skeleton sx={{ bgcolor: 'grey.800' }} variant="text" height={20} width={100} />
+                    <Skeleton sx={{ bgcolor: 'grey.800' }} variant="text" height={20} width={100} />
+                  </Stack>
+                  </div>
+                </div>
+              }
+              {post && 
+                <div className="detailpost__header__icon" >
+                  <div className="detailpost__header__save" onClick={handleSave}>
+                    {post.user_save.includes(currentUser._id) ? 
+                    <BookmarkOutlinedIcon
+                    className="detailpost__header__icon__saved"
                     sx={{ fontSize: 25,color: amber[400] }}
                     fontSize="large"
-                  />
-                  }
+                    />
+                    :
+                    <BookmarksOutlinedIcon
+                      className="detailpost__header__icon__save"
+                      sx={{ fontSize: 25,color: amber[400] }}
+                      fontSize="large"
+                    />
+                    }
+                  </div>
+                  <div
+                      className="detailpost__header__share"
+                      // onClick={(e) => handleSetting(e)}
+                    >
+                      <MoreHorizIcon sx={{ fontSize: 25,color: amber[400] }} />
+                  </div>
                 </div>
-                <div
-                    className="detailpost__header__share"
-                    // onClick={(e) => handleSetting(e)}
-                  >
-                    <MoreHorizIcon sx={{ fontSize: 25,color: amber[400] }} />
-                </div>
-              </div>
+              }
             </div>
           </div>
 
+          {post ? 
           <div ref={body} className="detailpost__body"></div>
+            :
+            <Skeleton sx={{ bgcolor: 'grey.800' }} variant="rectangular" height={500} />
+        }
 
-          <div className="detailpost__footer">
-
-            <div className="detailpost__footer__tags">
-                <span>Tags :</span>
-                {post.category.map((category, index) => (
-                  <Chip
-                    key={index}
-                    className="detailpost__footer__tags__item"
-                    text={category}
-                    field={post.fields}
-                  />
-                ))}
-            </div>
-          </div>
-
-          <div className="detailpost__inter">
-            <div className="detailpost__inter__related">
-              <h1>Bài viết cùng tác giả</h1>
-              <div className="detailpost__inter__relatedPost">
-                {relatedPost.length > 0 ? (
-                  relatedPost.map((post, index) => (
-                    <RelatedPost key={index} post={post} />
-                  ))
-                ) : (
-                  <span>tác giả chưa có bài viết mới</span>
-                )}
+          {post &&
+            <div className="detailpost__footer">
+              <div className="detailpost__footer__tags">
+                  <span>Tags :</span>
+                  {post.category.map((category, index) => (
+                    <Chip
+                      key={index}
+                      className="detailpost__footer__tags__item"
+                      text={category}
+                      field={post.fields}
+                    />
+                  ))}
               </div>
             </div>
-          </div>
+          }
+
+            <div className="detailpost__inter">
+              <div className="detailpost__inter__related">
+                <h1>Bài viết cùng tác giả</h1>
+                <div className="detailpost__inter__relatedPost">
+                  {relatedPost?.length > 0 ? (
+                    relatedPost?.map((post, index) => (
+                      <RelatedPost key={index} post={post} />
+                    ))
+                  ) : (
+                    <span>tác giả chưa có bài viết mới</span>
+                  )}
+                </div>
+              </div>
+            </div>
         </div>
         <div className="detailpost__sidebar">
           <div className="detailpost__icon">
-          <div className="detailpost__footer__inter">
-              <div onClick={handleLike}>
-                {post?.like_user.filter((e) => e._id === currentUser._id).length > 0 ? 
-                <FavoriteOutlinedIcon
-                  className="detailpost__footer__inter__like"
-                  ref={active}
-                  sx={{ color: red[500], fontSize: 30 }}
-                  fontSize="large"
-                /> : 
-                  <FavoriteBorderOutlinedIcon
+          {post ? 
+            <div className="detailpost__footer__inter">
+                <div onClick={handleLike}>
+                  {post?.like_user.filter((e) => e._id === currentUser._id).length > 0 ? 
+                  <FavoriteOutlinedIcon
                     className="detailpost__footer__inter__like"
-                    ref={negative}
+                    ref={active}
+                    sx={{ color: red[500], fontSize: 30 }}
                     fontSize="large"
-                    sx={{ fontSize: 30,color: amber[400] }}
-                  />
-                }
-                <span ref={number}>{post.likes}</span>
-              </div>
-              <div onClick={handleFocusComment}>
-                <ChatBubbleOutlineIcon fontSize="large" sx={{ fontSize: 30,color: amber[400] }} />
-                <span>{post.commentCount}</span>
-              </div>
+                  /> : 
+                    <FavoriteBorderOutlinedIcon
+                      className="detailpost__footer__inter__like"
+                      ref={negative}
+                      fontSize="large"
+                      sx={{ fontSize: 30,color: amber[400] }}
+                    />
+                  }
+                  <span ref={number}>{post.likes}</span>
+                </div>
+                <div onClick={handleFocusComment}>
+                  <ChatBubbleOutlineIcon fontSize="large" sx={{ fontSize: 30,color: amber[400] }} />
+                  <span>{post.commentCount}</span>
+                </div>
             </div>
+            :
+            <Skeleton sx={{ bgcolor: 'grey.800' }} variant="text" height={50}/>
+          }
           </div>
+          {post ? 
           <div className="detailpost__popular">
             <h2>Popular post</h2>
             {
@@ -415,11 +455,15 @@ const DetailPost = ({ socket }) => {
               </div>
             }
           </div>
+          :
+          <Skeleton sx={{ bgcolor: 'grey.800' }} variant="rectangular" height={400} />
+          }
         </div>
             
       </section>
 
       {/* OVERLAY COMMENT */}
+      {post && 
       <div className="detailpost__comment">
           <div
               id="overlay"
@@ -459,11 +503,12 @@ const DetailPost = ({ socket }) => {
                         <span>Chưa có bình luận</span>
                       ) : (
                         comment.map((comment, key) => (
-                          <div key={key}>
+                          <div key={key} >
                             <Comment
                               id={comment._id}
                               comment={comment}
                               socket={socket}
+                              receive={getComment}
                             />
                           </div>
                         ))
@@ -474,10 +519,9 @@ const DetailPost = ({ socket }) => {
               </div>
           </div>
         </div>
+      }
 
     </Helmet>
-    }
-    </>
   );
 };
 

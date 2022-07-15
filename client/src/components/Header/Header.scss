@@ -23,6 +23,7 @@
       }
   }
   }
+
   &__logo {
     @include flex(center, flex-start);
     h2 {
@@ -35,7 +36,7 @@
     position: relative;
     flex: 2 1;
     @include flex(center, center);
-    @include mobile {
+    @include tablet {
       display: none;
     }
     &__search {
@@ -73,6 +74,12 @@
       top: 100%;
       overflow: hidden;
       margin: 0px;
+      @include tablet {
+        top: 0;
+        position: static;
+        width: 100%;
+        margin-top: 2rem;
+      }
       h2 {
         color: $dark-txt-color;
       }
@@ -87,7 +94,7 @@
       }
       ul {
         padding: 0rem 2rem 2rem 2rem;
-        max-height: 77vh;
+        max-height: 50vh;
         overflow-y: auto;
         li {
           font-size: 1.3rem;
@@ -98,13 +105,16 @@
 
       &__item {
         @include flex(flex-start, center);
+        @include tablet {
+          @include flex(center, flex-start);
+        }
         cursor: pointer;
         & > * {
           margin: 0 .7rem;
         }
         h2 {
           min-width: 34rem;
-          max-width: 34rem;
+          max-width: 100%;
           font-size: 1.3rem;
           line-height: 1.4;
             // min-height: 5rem;
@@ -113,6 +123,10 @@
             display: -webkit-box;
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
+            @include mobile {
+              min-width: unset;
+              max-width: 100%;
+            }
         }
         &__img {
           border-radius: 1rem;
@@ -132,8 +146,11 @@
     & > * {
       margin: 0 0.8rem;
     }
-    span {
+    & > span {
       font-size: 1.5rem;
+      @include tablet {
+        display: none;
+      }
     }
     & > img {
       width: 4rem;
@@ -168,9 +185,9 @@
       right: 4rem;
       min-width: 25rem;
       top: 7rem;
+      overflow: hidden;
       background-color: #fff;
       border-radius: 1rem;
-      padding: 2rem;
       transition: all 0.3s ease;
       box-shadow: $box-shadow;
       transform-origin: top right;
@@ -193,13 +210,18 @@
       }
       ul {
         li {
-          text-align: center;
-          margin: 2rem 0;
-          font-size: 1.5rem;
-          color: $dark-txt-color;
+          padding:1rem 2rem;
+          font-size: 1.4rem;
           text-transform: uppercase;
+          cursor: pointer;
+          @include flex(center,flex-start);          
+          & > * {
+            margin-right: 1rem;
+          }
           &:hover {
-            color: $main-color;
+            a,div {
+              color: $hover-txt-color;
+            }
           }
         }
       }
@@ -209,6 +231,7 @@
       @include flex(center, center);
       flex-direction: column;
       position: relative;
+      padding:1rem 2rem;
       & > img {
         width: 7rem !important;
         height: 7rem !important;
@@ -229,7 +252,7 @@
       &::after {
         content: "";
         position: absolute;
-        width: 100%;
+        width: 80%;
         height: 1px;
         background-color: rgb(185, 185, 185);
         bottom: 0;
@@ -243,6 +266,55 @@
         font-weight: 500;
       }
     }
+  }
+
+  // SEARCH MOBILE
+
+  &__searchMobile {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: $txt-color;
+    background-color: $bg-color;
+    opacity: 0.99;
+    width: 100vw;
+    height: 100vh;
+    @include flex(center,center);
+    // border-radius: 1rem;
+    transform: translateY(-100%);
+    transition: transform .3s ease;
+    z-index: 99;
+    &.active {
+      transform: translateY(0);
+    }
+  }
+  
+  &__searchInner {
+    width: 75%;
+    border-radius: .6rem;
+    overflow: hidden;
+    @include mobile {
+      width: 90%;
+    }
+  }
+
+  &__searchInput {
+    input {
+      width: 100%;
+      // height: 8vh;
+      color: $dark-txt-color;
+      font-size: 2rem;
+      padding: 2rem 4rem;
+      background-color: $search-input-color;
+    }
+  }
+
+  &__searchClear {
+    position: absolute;
+    top: 2%;
+    right: 2%;
   }
 }
 
@@ -263,7 +335,9 @@
     margin-top: 2rem;
     width: 100%;
   }
-  // height:100%;
+  h3,span {
+    color: $txt-color;
+  }
   &__infor {
     @include flex(center, center);
     flex-direction: column;

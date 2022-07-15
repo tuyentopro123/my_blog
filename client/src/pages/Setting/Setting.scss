@@ -1,0 +1,121 @@
+@use '../../sass/index.scss' as *;
+
+.setting {
+    position: relative;
+    padding: 2rem;
+    max-width:100rem;
+    margin:8rem auto 0 auto;
+    background-color: $bg-color;
+    &__container {
+        padding: 2rem;
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 3.5rem;
+        }
+    }
+
+    &__infor {
+        h2 {
+            font-size: 2.5rem;
+            padding-bottom: 1rem;
+            margin-bottom: 4rem;
+            border-bottom: 1px solid $dark-txt-color;
+        }
+
+        &__item {
+            @include flex(flex-end,flex-start);
+            width: 100%;
+            margin-bottom: 4rem;
+            &__input {
+                flex: 2 1;
+                margin-right: 2rem;
+                h3 {
+                    font-size: 1.8rem;
+                    margin-bottom: 1rem;
+                }
+
+                input {
+                    width: 90%;
+                    background-color: transparent!important;
+                    border-bottom: 1px solid $dark-txt-color;
+                    color:$dark-txt-color!important;
+                    font-size: 1.5rem;
+                    line-height: 2;
+                }
+
+                select {
+                    background-color: transparent;
+                    outline: unset;
+                    border: none;
+                    border-bottom: 1px solid $dark-txt-color;
+                    color: $dark-txt-color;
+                    font-size: 2rem;
+                    text-transform: capitalize;
+                }
+
+                option {
+                    color: $txt-color;
+                }
+            }
+
+            &__button {
+                flex: 1 1;
+                button {
+                    font-size: 1.4rem;
+                    padding: 1rem 2rem;
+                    text-transform: capitalize;
+                    background-color:transparent;
+                    border: 1px solid $dark-txt-color;
+                    &:hover {
+                        opacity: 1!important;
+                        border: 1px solid $hover-txt-color;
+                    }
+                }
+
+                
+                &.active {
+                    & > button {
+                        display: none;
+                    }
+                    .setting__infor__item__save {
+                        display: inline-block;
+                    } 
+                }
+            }
+
+            &__save {
+                display: none;
+                & > * {
+                    margin-right: 1.2rem;
+                }
+            }
+            
+            &__avatar {
+                @include flex(center,flex-start);
+                &__image {
+                    position: relative;
+                    height: 8rem;
+                    width: 8rem;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    border-radius:50%;
+                    overflow: hidden;
+                    &:hover {
+                        .setting__infor__item__avatar__overlay{
+                            cursor: pointer;
+                            display: inline-block!important;
+                        }
+                    }
+                }
+                span {
+                    font-size: 1.5rem;
+                    margin-right: 3rem;
+                }
+                input {
+                    border:initial;
+                }
+            }
+        }
+    }
+}

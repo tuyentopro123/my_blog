@@ -57,7 +57,7 @@ button {
     padding: 1rem;
     cursor: pointer;
     border-radius:2rem;
-    background-color: $main-color;
+    background-color: $hover-txt-color;
     color:#fff;
     text-transform: uppercase;
     @include mobile {

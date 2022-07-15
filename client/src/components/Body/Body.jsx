@@ -40,11 +40,11 @@ import { Avatar } from "@mui/material";
 
 
 const Body = () => {
-  const [topPost, setTopPost] = useState([]);
-  const [listPost, setListPost] = useState([]);
-  const [viewPost, setViewPost] = useState([]);
-  const [popularPost, setPopularPost] = useState([]);
-  const [randomPost, setRandomPost] = useState({});
+  const [topPost, setTopPost] = useState();
+  const [listPost, setListPost] = useState();
+  const [viewPost, setViewPost] = useState();
+  const [popularPost, setPopularPost] = useState();
+  const [randomPost, setRandomPost] = useState();
   const navigate = useNavigate()
 
 
@@ -274,17 +274,18 @@ const Body = () => {
     randomPost();
     setLoading(false);
     return () => {
-      setTopPost([]);
-      setListPost([]);
-      setPopularPost([]);
-      setRandomPost({});
-      setViewPost([]);
+      setTopPost();
+      setListPost();
+      setPopularPost();
+      setRandomPost();
+      setViewPost();
       controller?.abort()
     };
   }, []);
   return (
     <section className="body">
       <div className="body__content">
+        {topPost ? 
         <div className="body__trailer">
           <div className="body__desc">
             <Swiper {...swiperOptionsV1}>
@@ -296,10 +297,13 @@ const Body = () => {
             </Swiper>
           </div>
         </div>
-
+        :
+         <Skeleton sx={{ bgcolor: 'grey.800' }} variant="rectangular" height={400} />
+        }
         <div className="body__post">
           {/* <-----------First form------------>*/}
           <div className="body__post__firstForm">
+            {listPost ? 
             <List header="Recent Stories">
               <Grid col={2} md={2} sm={1} gapCol={10} gapRow={10}>
                 {listPost.map((post, index) => (
@@ -307,6 +311,13 @@ const Body = () => {
                 ))}
               </Grid>
             </List>
+            :
+            <div className="skeleton__recent">
+                <Skeleton sx={{ bgcolor: 'grey.800' }} variant="rectangular" height={1000} />
+            </div>
+            }
+
+            {viewPost ? 
             <div className="body__post__firstForm__sidebar">
               <List header="read more" active="active">
                 <Grid col={1} md={2} sm={1} gapCol={20} gapRow={25}>
@@ -329,8 +340,14 @@ const Body = () => {
                 </Grid>
               </List>
             </div>
+            :
+            <div className="skeleton__sidebar">
+                <Skeleton sx={{ bgcolor: 'grey.800' }} variant="rectangular" height={1000} />
+            </div>
+            }
           </div>
 
+          {viewPost ? 
           <div className="body__banner">
             <div className="body__banner__overlay"></div>
             <div
@@ -342,9 +359,15 @@ const Body = () => {
               <span>Ads Banner</span>
             </div>
           </div>
+          :
+          <div className="body__banner">
+            <Skeleton sx={{ bgcolor: 'grey.800' }} variant="rectangular" height={200} />
+          </div>
+          }
           {/* <-----------Second form------------>*/}
 
-          <div className="body__post__secondForm">  
+          <div className="body__post__secondForm"> 
+            {popularPost ? 
             <List header="popular stories">
               <Swiper {...swiperOptionsV2}>
                 {popularPost.map((post, index) => (
@@ -390,10 +413,14 @@ const Body = () => {
                 ))}
               </Swiper>
             </List>
+            :
+            <Skeleton sx={{ bgcolor: 'grey.800' }} variant="rectangular" height={400} />
+            } 
           </div>
           {/* <-----------Third form------------>*/}
 
           <div className="body__post__thirdForm">
+            {randomPost ? 
             <List header="You Don't miss">
               <div className="body__post__thirdForm__container">
                 <Swiper {...swiperOptionsV3}>
@@ -469,6 +496,13 @@ const Body = () => {
                 </Swiper>
               </div>
             </List>
+            :
+            <div className="skeleton__recent">
+              <Skeleton sx={{ bgcolor: 'grey.800' }} variant="rectangular" height={600} />
+            </div>
+            }
+
+            {randomPost ? 
             <div className="body__post__firstForm__sidebar">
               <List header="Contact me" active="active">
                 <div className="follow">
@@ -493,6 +527,11 @@ const Body = () => {
                 </div>
               </List>
             </div>
+            :
+            <div className="skeleton__sidebar">
+              <Skeleton sx={{ bgcolor: 'grey.800' }} variant="rectangular" height={600} />
+            </div>
+            }
           </div>
         </div>
       </div>

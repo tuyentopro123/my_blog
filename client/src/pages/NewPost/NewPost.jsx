@@ -1,10 +1,7 @@
 import React,{useState,useMemo,useRef,useEffect} from 'react'
 import './NewPost.scss'
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from "react-redux";
-import {createPost,updateUsers} from '../../redux/apiRequest'
-import {loginSuccess} from '../../redux/authSlice'
-import { createAxios } from "../../createInstance";
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
 import Helmet from '../../components/Helmet/Helmet'
 import Navbar from '../../components/Navbar/Navbar'
 import bg from '../../assets/img/thumbnail.jpg'
@@ -16,6 +13,7 @@ import axios from "axios";
 
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
+import {amber} from '@mui/material/colors';
 
 import toast, { Toaster } from 'react-hot-toast';
 const notifySuccess = () => toast.success('Đăng bài thành công');
@@ -23,10 +21,8 @@ const notifyError = (e) => toast.error(e);
 
 var quillObj = ReactQuill;
 const NewPost = () => {
-    const dispatch = useDispatch()
     const navigate = useNavigate()
     const currentUser = useSelector((state)=> state.auth.login?.currentUser)
-    const message = useSelector((state)=> state.post.msg)
 
     
 
@@ -152,7 +148,7 @@ const NewPost = () => {
     const categoriesLife = ["game","social","drama","music","film","politics","sport"]
     const selected = useRef(null)
     const handleDelete = (e) => {
-        document.getElementById(e).disabled = false
+        document.getElementById(e).style.display = "block"
         setPost({...post,category: post.category.filter(item => item !== e)})
     };
 
@@ -170,7 +166,7 @@ const NewPost = () => {
     }
 
     const handleChoose = (e) => {
-        document.getElementById(e.target.value).disabled = true
+        document.getElementById(e.target.value).style.display = "none"
         setPost({...post,category: [...post.category,e.target.value]})
     }
 
@@ -238,7 +234,7 @@ const NewPost = () => {
                             </div>
                             <Stack className="new__body__blog__category__input" direction="row" spacing={1}>
                                 {post.category.map((caterory,index) => (
-                                    <Chip key={index} label={caterory} onDelete={() => handleDelete(caterory)} />
+                                    <Chip color="success" sx={{fontSize: 15}} key={index} label={caterory} onDelete={() => handleDelete(caterory)} />
                                 ))}
                             </Stack>
                         </div>
