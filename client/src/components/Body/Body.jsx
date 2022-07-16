@@ -8,7 +8,6 @@ import {useNavigate} from "react-router-dom"
 
 // Import material ui
 import Skeleton from "@mui/material/Skeleton";
-import Stack from "@mui/material/Stack";
 import axios from "axios";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";

@@ -22,7 +22,7 @@
         border-radius:1rem;
         box-shadow: $box-shadow;
         @include mobile {
-            width:80%;
+            width: 90% !important;;
         }
         @include tablet {
             width:60%;

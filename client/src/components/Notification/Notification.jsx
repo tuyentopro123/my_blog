@@ -73,7 +73,12 @@ const Notification = ({data}) => {
               <div className="notification__container">
                 <h2>Thông báo</h2>
                 <ul>
-                  {data.map((noti, index) => (
+                  {data.length === 0 ? 
+                  <li style={{padding: "1rem"}}>
+                    <span>Bạn chưa có thông báo mới</span>  
+                  </li>
+                  :
+                  data.map((noti, index) => (
                     <li key={index} onClick={() => handleNoti(noti)}>
                       <div className="notification__item">
                         <div className="notification__item__avatar">
@@ -111,7 +116,8 @@ const Notification = ({data}) => {
                         <div className={`notification__item__dot ${!noti.seen && "active"}`}></div>
                       </div>
                     </li>
-                  ))}
+                  ))
+                  }
                 </ul>
               </div>
             </div>

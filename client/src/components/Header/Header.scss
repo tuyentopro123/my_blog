@@ -87,6 +87,15 @@
         animation: Fade ease-in 0.2s;
         display: block;
       }
+      &__tablet {
+        display: none;
+        &.active {
+          @include tablet {
+            animation: Fade ease-in 0.2s;
+            display: block;
+          }
+        }
+      }
       &__title {
         padding: 2rem 0rem 1rem 0rem;
         margin:0 2rem;
@@ -382,6 +391,9 @@
     background-color: rgb(255, 255, 255);
     box-shadow: 0 1px 3px 0 #00000033;
     min-width: 40rem;
+    @include tablet {
+      left: -5%;
+    }
 }
 
 

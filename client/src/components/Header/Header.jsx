@@ -4,7 +4,6 @@ import { logOut } from "../../redux/apiRequest";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search";
-import logo from "../../assets/img/logo.png";
 import male from "../../assets/img/male.png";
 import female from "../../assets/img/female.png";
 import CreateSlug from "../utils/CreateSlug/CreateSlug";
@@ -37,6 +36,11 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Notification from "../Notification/Notification";
 import ClearIcon from '@mui/icons-material/Clear';
+
+import toast, { Toaster } from 'react-hot-toast';
+const notifyWarning = (e) => toast(e, {
+  icon: '😅',
+});
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -83,9 +87,14 @@ const Header = ({ socket }) => {
 
   // GET NOTIFICATION
   const handleGetNotification = async (e) => {
-    setLoading(true);
-    await getNotification(dispatch, user._id);
-    setLoading(false);
+    console.log(user)
+    if(user) {
+      setLoading(true);
+      await getNotification(dispatch, user._id);
+      setLoading(false);
+    } else {
+      notifyWarning("Bạn cần đăng nhập để sử dụng chức năng này")
+    }
   };
 
   
@@ -192,6 +201,16 @@ const Header = ({ socket }) => {
 
   return (
     <div className="header">
+      <Toaster
+                toastOptions={{
+                    className: '',
+                    style: {
+                        padding: '16px',
+                        fontSize:'13px',
+
+                    },
+                }}
+            />
       <div className="header__logo">
         <Link to="/" className="header__logo__img">
           <h2>VANTUYEN</h2>
@@ -247,32 +266,33 @@ const Header = ({ socket }) => {
       <div className="header__actions">
         
         <span> {user ? `Hi, ${user.username}` : ""} </span>
-
-        <Tippy
-          arrow={false}
-          interactive={true}
-          theme="noti"
-          trigger="click"
-          animation="shift-away-extreme"
-          duration={[150, 0]}
-          content={
-              <Notification data={notification}/>
-          }
-        >
-          <div className="header__notification" onClick={(e) => handleGetNotification(e)}>
-            <IconButton size="small">
-              <StyledBadge badgeContent={user?.notification_count} color="error">
-                <div
-                  className={`header__notification__icon ${
-                    user?.notification_count > 0 && "active"
-                  }`}
-                >
-                  <NotificationsIcon sx={{ fontSize: 25, color: grey[700] }} />
-                </div>
-              </StyledBadge>
-            </IconButton>
-          </div>
-        </Tippy>
+        {user && 
+          <Tippy
+            arrow={false}
+            interactive={true}
+            theme="noti"
+            trigger="click"
+            animation="shift-away-extreme"
+            duration={[150, 0]}
+            content={
+                <Notification data={notification}/>
+            }
+          >
+            <div className="header__notification" onClick={handleGetNotification}>
+              <IconButton size="small">
+                <StyledBadge badgeContent={user?.notification_count} color="error">
+                  <div
+                    className={`header__notification__icon ${
+                      user?.notification_count > 0 && "active"
+                    }`}
+                  >
+                    <NotificationsIcon sx={{ fontSize: 25, color: grey[700] }} />
+                  </div>
+                </StyledBadge>
+              </IconButton>
+            </div>
+          </Tippy>
+        }
             
         <div className="header__account">
           {user ?
@@ -450,7 +470,7 @@ const Header = ({ socket }) => {
           <div className="header__searchResult">
             <div
                 ref={listResult}
-                className={`header__body__result ${
+                className={`header__body__result__tablet ${
                   searchTerm !== "" ? "active" : " "
                 }`}
               >

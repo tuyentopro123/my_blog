@@ -38,21 +38,20 @@ passport.use(
     callbackURL: '/auth/facebook/callback'
   }, async(accessToken,refreshToken,profile, done) => {  
     try {
-      console.log(profile);
-      // const user = await User.findOne({socialId: profile.id})
-      // console.log(`the user: ${user}`)
-      // if(user) {
-      //   return done(null,user);
-      // } else {
-      //   const newUser = new User({
-      //     username: profile.displayName,
-      //     image: profile.photos[0].value,
-      //     socialId: profile.id,
-      //     email:profile.emails[0].value,
-      //   });
-      //   await newUser.save();
+      const user = await User.findOne({socialId: profile.id})
+      console.log(`the user: ${user}`)
+      if(user) {
+        return done(null,user);
+      } else {
+        const newUser = new User({
+          username: profile.displayName,
+          image: profile.photos[0].value,
+          socialId: profile.id,
+          email:profile.emails[0].value,
+        });
+        await newUser.save();
         return done(null);
-      // }
+      }
     } catch(err) {
       console.log(err);
     }

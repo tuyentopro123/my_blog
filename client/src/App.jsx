@@ -24,6 +24,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
 import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
+import InfoIcon from '@mui/icons-material/Info';
 import {amber} from '@mui/material/colors';
 
 function App() {
@@ -184,17 +185,25 @@ function SpeedDialTooltip() {
   const handlePost = () => {
     navigate("/newPost")
   }
+
+  const handleAbout = () => {
+    navigate("/about")
+  }
   const handleUp = () => {
     window.scrollTo(0, 0)
   }
   const actions = [
     { 
-      icon: <EditIcon onClick={handlePost} sx={{ fontSize:25,color: amber[400] }}/>, 
+      icon: <EditIcon onClick={handlePost} sx={{ fontSize:25,color: amber[500] }}/>, 
       name: 'Add',
     },
     { 
-      icon: <HomeIcon onClick={handleHome} sx={{ fontSize:25,color: amber[400] }}/>, 
+      icon: <HomeIcon onClick={handleHome} sx={{ fontSize:25,color: amber[500] }}/>, 
       name: 'Home',
+    },
+    { 
+      icon: <InfoIcon onClick={handleAbout} sx={{ fontSize:25,color: amber[500] }}/>, 
+      name: 'About',
     },
   ];
 
