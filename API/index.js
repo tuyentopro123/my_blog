@@ -36,7 +36,7 @@ app.use(express.json());
 
 require("./utils/passport");
 app.use(cors({
-  origin: "https://my-blog-alpha-pearl.vercel.app/",
+  origin: "https://my-blog-ten-snowy.vercel.app/",
   credentials:true,
   optionSuccessStatus:200
 }
@@ -69,7 +69,7 @@ app.get('/auth/google',passport.authenticate('google', {
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    successRedirect: "https://my-blog-alpha-pearl.vercel.app/"
+    successRedirect: "https://my-blog-ten-snowy.vercel.app/"
   })
 );
 
@@ -81,7 +81,7 @@ app.get('/auth/facebook',passport.authenticate('facebook', {
 app.get(
   "/auth/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: "https://my-blog-alpha-pearl.vercel.app/"
+    successRedirect: "https://my-blog-ten-snowy.vercel.app/"
   })
 );
 
@@ -99,7 +99,7 @@ app.listen(PORT, () => {
 const httpServer = createServer(app);
 const io = new Server(httpServer, {  
     cors: {
-        origin: "https://my-blog-alpha-pearl.vercel.app/",
+        origin: "https://my-blog-ten-snowy.vercel.app/",
   },
 });
 
