@@ -15,7 +15,7 @@ const MongoStore = require('connect-mongo');
 
 dotenv.config()
 const app = express();
-const PORT = process.env.port || 8000
+const PORT = process.env.PORT || 8000
 
 // Connect database
 mongoose.connect(process.env.MONGODB_URL,
@@ -36,7 +36,7 @@ app.use(express.json());
 
 require("./utils/passport");
 app.use(cors({
-  origin: "https://vantuyen.tk",
+  origin: "https://my-blog-alpha-pearl.vercel.app/",
   credentials:true,
   optionSuccessStatus:200
 }
@@ -69,7 +69,7 @@ app.get('/auth/google',passport.authenticate('google', {
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    successRedirect: "https://vantuyen.tk"
+    successRedirect: "https://my-blog-alpha-pearl.vercel.app/"
   })
 );
 
@@ -81,7 +81,7 @@ app.get('/auth/facebook',passport.authenticate('facebook', {
 app.get(
   "/auth/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: "https://vantuyen.tk"
+    successRedirect: "https://my-blog-alpha-pearl.vercel.app/"
   })
 );
 
@@ -99,7 +99,7 @@ app.listen(PORT, () => {
 const httpServer = createServer(app);
 const io = new Server(httpServer, {  
     cors: {
-        origin: "https://vantuyen.tk",
+        origin: "https://my-blog-alpha-pearl.vercel.app/",
   },
 });
 
