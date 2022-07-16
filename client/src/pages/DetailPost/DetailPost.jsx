@@ -33,7 +33,7 @@ import RelatedPost from "../../components/RelatedPost/RelatedPost";
 import toast, { Toaster } from 'react-hot-toast';
 const notifyError = (e) => toast.error(e);
 
-const DetailPost = ({ socket }) => {
+const DetailPost = () => {
   const location = useLocation()
   const {slug} = useParams()
   
@@ -138,18 +138,18 @@ const DetailPost = ({ socket }) => {
       success: noti,
       error: 'lỗi đường truyền',
     });
-    if (post.like_user.filter((e) => e._id === currentUser._id).length === 0) {
-      socket.emit("sendNotification", {
-        sender_img: currentUser.image,
-        sender_user: currentUser.username,
-        action: "likePost",
-        action_icon: "heart",
-        createdAt: Date().now,
-        reaction: post._id,
-        user_receiver: post.user._id,
-        seen: false,
-      });
-    }
+    // if (post.like_user.filter((e) => e._id === currentUser._id).length === 0) {
+    //   socket.emit("sendNotification", {
+    //     sender_img: currentUser.image,
+    //     sender_user: currentUser.username,
+    //     action: "likePost",
+    //     action_icon: "heart",
+    //     createdAt: Date().now,
+    //     reaction: post._id,
+    //     user_receiver: post.user._id,
+    //     seen: false,
+    //   });
+    // }
   };
 
   // Handle save 
@@ -196,16 +196,16 @@ const DetailPost = ({ socket }) => {
           error: 'lỗi đường truyền',
         });
       await getComment(post._id)
-      socket.emit("sendNotification", {
-        sender_img: currentUser.image,
-        sender_user: currentUser.username,
-        action: "comment",
-        action_icon: "comment",
-        createdAt: Date().now,
-        reaction: post._id,
-        user_receiver: post.user._id,
-        seen: false,
-      });
+      // socket.emit("sendNotification", {
+      //   sender_img: currentUser.image,
+      //   sender_user: currentUser.username,
+      //   action: "comment",
+      //   action_icon: "comment",
+      //   createdAt: Date().now,
+      //   reaction: post._id,
+      //   user_receiver: post.user._id,
+      //   seen: false,
+      // });
       setNewComment({ ...newComment, comment: "" });
     }
   };
@@ -507,7 +507,6 @@ const DetailPost = ({ socket }) => {
                             <Comment
                               id={comment._id}
                               comment={comment}
-                              socket={socket}
                               receive={getComment}
                             />
                           </div>

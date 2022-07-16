@@ -55,7 +55,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 
 
-const Header = ({ socket }) => {
+const Header = () => {
   const user = useSelector((state) => state.auth.login?.currentUser);
   const notificationUser = useSelector(
     (state) => state.auth.login?.notification
@@ -63,12 +63,6 @@ const Header = ({ socket }) => {
   const [loading, setLoading] = useState(false);
   // SOCKET IO
   const [notification, setNotification] = useState([]);
-
-  useEffect(() => {
-    socket?.on("getNotification", (data) => {
-      setNotification((prev) => [...prev, data]);
-    });
-  }, [socket]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

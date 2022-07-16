@@ -22,7 +22,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import axios from "axios";
 
-const Comment = ({ comment, socket, id,receive }) => {
+const Comment = ({ comment, id,receive }) => {
   const emoji = [
     {
       title: "Thích",
@@ -104,18 +104,18 @@ const Comment = ({ comment, socket, id,receive }) => {
     await receive(comment.post)
     await getReplyComment(comment._id)
 
-    if (currentUser._id !== e.target.name) {
-      socket.emit("sendNotification", {
-        sender_img: currentUser.image,
-        sender_user: currentUser.username,
-        action: "replyComment",
-        action_icon: "comment",
-        createdAt: Date().now,
-        reaction: e.target.id,
-        user_receiver: e.target.name,
-        seen: false,
-      });
-    }
+    // if (currentUser._id !== e.target.name) {
+    //   socket.emit("sendNotification", {
+    //     sender_img: currentUser.image,
+    //     sender_user: currentUser.username,
+    //     action: "replyComment",
+    //     action_icon: "comment",
+    //     createdAt: Date().now,
+    //     reaction: e.target.id,
+    //     user_receiver: e.target.name,
+    //     seen: false,
+    //   });
+    // }
   };
 
   // cancel comment
@@ -163,18 +163,18 @@ const Comment = ({ comment, socket, id,receive }) => {
       e.target.id,
       dispatch
     );
-    if (currentUser._id !== e.target.ariaRequired) {
-      socket.emit("sendNotification", {
-        sender_img: currentUser.image,
-        sender_user: currentUser.username,
-        action: "interComment",
-        action_icon: e.target.accessKey || e.target.name,
-        createdAt: Date().now,
-        reaction: e.target.id,
-        user_receiver: e.target.ariaRequired,
-        seen: false,
-      });
-    }
+    // if (currentUser._id !== e.target.ariaRequired) {
+    //   socket.emit("sendNotification", {
+    //     sender_img: currentUser.image,
+    //     sender_user: currentUser.username,
+    //     action: "interComment",
+    //     action_icon: e.target.accessKey || e.target.name,
+    //     createdAt: Date().now,
+    //     reaction: e.target.id,
+    //     user_receiver: e.target.ariaRequired,
+    //     seen: false,
+    //   });
+    // }
     if (e.target.ariaAtomic) getReplyComment(comment._id);
   };
 

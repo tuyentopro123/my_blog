@@ -2,10 +2,7 @@ import React from 'react'
 import './MiniPost.scss'
 import bgEmty from '../../assets/img/thumbnail_emty.jpg'
 import { useDispatch,useSelector } from "react-redux";
-import { getUserPost } from "../../redux/apiRequest"
 import { useNavigate } from "react-router-dom";
-import { createAxios } from "../../createInstance";
-import { loginSuccess } from '../../redux/authSlice';
 import getTimeString from '../../utils/GetTimeString';
 
 // material ui

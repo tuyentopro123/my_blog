@@ -36,7 +36,7 @@ app.use(express.json());
 
 require("./utils/passport");
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://vantuyen.tk",
   credentials:true,
   optionSuccessStatus:200
 }
@@ -69,7 +69,7 @@ app.get('/auth/google',passport.authenticate('google', {
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    successRedirect: "http://localhost:3000/"
+    successRedirect: "https://vantuyen.tk"
   })
 );
 
@@ -81,7 +81,7 @@ app.get('/auth/facebook',passport.authenticate('facebook', {
 app.get(
   "/auth/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: "http://localhost:3000/"
+    successRedirect: "https://vantuyen.tk"
   })
 );
 
@@ -99,7 +99,7 @@ app.listen(PORT, () => {
 const httpServer = createServer(app);
 const io = new Server(httpServer, {  
     cors: {
-        origin: "http://localhost:3000",
+        origin: "https://vantuyen.tk",
   },
 });
 

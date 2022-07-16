@@ -32,7 +32,7 @@ function App() {
   const user = useSelector((state)=> state.auth.login?.currentUser)
   const loading = useSelector((state)=> state.post.post.isFetching)
   const dispatch = useDispatch()
-  const [socket,setSocket] = useState(null)
+  // const [socket,setSocket] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const categories = ["Frontend",
                       "Backend",
@@ -48,15 +48,15 @@ function App() {
 ]
   
   // SOCKET IO
-  useEffect(() => {
-    setSocket(io("http://localhost:5000"))
-    loginUser(dispatch)
-  },[])
+  // useEffect(() => {
+  //   setSocket(io("http://localhost:5000"))
+  //   loginUser(dispatch)
+  // },[])
 
   
-  useEffect(() => {
-    socket?.emit("newUser",user)
-  },[socket,user]) 
+  // useEffect(() => {
+  //   socket?.emit("newUser",user)
+  // },[socket,user]) 
   
   useEffect(() => {
     setIsLoading(loading)
@@ -68,7 +68,7 @@ function App() {
     <div className="App">
       <ProgressBar isAnimating={isLoading} />
       <BrowserRouter>
-        <Header socket={socket}/>
+        <Header/>
         <SpeedDialTooltip/>  
         <Routes>
           <Route path='/' element={<Home />}/>
@@ -81,7 +81,7 @@ function App() {
           <Route path='/infor/save/:id' element={user ? <Infor save={true}/> : <Login /> }/>
           <Route path='/newPost' element={<NewPost />}/>
           <Route path='/setting' element={<Setting />}/>
-          <Route path='/post/:slug' element={user ? <DetailPost socket={socket}/> : <Login /> }/>
+          <Route path='/post/:slug' element={user ? <DetailPost/> : <Login /> }/>
         </Routes>
       </BrowserRouter>  
       <div className="footer">
