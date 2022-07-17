@@ -25,7 +25,6 @@ mongoose.connect(process.env.MONGODB_URL,
        }
 )
 
-
 app.use(express.json({ limit: '50mb', extended: true }));
 
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
@@ -35,12 +34,7 @@ app.use(cookieParser())
 app.use(express.json());
 
 require("./utils/passport");
-app.use(cors({
-  origin: "*",
-  credentials:true,
-  optionSuccessStatus:200
-}
-)) 
+app.use(cors()) 
 app.use(session({
   secret: 'somethingsecret',
   resave: false,
