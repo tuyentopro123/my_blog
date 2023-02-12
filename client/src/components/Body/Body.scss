@@ -321,6 +321,7 @@
             background-repeat: no-repeat;
             background-size: cover;
             background-attachment: fixed;
+            -webkit-overflow-scrolling: touch;
             span {
                 font-size: 4rem;
                 color: #fff;

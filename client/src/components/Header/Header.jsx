@@ -8,7 +8,9 @@ import male from "../../assets/img/male.png";
 import female from "../../assets/img/female.png";
 import CreateSlug from "../utils/CreateSlug/CreateSlug";
 import { getNotification } from "../../redux/apiRequest";
-import axios from "axios";
+import {publicRequest} from "../../utils/configAxios";
+
+
 
 // Material ui
 import { yellow } from "@mui/material/colors";
@@ -81,7 +83,6 @@ const Header = () => {
 
   // GET NOTIFICATION
   const handleGetNotification = async (e) => {
-    console.log(user)
     if(user) {
       setLoading(true);
       await getNotification(dispatch, user._id);
@@ -102,6 +103,7 @@ const Header = () => {
   // GET POST USER
   const input = useRef(null);
   const listResult = useRef(null);
+  const listResultMobile = useRef(null);
   const handleGetPost = async (item) => {
     input.current.value = "";
     listResult.current.classList.remove("active");
@@ -110,7 +112,7 @@ const Header = () => {
 
   const handleGetPostMobile = async (item) => {
     input.current.value = "";
-    listResult.current.classList.remove("active");
+    listResultMobile.current.classList.remove("active");
     document.querySelector(".header__searchMobile").classList.remove("active");
     navigate(`/post/${item.slug}`, { state: item._id });
   };
@@ -136,7 +138,7 @@ const Header = () => {
     if (debounceSearchTerm) {
       const searchItem = async () => {
         try {
-          const res = await axios.get(
+          const res = await publicRequest.get(
             `/v1/post/path/result?searchQuery=${CreateSlug(debounceSearchTerm)}`
           );
           setResult(res.data);
@@ -463,7 +465,7 @@ const Header = () => {
 
           <div className="header__searchResult">
             <div
-                ref={listResult}
+                ref={listResultMobile}
                 className={`header__body__result__tablet ${
                   searchTerm !== "" ? "active" : " "
                 }`}

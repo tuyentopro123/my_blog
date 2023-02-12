@@ -5,7 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Typography from '@mui/material/Typography';
+import { amber } from '@mui/material/colors';
 
 const DialogComponent = (props) => {
     const handleCancel = () => {
@@ -30,17 +30,17 @@ const DialogComponent = (props) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title" sx={{ fontSize:30}}>
+        <DialogTitle id="alert-dialog-title" sx={{ fontSize:30,color:amber[500]}}>
           {"Xóa bình luận?"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description" sx={{ fontSize:20}}>
+          <DialogContentText id="alert-dialog-description" sx={{ fontSize:20,color:amber[500]}}>
             Bạn có chắc muốn xóa bình luận ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button sx={{ fontSize:20}} onClick={handleCancel}>HỦY</Button>
-          <Button sx={{ fontSize:20}} onClick={handleAccess} autoFocus>
+          <Button sx={{ fontSize:20,color:amber[500]}} onClick={handleCancel}>HỦY</Button>
+          <Button sx={{ fontSize:20,color:amber[500]}} onClick={handleAccess} autoFocus>
             XÓA
           </Button>
         </DialogActions>

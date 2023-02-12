@@ -12,11 +12,11 @@ const Login = () => {
 
       
   const handleGoogle = async() => {
-    window.open('http://localhost:8000/auth/google',"_self")
+    window.open('https://server-app-js.herokuapp.com/auth/google',"_self")
   }
 
   const handleFacebook = async() => {
-    window.open('http://localhost:8000/auth/facebook',"_self")
+    window.open('https://server-app-js.herokuapp.com/auth/facebook',"_self")
   }
 
 

@@ -1,10 +1,12 @@
 import React,{useState,useEffect } from 'react'
 import './Infor.scss'
-import {useLocation, useParams,useNavigate} from 'react-router-dom'
+import { useParams,useNavigate} from 'react-router-dom'
 import { useDispatch,useSelector } from "react-redux";
 import { updateUsers } from "../../redux/apiRequest";
+import {getUserStart,getUserSuccess} from "../../redux/userSlice"
 
-import axios from "axios";
+import {publicRequest} from '../../utils/configAxios'
+
 import male from '../../assets/img/male.png'
 import female from '../../assets/img/female.png'
 import Grid from '../../components/utils/Grid/Grid'
@@ -14,7 +16,7 @@ import Helmet from '../../components/Helmet/Helmet';
 
 // MUI
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import { grey,amber } from '@mui/material/colors';
+import { amber } from '@mui/material/colors';
 import CircularProgress from '@mui/material/CircularProgress';
 import ListIcon from '@mui/icons-material/List';
 import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
@@ -34,7 +36,6 @@ import toast, { Toaster } from 'react-hot-toast';
 const notify = () => toast.success('Cập nhật ảnh đại diện thành công');
 
 const Infor = ({save}) => {
-    const location = useLocation()
     const {id} = useParams()
     const currentUser = useSelector((state)=> state.auth.login?.currentUser)
     const [loading,setLoading] = useState(false) 
@@ -57,8 +58,7 @@ const Infor = ({save}) => {
 
     const uploadImage = async(base64encodedImage) => {
         try {
-            const res = await axios.post(`/v1/user/upload/user/${currentUser._id}`, {data: base64encodedImage},{
-              })
+            const res = await publicRequest.post(`/v1/user/upload/user/${currentUser._id}`, {data: base64encodedImage})
             setUser({...user,image: `${res.data.url}`})
             await updateUsers({image: `${res.data.url}`},dispatch,user._id);
             setLoading(false)
@@ -83,8 +83,10 @@ const Infor = ({save}) => {
 
     // GET USER
     const getUsers = async(id) => {
+        dispatch(getUserStart())
       try {
-        const res = await axios.get(`/v1/user/` + id);
+        const res = await publicRequest.get(`/v1/user/` + id);
+        dispatch(getUserSuccess())
         setUser(res.data)
         setPost(res.data.posts)
       } catch (err) {
@@ -100,14 +102,15 @@ const Infor = ({save}) => {
           getUsers(id)
       }, [id]);
 
-      useEffect(() => {
-        
+      useEffect(() => { 
         const getSavePost = async(id) => {
+        dispatch(getUserStart())
             try {
-              const res = await axios.get(`/v1/post/saved/` + id);
-              setPost(res.data)
+                const res = await publicRequest.get(`/v1/post/saved/` + id);
+                dispatch(getUserSuccess())
+                setPost(res.data)
             } catch (err) {
-              console.log(err)
+                console.log(err)
             }
           };
         if(save) {
@@ -146,7 +149,7 @@ const Infor = ({save}) => {
                                         <div className="infor__hard__avatar__overlay overlay"></div>
                                         <CameraAltIcon 
                                             className="infor__hard__avatar__icon" 
-                                            sx={{ fontSize: 40,color: grey[800] }} 
+                                            sx={{ fontSize: 40,color: amber[600] }} 
                                             style={{position: 'absolute'}}
                                             htmlFor="imgProfile"
                                         />

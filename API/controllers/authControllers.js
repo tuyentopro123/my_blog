@@ -31,10 +31,11 @@ const authControllers = {
     loginUser: async(req,res) => {
         try {
             if(req.user) {
+                const user = await User.findById(req.user)
                 res.status(200).json({
                     success:true,
                     message: "successfully",
-                    user:req.user,
+                    user:user,
                 });
             } else {
                 res.status(200).json({
@@ -66,8 +67,8 @@ const authControllers = {
 
         // LOGOUT
     userLogout: async(req,res) => {
-        req.session.destroy(function (err) {
-            res.redirect('/'); //Inside a callback… bulletproof!
+        req.session.destroy((err) => {
+            res.status(200).json("logout success");
         });
     }
 

@@ -8,7 +8,7 @@
         background-color: $bg-color;
         &__container {
                 width: 100%;
-                padding:2.5rem;
+                padding:1.5rem;
         }
 
         &__thumbnail {
@@ -29,8 +29,7 @@
         &__category {
                 width: 100%;
                 @include flex(center,flex-start);
-                margin-bottom:2rem;
-                margin-left: 1rem;
+                margin: 1.5rem 0 2rem 1rem;
                 &__item {
                         padding: .6rem 1.2rem!important;
                         margin-right:1rem ;
@@ -53,7 +52,8 @@
                                 width: 3.5rem;
                                 height: 3.5rem;
                                 border-radius: 50%;
-                                object-fit: cover;
+                                -o-object-fit: cover;
+                                   object-fit: cover;
                                 cursor: pointer;
                         }
                         span {
@@ -71,13 +71,15 @@
 
                         span {
                                 font-size: 1.5rem;
-                                user-select: none;
+                                -webkit-user-select: none;
+                                   -moz-user-select: none;
+                                    -ms-user-select: none;
+                                        user-select: none;
                         }
                     }
         }
 
         &__content {
-                padding: 1rem 0;
                 @include flex(center,space-between);
                 &:hover {
                         h1 {
@@ -90,7 +92,7 @@
                 &__text {
                         cursor: pointer;
                         & > * {
-                                margin:2rem 0;
+                                margin:.8rem 0;
                         }
                         &__title {
                                 h1 {
@@ -108,7 +110,10 @@
 
                         &__detail {
                                 font-size: 1.4rem;
-                                user-select: none;
+                                -webkit-user-select: none;
+                                   -moz-user-select: none;
+                                    -ms-user-select: none;
+                                        user-select: none;
                                 & > * {
                                         display: none;
                                 }
@@ -120,11 +125,11 @@
                                 }
                                 line-height: 1.8;
                                 max-width: 40rem;
-                                min-height: 5rem;
+                                min-height: 7rem;
+                                max-height: 5rem;
                                 overflow: hidden;
-                                display: -webkit-box;
-                                -webkit-box-orient: vertical;
-                                -webkit-line-clamp: 2;
+                                mask-image: linear-gradient($bg-color,$bg-color,hsla(0,0%,100%,0));
+                                -webkit-mask-image: linear-gradient($bg-color,$bg-color,hsla(0,0%,100%,0));
                         }
                 }
 

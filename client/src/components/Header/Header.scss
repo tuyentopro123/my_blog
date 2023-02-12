@@ -10,6 +10,7 @@
   background-color: $bg-color;
   @include tablet {
     position: fixed;
+    top:0;
   }
   & > * {
     height: 100%;
@@ -19,7 +20,8 @@
   &__notification {
     &__icon {
       &.active {
-          animation:ringBell ease-in 3s infinite;
+          -webkit-animation:ringBell ease-in 3s infinite;
+                  animation:ringBell ease-in 3s infinite;
       }
   }
   }
@@ -84,15 +86,24 @@
         color: $dark-txt-color;
       }
       &.active {
-        animation: Fade ease-in 0.2s;
+        -webkit-animation: Fade ease-in 0.2s;
+                animation: Fade ease-in 0.2s;
         display: block;
       }
       &__tablet {
         display: none;
         &.active {
           @include tablet {
-            animation: Fade ease-in 0.2s;
+            -webkit-animation: Fade ease-in 0.2s;
+                    animation: Fade ease-in 0.2s;
             display: block;
+          }
+          ul {
+            max-height: 40rem;
+            overflow-x: auto;
+          }
+          li {
+            margin: 2rem 0;
           }
         }
       }
@@ -165,7 +176,8 @@
       width: 4rem;
       height: 4rem;
       border-radius: 50%;
-      object-fit: cover;
+      -o-object-fit: cover;
+         object-fit: cover;
       cursor: pointer;
     }
   }
@@ -201,7 +213,8 @@
       box-shadow: $box-shadow;
       transform-origin: top right;
       &.active {
-        animation: Fade ease-in 0.2s;
+        -webkit-animation: Fade ease-in 0.2s;
+                animation: Fade ease-in 0.2s;
         display: block;
         @include mobile {
           .overlay {
@@ -327,6 +340,15 @@
   }
 }
 
+@-webkit-keyframes Fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes Fade {
   from {
     opacity: 0;
@@ -401,50 +423,76 @@
   width: 75%;
 }
 
-@keyframes ringBell {
+@-webkit-keyframes ringBell {
   0% {
-      -webkit-transform: rotate(0deg);
       transform: rotate(0deg)
   }
   30% {
-      -webkit-transform: rotate(0deg);
       transform: rotate(0deg)
   }
   33% {
-      -webkit-transform: rotate(-15deg);
       transform: rotate(-15deg)
   }
   36% {
-      -webkit-transform: rotate(15deg);
       transform: rotate(15deg)
   }
   39% {
-      -webkit-transform: rotate(-15deg);
       transform: rotate(-15deg)
   }
   42% {
-      -webkit-transform: rotate(15deg);
       transform: rotate(15deg)
   }
   45% {
-      -webkit-transform: rotate(-15deg);
       transform: rotate(-15deg)
   }
   48% {
-      -webkit-transform: rotate(15deg);
       transform: rotate(15deg);
       opacity: 1
   }
   51% {
-      -webkit-transform: rotate(-15deg);
       transform: rotate(-15deg)
   }
   54% {
-      -webkit-transform: rotate(15deg);
       transform: rotate(15deg)
   }
   57% {
-      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg)
+  }
+}
+
+@keyframes ringBell {
+  0% {
+      transform: rotate(0deg)
+  }
+  30% {
+      transform: rotate(0deg)
+  }
+  33% {
+      transform: rotate(-15deg)
+  }
+  36% {
+      transform: rotate(15deg)
+  }
+  39% {
+      transform: rotate(-15deg)
+  }
+  42% {
+      transform: rotate(15deg)
+  }
+  45% {
+      transform: rotate(-15deg)
+  }
+  48% {
+      transform: rotate(15deg);
+      opacity: 1
+  }
+  51% {
+      transform: rotate(-15deg)
+  }
+  54% {
+      transform: rotate(15deg)
+  }
+  57% {
       transform: rotate(0deg)
   }
 }

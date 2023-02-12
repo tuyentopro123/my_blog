@@ -20,9 +20,9 @@ const Blog = ({ fields }) => {
   const allPost = useSelector((state) => state.post.post.AllPost);
 
   const pageNumber =
-    allPost.totalPost % 4 === 0
-      ? Math.floor(allPost.totalPost / 4)
-      : Math.floor(allPost.totalPost / 4) + 1;
+    allPost?.totalPost % 4 === 0
+      ? Math.floor(allPost?.totalPost / 4)
+      : Math.floor(allPost?.totalPost / 4) + 1;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
@@ -40,7 +40,6 @@ const Blog = ({ fields }) => {
   }, [pathname,category,currentPage]);
   
   const HandleSetPage = async (e, value) => {
-    console.log(value);
     if(category) {
       navigate(`/${fields}?category=${category}${value === 1 ? '' : `&pagePost=${value}`}`)
     } else {
@@ -58,8 +57,8 @@ const Blog = ({ fields }) => {
           <div className="blog__content">
             <div className="blog__content__list">
               <Grid col={2} md={2} sm={1} gapCol={15} gapRow={10}>
-                {allPost.post.length > 0 ? (
-                  allPost.post.map((post, index) => (
+                {allPost?.post.length > 0 ? (
+                  allPost?.post.map((post, index) => (
                     <BlogItem key={index} post={post} field={fields} />
                   ))
                 ) : (
@@ -67,11 +66,11 @@ const Blog = ({ fields }) => {
                 )}
               </Grid>
             </div>
-            {allPost.post.length > 0 && (
+            {allPost?.post.length > 0 && (
               <PaginationType
                 defaultPage={currentPage ? parseInt(currentPage) : 1}
                 func={HandleSetPage} 
-                numb={pageNumber}
+                numb={pageNumber ? pageNumber : 2}
               />  
             )}
           </div>

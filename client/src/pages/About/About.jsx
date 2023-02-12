@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import './About.scss'
 import {useNavigate,Link} from 'react-router-dom'
-import axios from 'axios'
+import {publicRequest} from '../../utils/configAxios'
 import LazyLoad from "react-lazyload";
 import GetTime from "../../utils/GetTime";
 import Helmet from "../../components/Helmet/Helmet";
@@ -26,31 +26,37 @@ const About = () => {
     const navigate = useNavigate()
     const social = [
         {
+          title: "Facebook",
           href: "https://www.facebook.com/tea.live.167/",
           icon: FacebookIcon,
           color:indigo,
         },
         {
-          href: "https://www.facebook.com/tea.live.167/",
+          title: "instagram",
+          href: "https://www.instagram.com/tealive4/",
           icon: InstagramIcon,
           color:orange,
         },
         {
-          href: "https://www.facebook.com/tea.live.167/",
+          title: "linkedin",
+          href: "https://www.linkedin.com/in/tuy%C3%AAn-nguy%E1%BB%85n-v%C4%83n-47771b234/",
           icon: LinkedInIcon,
           color:purple,
         },
         {
-          href: "https://www.facebook.com/tea.live.167/",
+          title: "github",
+          href: "https://github.com/tuyentopro123",
           icon: GitHubIcon,
           color:null,
         },
         {
+          title: "youtube",
           href: "https://www.facebook.com/tea.live.167/",
           icon: YouTubeIcon,
           color:red,
         },
         {
+          title: "twitter",
           href: "https://www.facebook.com/tea.live.167/",
           icon: TwitterIcon,
           color:blue
@@ -91,7 +97,7 @@ const About = () => {
             desc:"Đây là template mình clone từ file Figma và sử dụng TailwindCSS",
             img: Hiking,
             github: "https://github.com/tuyentopro123/Hiking-concept-web-template",
-            web: "https://hiking-concept-web-template.netlify.app/"
+            web: "https://hiking-concept-web-template.vercel.app/"
         },
         {
             name:"Lengue of lengends template",
@@ -115,7 +121,7 @@ const About = () => {
      // RANDOM POST
     const getRandomPost = async () => {
         try {
-        const res = await axios.get("/v1/post/path/random");
+        const res = await publicRequest.get("/v1/post/path/random");
         setRandom(res.data.randomPosts1);
         } catch (err) {
         console.log(err);
@@ -188,7 +194,7 @@ const About = () => {
                             <div className="about__personal__avatar">
                                 <Avatar
                                     sx={{ width: 140, height: 140 }}
-                                    src="https://yt3.ggpht.com/ytc/AKedOLRwjFr7ljzmtF-lRtLcnUv6NmmkH7ud-vdgMpO6KA=s900-c-k-c0x00ffffff-no-rj"
+                                    src="https://res.cloudinary.com/tealive/image/upload/v1658281211/lol_template/crrjc8bqkcps2bvmc95b.jpg"
                                 />
                             </div>
                             <div className="about__personal__content">
@@ -200,7 +206,7 @@ const About = () => {
                                     </div>
                                 </div>
                                 <div className="about__personal__content__detail">
-                                    <p>Hi my name is Marshall and this is my Journey! I use this awesome blog theme to tell people my story. Through all the places and things I see around the world, there isn't a best way to share my experience! Follow my daily updates and discover with me the essence of traveling!</p>
+                                    <p>Xin chào, tên mình là Tuyên. Mình là một front-end developer. Mình có khả năng tự tìm hiểu và phát triển ứng web app bằng các công nghệ mới ngày nay như ReactJS, NextJS. Mình đang cố gắng phát triển và định hướng trong tương lai sẽ trở thành một fullstack developer </p>
                                 </div>
                                 <div className="about__personal__content__social">
                                     {social.map((item, index) => (

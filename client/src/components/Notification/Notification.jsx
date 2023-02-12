@@ -6,11 +6,12 @@ import GetTime from "../../utils/GetTime"
 import {useNavigate } from 'react-router-dom';
 import { useDispatch,useSelector} from "react-redux";
 import { grey } from "@mui/material/colors";
-import axios from 'axios';
-import { getUserPost } from "../../redux/apiRequest"
+import {publicRequest} from "../../utils/configAxios";
 
-import {redirectNotificationStart,
-  redirectNotificationFinish} from "../../redux/authSlice"
+
+// import { getUserPost } from "../../redux/apiRequest"
+
+import {redirectNotificationStart} from "../../redux/authSlice"
 
 
 
@@ -58,7 +59,7 @@ const Notification = ({data}) => {
     // ACCESS NOTIFICATION
     const accessNotification = async() => {
         try {
-          const res = await axios.post("/v1/user/check/" + user._id,noti);
+          const res = await publicRequest.post("/v1/user/check/" + user._id,noti);
           res.data.action && dispatch(redirectNotificationStart(noti))
           navigate(`/post/${res.data.post.slug}`,{state:res.data.post._id})
         } catch (err) {

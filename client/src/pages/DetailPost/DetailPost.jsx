@@ -13,10 +13,12 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 // Skeleton
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
+import CloseIcon from '@mui/icons-material/Close';
 
 import Helmet from "../../components/Helmet/Helmet";
 import GetTime from "../../utils/GetTime";
-import axios from "axios";
+import {publicRequest} from '../../utils/configAxios'
+
 
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation,useParams,Link } from "react-router-dom";
@@ -32,6 +34,19 @@ import RelatedPost from "../../components/RelatedPost/RelatedPost";
 
 import toast, { Toaster } from 'react-hot-toast';
 const notifyError = (e) => toast.error(e);
+const notifySpam = () => toast('Vui lòng không spam',
+                                {
+                                  icon: '🤫',
+                                  style: {
+                                    borderRadius: '10px',
+                                    background: '#333',
+                                    color: '#fff',
+                                  },
+                                }
+                              );
+const notify = () => toast('Chức năng hiện đang bảo trì', {
+                        icon: '🛠',
+                      });
 
 const DetailPost = () => {
   const location = useLocation()
@@ -71,7 +86,7 @@ const DetailPost = () => {
   const getUserPost = async (slug) => {
     dispatch(startFirstLoading())
     try {
-      const res = await axios.get("/v1/post/" + slug);
+      const res = await publicRequest.get("/v1/post/" + slug);
       dispatch(FinishLoading())
       setPost(res.data.userPost)
       setRelatedPost(res.data.relatedPost)
@@ -84,7 +99,7 @@ const DetailPost = () => {
   // GET COMMENT
   const getComment = async (id) => {
     try {
-      const res = await axios.get("/v1/comment/comment/" + id);
+      const res = await publicRequest.get("/v1/comment/comment/" + id);
       setComment(res.data)
       dispatch(resetFirstLoading())
     } catch (err) {
@@ -95,7 +110,7 @@ const DetailPost = () => {
   // UPDATE LIKE
   const updatePost = async (user,id) => {
     try {
-      const res = await axios.post("/v1/post/update/" + id,user);
+      const res = await publicRequest.post("/v1/post/update/" + id,user);
       setPost(res.data)
     } catch (err) {
       console.log(err)
@@ -105,7 +120,7 @@ const DetailPost = () => {
     // SAVE POST
     const savePost = async (user,id) => {
       try {
-        const res = await axios.post("/v1/post/save/" + id,user);
+        const res = await publicRequest.post("/v1/post/save/" + id,user);
         setPost(res.data)
       } catch (err) {
         console.log(err)
@@ -115,7 +130,7 @@ const DetailPost = () => {
  // RANDOM POST
  const getRandomPost = async () => {
   try {
-    const res = await axios.get("/v1/post/path/random");
+    const res = await publicRequest.get("/v1/post/path/random");
     setRandomPost(res.data.randomPosts1);
   } catch (err) {
     console.log(err);
@@ -209,6 +224,18 @@ const DetailPost = () => {
       setNewComment({ ...newComment, comment: "" });
     }
   };
+
+  // Share 
+  var click = 0;
+  const handleShare = () =>  {
+    if(click < 5) {
+      click++;
+      notify()
+    } else {
+      notifySpam();
+      click = 0;
+    }
+  }
 
   // Focus input
   const handleFocusComment = async () => {
@@ -349,8 +376,9 @@ const DetailPost = () => {
                     }
                   </div>
                   <div
+                      id="share"
                       className="detailpost__header__share"
-                      // onClick={(e) => handleSetting(e)}
+                      onClick={handleShare}
                     >
                       <MoreHorizIcon sx={{ fontSize: 25,color: amber[400] }} />
                   </div>
@@ -471,6 +499,9 @@ const DetailPost = () => {
               onClick={handleOffComment}
             ></div>
           <div id="comment" className="detailpost__idea">
+              <div className="detailpost__idea__closeTab" onClick={handleOffComment}>
+                <CloseIcon sx={{fontSize:30}}/>
+              </div>
               <div className="detailpost__idea__container">
                 <div className="detailpost__idea__commentCount">
                   <h1>{post.commentCount} bình luận</h1>

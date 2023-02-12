@@ -13,7 +13,8 @@
             img {
                 width: 5rem;
                 height: 5rem;
-                object-fit: cover;
+                -o-object-fit: cover;
+                   object-fit: cover;
                 border-radius: 50%;
                 margin-right:2rem;
             }
@@ -45,7 +46,8 @@
                 img {
                     width: 6rem;
                     height: 6rem;
-                    object-fit: cover;
+                    -o-object-fit: cover;
+                       object-fit: cover;
                     border-radius: 50%;
                     margin-right:2rem;
                 }
@@ -80,7 +82,7 @@
         &__userComment {
             @include flex(flex-start,flex-start);
             flex-direction:column; ;
-            margin: 3rem 0;
+            margin: 1rem 0;
             &__container {
                 z-index: 90;
             }
@@ -107,7 +109,8 @@
 
                 &.active {
                     #reaction {
-                        animation: FadeBackGround ease-in-out .8s;
+                        -webkit-animation: FadeBackGround ease-in-out .8s;
+                                animation: FadeBackGround ease-in-out .8s;
                     }
                 }
             }
@@ -217,14 +220,15 @@
                     display: none;
                     background-color: rgb(223, 223, 223);
                     border-radius:.5rem;
-                    padding:1rem;
+                    padding:.5rem;
                     min-width:100%;
                     right:0;
                     left: 50%;
                     top: 50%;
                     transform: translate(-50%, 50%);
                     min-width: 20rem;
-                    animation: Fade ease .2s;
+                    -webkit-animation: Fade ease .2s;
+                            animation: Fade ease .2s;
                     h2 {
                         cursor: pointer;
                         padding:1rem;
@@ -232,7 +236,11 @@
                         border-radius:.5rem;
                         font-weight: normal;
                         font-size: 1.5rem;
-                        user-select: none;
+                        -webkit-user-select: none;
+                           -moz-user-select: none;
+                            -ms-user-select: none;
+                                user-select: none;
+                        color: $txt-color;
                         &:hover {
                             background-color: rgb(243, 243, 243);
                         }
@@ -266,7 +274,10 @@
                     .text {
                         color: $main-color;
                         cursor: pointer;
-                        user-select: none;
+                        -webkit-user-select: none;
+                           -moz-user-select: none;
+                            -ms-user-select: none;
+                                user-select: none;
                         &:hover {
                             text-decoration: underline;
                         }
@@ -340,7 +351,23 @@
 
         &.active {
             #comment {
-                animation: FadeBackGround ease-in-out .8s;
+                -webkit-animation: FadeBackGround ease-in-out .8s;
+                        animation: FadeBackGround ease-in-out .8s;
+            }
+        }
+
+        &__loading {
+            @include flex(center,center);
+            display: none;
+            width: 50%;
+            margin-top: 1rem;
+            &.active {
+                display: flex;
+            }
+            span {
+                width: 3rem!important;
+                height: 3rem!important;
+                color: $hover-txt-color;
             }
         }
 }
@@ -361,12 +388,30 @@
     }
 }
 
+@-webkit-keyframes Fade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 @keyframes Fade {
     from {
         opacity: 0;
     }
     to {
         opacity: 1;
+    }
+}
+
+@-webkit-keyframes FadeBackGround {
+    from {
+        background-color: rgba(12, 199, 237,1);
+    }
+    to {
+        background-color: rgba(12, 199, 237, 0.133)
     }
 }
 

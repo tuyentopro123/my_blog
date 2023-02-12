@@ -114,6 +114,7 @@
 
     // SIDE BAR
     &__sidebar {
+        position: -webkit-sticky;
         position: sticky;
         top: 2rem;
         flex: 1 1;
@@ -272,13 +273,15 @@
                 width: 12rem;
                 min-width: 12rem;
                 height: 7rem;
-                object-fit: cover;
+                -o-object-fit: cover;
+                   object-fit: cover;
                 border-radius:.5rem;
                 img {
                     width: 12rem;
                     min-width: 12rem;
                     height: 7rem;
-                    object-fit: cover;
+                    -o-object-fit: cover;
+                       object-fit: cover;
                }
             }
     

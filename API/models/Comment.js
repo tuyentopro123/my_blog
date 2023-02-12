@@ -13,8 +13,8 @@ const commentSchema = new mongoose.Schema(
             required: true, 
         },
         user: {
-            type: String, 
-            required: true, 
+            type: Schema.Types.ObjectId, 
+            ref: "User" 
         },
         user_receiver: {
             type: String, 

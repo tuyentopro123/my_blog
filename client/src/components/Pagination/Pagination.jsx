@@ -18,13 +18,6 @@ const PaginationType = ({func,numb,defaultPage}) => {
         shape="rounded"
         showLastButton 
         onChange={func}
-        // renderItem={(item) => (
-        //   <PaginationItem
-        //     component={Link}
-        //     to={`/${type}${item.page === 1 ? '' : `?${page}=${item.page}`}`}
-        //     {...item}
-        //   />
-        // )}
     />
   )
 }

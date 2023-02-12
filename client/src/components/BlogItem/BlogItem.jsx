@@ -35,6 +35,7 @@ const BlogItem = ({ post }) => {
     <div className="blogitem">
       <div
         className="blogitem__thumbnail"
+        onClick={handleGetPost}
         style={
           post.imgPost
             ? { backgroundImage: `url(${post.imgPost})` }

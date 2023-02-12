@@ -7,7 +7,8 @@ import Grid from '../../components/utils/Grid/Grid'
 import PaginationType  from '../../components/Pagination/Pagination';
 
 import { useSelector } from "react-redux";
-import axios from "axios";
+import {publicRequest} from '../../utils/configAxios'
+
 
 
 const Author = () => {
@@ -23,7 +24,7 @@ const Author = () => {
     // GET ALL USER
     const getAllUsers = async () => {
       try {
-        const res = await axios.get(`/v1/user/author?pageUser=${currenPageUser}`);
+        const res = await publicRequest.get(`/v1/user/author?pageUser=${currenPageUser}`);
         setUserList(res.data.user);
         setAllUser(res.data.userCount)
       } catch (err) {

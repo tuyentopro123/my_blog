@@ -103,7 +103,8 @@
                 width: 3.5rem;
                 height: 3.5rem;
                 border-radius: 50%;
-                object-fit: cover;
+                -o-object-fit: cover;
+                   object-fit: cover;
                 cursor: pointer;
             }
             h4 {
@@ -119,7 +120,10 @@
     &__fields {
         top: 1.5rem;
         left: -.6rem;
-        user-select:none;
+        -webkit-user-select:none;
+           -moz-user-select:none;
+            -ms-user-select:none;
+                user-select:none;
         padding:1rem 2rem;
         background-color: $field-color;
         span {

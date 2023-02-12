@@ -25,12 +25,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
 import InfoIcon from '@mui/icons-material/Info';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import {amber} from '@mui/material/colors';
 
 function App() {
   // const location = useLocation()  
   const user = useSelector((state)=> state.auth.login?.currentUser)
   const loading = useSelector((state)=> state.post.post.isFetching)
+  const loadingUser = useSelector((state)=> state.user.users.isFetching)
   const dispatch = useDispatch()
   // const [socket,setSocket] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -48,10 +50,10 @@ function App() {
 ]
   
   // SOCKET IO
-  // useEffect(() => {
-  //   setSocket(io("http://localhost:5000"))
-  //   loginUser(dispatch)
-  // },[])
+  useEffect(() => {
+    // setSocket(io("http://localhost:5000"))
+    loginUser(dispatch)
+  },[])
 
   
   // useEffect(() => {
@@ -62,6 +64,10 @@ function App() {
     setIsLoading(loading)
   },[loading]) 
 
+  useEffect(() => {
+    setIsLoading(loadingUser)
+  },[loadingUser]) 
+
         
 
   return (
@@ -69,7 +75,7 @@ function App() {
       <ProgressBar isAnimating={isLoading} />
       <BrowserRouter>
         <Header/>
-        <SpeedDialTooltip/>  
+        <SpeedDialTooltip user={user}/>  
         <Routes>
           <Route path='/' element={<Home />}/>
           <Route path='/login' element={user ? <Navigate to='/' /> : <Login />}/>
@@ -79,9 +85,10 @@ function App() {
           <Route path='/about' element={<About/>}/>
           <Route path='/infor/:id' element={user ? <Infor save={false}/> : <Login /> }/>
           <Route path='/infor/save/:id' element={user ? <Infor save={true}/> : <Login /> }/>
-          <Route path='/newPost' element={<NewPost />}/>
+          <Route path='/newPost' element={user ? <NewPost /> : <Login /> }/>
           <Route path='/setting' element={<Setting />}/>
           <Route path='/post/:slug' element={user ? <DetailPost/> : <Login /> }/>
+          {/* <Route path='/admin' element={user?.isAdmin ? <Admin/> : <Home/> }/> */}
         </Routes>
       </BrowserRouter>  
       <div className="footer">
@@ -177,34 +184,31 @@ function App() {
 }
 export default App;
 
-function SpeedDialTooltip() {
+function SpeedDialTooltip({user}) {
   const navigate = useNavigate()
-  const handleHome = () => {
-    navigate("/")
-  }
-  const handlePost = () => {
-    navigate("/newPost")
-  }
-
-  const handleAbout = () => {
-    navigate("/about")
+  const handleNavigate = (e) => {
+    navigate(`/${e}`)
   }
   const handleUp = () => {
     window.scrollTo(0, 0)
   }
   const actions = [
     { 
-      icon: <EditIcon onClick={handlePost} sx={{ fontSize:25,color: amber[500] }}/>, 
+      icon: <EditIcon onClick={() => handleNavigate("add")} sx={{ fontSize:25,color: amber[500] }}/>, 
       name: 'Add',
     },
     { 
-      icon: <HomeIcon onClick={handleHome} sx={{ fontSize:25,color: amber[500] }}/>, 
+      icon: <HomeIcon onClick={() => handleNavigate("home")} sx={{ fontSize:25,color: amber[500] }}/>, 
       name: 'Home',
     },
     { 
-      icon: <InfoIcon onClick={handleAbout} sx={{ fontSize:25,color: amber[500] }}/>, 
+      icon: <InfoIcon onClick={() => handleNavigate("about")} sx={{ fontSize:25,color: amber[500] }}/>, 
       name: 'About',
-    },
+    }, 
+    { 
+      icon:<AdminPanelSettingsIcon onClick={() => handleNavigate("admin")} sx={{ fontSize:25,color: amber[500] }}/>,
+      name: 'Admin',
+    }
   ];
 
   return (
@@ -223,7 +227,7 @@ function SpeedDialTooltip() {
                       />
                   }
           >
-            {actions.map((action) => (
+            {(user?.isAdmin ? actions.slice(1,4) : actions).map((action) => (
               <SpeedDialAction
                 key={action.name}
                 icon={action.icon}

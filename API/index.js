@@ -30,16 +30,21 @@ app.use(express.json({ limit: '50mb', extended: true }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(cookieParser())
-
+app.enable('trust proxy')
 app.use(express.json());
 
 require("./utils/passport");
-app.use(cors()) 
+app.use(cors({
+  origin: 'https://vantuyen.tk',
+  credentials:true
+})) 
+
+// establish sessions
 app.use(session({
   secret: 'somethingsecret',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 2*24*60*60*1000},
+  cookie: { maxAge: 2*24*60*60*1000,secure: true,sameSite: 'None',},
   store: MongoStore.create({ mongoUrl: process.env.MONGODB_URL })
 }));
 app.use(passport.authenticate("session"));
@@ -63,21 +68,19 @@ app.get('/auth/google',passport.authenticate('google', {
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    successRedirect: "https://my-blog-psi-lilac.vercel.app/"
+    successRedirect: "https://vantuyen.tk"
   })
 );
 
 // REQUEST TO FACEBOOK
-app.get('/auth/facebook',passport.authenticate('facebook', {
-  scope: ['profile']
-}));
+app.get('/auth/facebook',passport.authenticate('facebook'));
 
-app.get(
-  "/auth/facebook/callback",
-  passport.authenticate("facebook", {
-    successRedirect: "https://my-blog-psi-lilac.vercel.app/"
-  })
-);
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: 'https://vantuyen.tk/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('https://vantuyen.tk/');
+});
 
 
 
@@ -93,7 +96,7 @@ app.listen(PORT, () => {
 const httpServer = createServer(app);
 const io = new Server(httpServer, {  
     cors: {
-        origin: "https://my-blog-psi-lilac.vercel.app/",
+        origin: "https://vantuyen.tk",
   },
 });
 

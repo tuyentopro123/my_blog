@@ -2,7 +2,8 @@ import React,{useState,useEffect } from 'react'
 import "./Setting.scss"
 import {useLocation, useParams,useNavigate} from 'react-router-dom'
 import { useDispatch,useSelector } from "react-redux";
-import axios from "axios";
+import {publicRequest} from '../../utils/configAxios'
+
 import { updateUsers } from "../../redux/apiRequest";
 import Helmet from '../../components/Helmet/Helmet'
 import toast, { Toaster } from 'react-hot-toast';
@@ -94,7 +95,7 @@ const Setting = () => {
 
     const uploadImage = async(base64encodedImage) => {
         try {
-            const res = await axios.post(`/v1/user/upload/user/${currentUser._id}`, {data: base64encodedImage},{
+            const res = await publicRequest.post(`/v1/user/upload/user/${currentUser._id}`, {data: base64encodedImage},{
               })
             setUser({...user,image: `${res.data.url}`})
             await updateUsers({image: `${res.data.url}`},dispatch,user._id);
@@ -107,7 +108,7 @@ const Setting = () => {
     // GET USER
     const getUsers = async(id) => {
       try {
-        const res = await axios.get(`/v1/user/` + id);
+        const res = await publicRequest.get(`/v1/user/` + id);
         setUser(res.data)
       } catch (err) {
         console.log(err)

@@ -1,5 +1,5 @@
-// import axios from "axios";
-import axios from "axios";
+import {publicRequest} from "../utils/configAxios";
+import axios from "axios"
 import {loginStart,
         loginSuccess,
         loginFailed,
@@ -52,25 +52,15 @@ import {createCommentStart,
         deleteCommentStart,
         deleteCommentSuccess,
         deleteCommentFailed,
-        getCommentStart,
-        getCommentSuccess,
-        getCommentFailed,
 } from "./commentSlice"
 
 
-const options = {
-  onUploadProgress: (ProgressEvent) => {
-    const {loaded,total} = ProgressEvent;
-    let percent = Math.floor((loaded * 100) / total)
-    console.log(`${loaded} Kb of ${total}kb | ${percent}%`)
-  }
-}
 // <-- ( AUTH ) ----------------------------->
     // LOGIN
     export const loginUser = async(dispatch) => {
       dispatch(loginStart())
       try {
-          const res = await axios.get("/v1/auth/login")
+          const res = await publicRequest.get("/v1/auth/login",{withCredentials:true})
           dispatch(loginSuccess(res.data));
           // navigate("/");
         }catch(err) {
@@ -81,7 +71,7 @@ const options = {
     export const registerUser = async (user, dispatch, navigate) => {
       dispatch(registerStart());
       try {
-        await axios.post("v1/auth/register", user);
+        await publicRequest.post("v1/auth/register", user);
         dispatch(registerSuccess());
         navigate("/login");
       } catch (err) {
@@ -92,7 +82,7 @@ const options = {
     export const logOut = async (dispatch,navigate) => {
       dispatch(logOutStart());
       try {
-        await axios.get("/v1/auth/logout");
+        await publicRequest.get("/v1/auth/logout",{withCredentials:true});
         dispatch(logOutSuccess());
         navigate("/");
       } catch (err) {
@@ -104,7 +94,7 @@ const options = {
     export const getCurrentUser = async (dispatch,id) => {
       dispatch(getCurrentUserStart());
       try {
-        await axios.get("/v1/auth/current/" + id);
+        await publicRequest.get("/v1/auth/current/" + id);
         dispatch(getCurrentUserSuccess());
       } catch (err) {
         dispatch(getCurrentUserFailed());
@@ -119,7 +109,7 @@ const options = {
     export const updateUsers = async (user, dispatch,id) => {
       dispatch(updateUserStart());
       try {
-        const res = await axios.put(`/v1/user/` + id, user);
+        const res = await publicRequest.put(`/v1/user/` + id, user);
         dispatch(updateUserSuccess(res.data));
       } catch (err) {
         console.log(err)
@@ -131,7 +121,7 @@ const options = {
     export const getNotification = async(dispatch, id)  => {
       dispatch(getNotificationStart());
       try {
-        const res = await axios.get("/v1/user/noti/" + id);
+        const res = await publicRequest.get("/v1/user/noti/" + id);
         dispatch(getNotificationSuccess(res.data));
       } catch (err) {
         dispatch(getNotificationFailed(err));
@@ -143,7 +133,7 @@ const options = {
     //   export const deleteUser = async ( dispatch, id,  => {
     //     dispatch(deleteUserStart());
     //     try {
-    //       const res = await axios.delete("/v1/user/" + id, {
+    //       const res = await publicRequest.delete("/v1/user/" + id, {
     //         headers: { token: `Bearer ${accessToken` },
     //       });
     //       dispatch(deleteUsersSuccess(res.data));
@@ -158,7 +148,7 @@ const options = {
     export const createPost = async (post,id, dispatch, navigate) => {
       dispatch(createPostStart());
       try {
-        const res = await axios.post(`/v1/post/post/` + id, post );
+        const res = await publicRequest.post(`/v1/post/post/` + id, post );
         dispatch(createPostSuccess(res.data));
         const navigation = () => {
           navigate(`/`)
@@ -174,10 +164,10 @@ const options = {
       dispatch(getAllPostStart());
       try {
         if(category) {
-          const res = await axios.get(`/v1/post/${field}?category=${category}&pagePost=${currentPagePost}`);
+          const res = await publicRequest.get(`/v1/post/${field}?category=${category}&pagePost=${currentPagePost}`);
           dispatch(getAllPostSuccess(res.data));
         } else {
-          const res = await axios.get(`/v1/post/${field}?pagePost=${currentPagePost}`);
+          const res = await publicRequest.get(`/v1/post/${field}?pagePost=${currentPagePost}`);
           dispatch(getAllPostSuccess(res.data));
         }
       } catch (err) {
@@ -189,7 +179,7 @@ const options = {
     export const updatePost = async (user,id,dispatch) => {
       dispatch(updateLikeStart());
       try {
-        const res = await axios.post("/v1/post/update/" + id,user);
+        const res = await publicRequest.post("/v1/post/update/" + id,user);
         dispatch(updateLikeSuccess(res.data));
       } catch (err) {
         dispatch(updateLikeFailed());
@@ -202,7 +192,7 @@ const options = {
     export const createComment = async (comment,dispatch) => {
       dispatch(createCommentStart());
       try {
-        const res = await axios.post("/v1/comment/comment",comment);
+        const res = await publicRequest.post("/v1/comment/comment",comment);
         dispatch(createCommentSuccess(res.data));
       } catch (err) {
         dispatch(createCommentFailed(err));
@@ -214,7 +204,7 @@ const options = {
     export const deleteComment = async (id,comment,dispatch) => {
       dispatch(deleteCommentStart());
       try {
-        const res = await axios.post("/v1/comment/" + id,comment);
+        const res = await publicRequest.post("/v1/comment/" + id,comment);
         dispatch(deleteCommentSuccess(res.data));
       } catch (err) {
         dispatch(deleteCommentFailed(err));
@@ -225,7 +215,7 @@ const options = {
     export const interComment = async (inter,id,dispatch) => {
       dispatch(interCommentStart());
       try {
-        const res = await axios.post("/v1/comment/inter/" + id,inter);
+        const res = await publicRequest.post("/v1/comment/inter/" + id,inter);
         dispatch(interCommentSuccess(res.data));
       } catch (err) {
         dispatch(interCommentFailed(err));

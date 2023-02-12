@@ -38,7 +38,8 @@
             img {
                 width: 6rem;
                 height: 6rem;
-                object-fit: cover;
+                -o-object-fit: cover;
+                   object-fit: cover;
                 border-radius: 50%;
                 margin-right:2rem;
             }
@@ -64,6 +65,21 @@
             @include flex(center,flex-start);
             & > * {
                 margin:0 .2rem;
+            }
+        }
+
+        &__save {
+            cursor: pointer;
+        }
+
+        &__share{
+            @include flex(center,center);
+            cursor: pointer;
+            border-radius:50%;
+            width: 3rem;
+            height: 3rem;
+            &:hover {
+                background-color: rgba(195, 195, 195, 0.171);
             }
         }
         
@@ -110,7 +126,9 @@
             -ms-hyphens: none;
             hyphens: none;
             line-height: 1.5;
-            tab-size: 4;
+            -moz-tab-size: 4;
+              -o-tab-size: 4;
+                 tab-size: 4;
             text-align: left;
             text-shadow: 0 1px rgb(0 0 0 / 30%);
             white-space: pre;
@@ -182,11 +200,20 @@
         margin: auto;
         z-index: 100;
         overflow: hidden;
-        animation:Fade ease .2s;
+        -webkit-animation:Fade ease .2s;
+                animation:Fade ease .2s;
         border: 1px solid rgb(152, 152, 152);
         @include tablet {
             width: 90%;
         }
+
+        &__closeTab {
+            position: absolute;
+            top: 2%;
+            right: 4%;
+            cursor: pointer;
+        }
+
         &__container {
             overflow-x: hidden;
             overflow-y: auto;
@@ -205,9 +232,10 @@
                 font-size: 2rem;
             }
             img {
-                width: 5rem;
-                height: 5rem;
-                object-fit: cover;
+                width: 4rem;
+                height: 4rem;
+                -o-object-fit: cover;
+                   object-fit: cover;
                 border-radius: 50%;
                 margin-right:2rem;
             }
@@ -217,7 +245,8 @@
         }
 
         &__overlay {
-            animation:Fade ease .2s;
+            -webkit-animation:Fade ease .2s;
+                    animation:Fade ease .2s;
             display: none;
             &::before {
                 position: fixed;
@@ -330,6 +359,7 @@
     &__sidebar {
         width: 27%;
         padding: 2rem;
+        position:-webkit-sticky;
         position:sticky;
         top: 10rem;
         @include tablet {
@@ -361,7 +391,8 @@
             width: 12rem;
             min-width: 12rem;
             height: 7rem;
-            object-fit: cover;
+            -o-object-fit: cover;
+               object-fit: cover;
             border-radius:.5rem;
             outline:1px solid #ccc;
             @include tablet {
@@ -373,7 +404,8 @@
                 width: 12rem;
                 min-width: 12rem;
                 height: 7rem;
-                object-fit: cover;
+                -o-object-fit: cover;
+                   object-fit: cover;
                 @include tablet {
                     width: 20rem;
                     min-width: 20rem;
@@ -424,6 +456,11 @@
 
 .MuiSkeleton-circular {
     margin-right: 2rem;
+}
+
+@-webkit-keyframes Fade {
+    from { opacity:0} 
+    to { opacity:1}
 }
 
 @keyframes Fade {

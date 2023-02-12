@@ -9,7 +9,8 @@ import bg from '../../assets/img/thumbnail.jpg'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import CreateSlug from "../../components/utils/CreateSlug/CreateSlug"
-import axios from "axios";
+import {publicRequest} from '../../utils/configAxios'
+
 
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
@@ -44,7 +45,7 @@ const NewPost = () => {
                 reader.onloadend = () => {
                     const uploadImagePost = async() => {
                         try {
-                            const res = await axios.post(`/v1/post/upload/post/${currentUser._id}`, {data: reader.result})
+                            const res = await publicRequest.post(`/v1/post/upload/post/${currentUser._id}`, {data: reader.result})
                             quillObj.getEditor().insertEmbed(range.index, 'image', res.data.url);  
                         } catch(err) {
                             console.error(err)
@@ -86,7 +87,7 @@ const NewPost = () => {
 
     const uploadImage = async(base64encodedImage) => {
         try {
-            const res = await axios.post(`/v1/post/upload/thumb/${currentUser._id}`, {data: base64encodedImage},{
+            const res = await publicRequest.post(`/v1/post/upload/thumb/${currentUser._id}`, {data: base64encodedImage},{
                 headers: { token: `Bearer ${currentUser.accessToken}` }
             })
             setPost({...post,imgPost: `${res.data.url}`})
@@ -118,7 +119,7 @@ const NewPost = () => {
 
     const handleCreatePost = async (post,id) => {
         try {
-          await axios.post(`/v1/post/post/` + id, post );
+          await publicRequest.post(`/v1/post/post/` + id, post );
           notifySuccess()
           const navigation = () => {
             navigate(`/`)

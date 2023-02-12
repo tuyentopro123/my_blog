@@ -85,7 +85,7 @@ const commentControllers = {
       const comment = await Comment.find({
         post: req.params.id,
         reaction: "",
-      }).sort({ createdAt: -1 });
+      }).populate("user").sort({ createdAt: -1 });
       return res.status(200).json(comment);
     } catch (err) {
       console.log(err);
@@ -162,7 +162,7 @@ const commentControllers = {
       const commentRequest = await Comment.find({
         post: comment.post,
         reaction: "",
-      }).sort({ createdAt: -1 });
+      }).populate("user").sort({ createdAt: -1 });
       return res.status(200).json(commentRequest);
     } catch (err) {
       console.log(err);
@@ -174,7 +174,7 @@ const commentControllers = {
   replyComment: async (req, res) => {
     try {
       const id = req.params.id
-      const comment = await Comment.find({ reaction: id }).sort({
+      const comment = await Comment.find({ reaction: id }).populate("user").sort({
         createdAt: -1,
       });
       return res.status(200).json({

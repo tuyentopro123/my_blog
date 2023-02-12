@@ -20,7 +20,8 @@
                 outline: 5px solid $third-color;
                 width:120px;
                 height:120px;
-                object-fit: cover;
+                -o-object-fit: cover;
+                   object-fit: cover;
                 border-radius:50%;
             }
         }

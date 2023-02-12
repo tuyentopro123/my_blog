@@ -17,7 +17,10 @@
         }
     }
     span {
-        user-select: none;
+        -webkit-user-select: none;
+           -moz-user-select: none;
+            -ms-user-select: none;
+                user-select: none;
         letter-spacing: 2px;
         font-size: 1.5rem;
         text-transform: uppercase;  

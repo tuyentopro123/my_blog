@@ -4,7 +4,9 @@ import Avatar from '@mui/material/Avatar';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import {teal,amber,grey,blueGrey} from '@mui/material/colors';
-import axios from 'axios';
+import {publicRequest} from "../../utils/configAxios";
+
+
 import Chip from '../utils/Chip/Chip';
 import List  from '../utils/List/List';
 import { Link } from 'react-router-dom';
@@ -18,7 +20,7 @@ const Sidebar = ({type}) => {
 
     const getTopUsers = async() => {
       try {
-        const res = await axios.get("v1/user/top");
+        const res = await publicRequest.get("v1/user/top");
         setTopUsers(res.data)
         controller = null
 

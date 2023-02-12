@@ -8,11 +8,11 @@ passport.use(
   new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: '/auth/google/callback'
+    callbackURL: 'https://server-app-js.herokuapp.com/auth/google/callback'
   }, async(accessToken,refreshToken,profile, done) => {  
     try {
       const user = await User.findOne({socialId: profile.id})
-      console.log(`the user: ${user}`)
+      // console.log(`the user: ${user}`)
       if(user) {
         return done(null,user);
       } else {
@@ -35,8 +35,10 @@ passport.use(
   new FacebookStrategy({
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-    callbackURL: '/auth/facebook/callback'
+    callbackURL: 'https://server-app-js.herokuapp.com/auth/facebook/callback',
+    profileFields: ['id', 'displayName', 'photos', 'email']
   }, async(accessToken,refreshToken,profile, done) => {  
+    console.log(profile);
     try {
       const user = await User.findOne({socialId: profile.id})
       console.log(`the user: ${user}`)
@@ -47,10 +49,10 @@ passport.use(
           username: profile.displayName,
           image: profile.photos[0].value,
           socialId: profile.id,
-          email:profile.emails[0].value,
         });
+      console.log(`the newUser: ${user}`)
         await newUser.save();
-        return done(null);
+        return done(null,newUser);
       }
     } catch(err) {
       console.log(err);
@@ -59,7 +61,7 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  done(null, user);
+  done(null, user._id);
 });
   
 passport.deserializeUser((user, done) => {

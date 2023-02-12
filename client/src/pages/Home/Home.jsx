@@ -13,7 +13,7 @@ const Home = () => {
   const navigate = useNavigate()
 
   return (
-    <Helmet title="Home">
+    <Helmet title="Vantuyen">
       <main className="home">
         <Navbar/>
         <Body/>

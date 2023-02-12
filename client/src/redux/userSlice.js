@@ -34,6 +34,14 @@ const userSlice = createSlice({
             state.users.error = true;
         },
 
+        // GET USER SET
+        getUserStart: (state) => {
+            state.users.isFetching = true;
+        },
+        getUserSuccess: (state) => {
+            state.users.isFetching = false;
+        },
+
         
     }
 })
@@ -46,6 +54,8 @@ export const {
     deleteUserStart,
     deleteUserSuccess,
     deleteUserFailed,
+    getUserStart,
+    getUserSuccess
    
 } = userSlice.actions;
 

@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.use(
     '/v1',
     createProxyMiddleware({
-      target: 'https://server-app-js.herokuapp.com/',
+      target: 'https://my-blog-kfgs.vercel.app/',
       changeOrigin: true,
     })
   );
