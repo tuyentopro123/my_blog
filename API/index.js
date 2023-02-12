@@ -18,6 +18,7 @@ const app = express();
 const PORT = process.env.PORT || 8000
 
 // Connect database
+mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGODB_URL,
     (err) => {
         if(err) console.log(err) 
